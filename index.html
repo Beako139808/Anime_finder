@@ -10,7 +10,9 @@
     --blue:#3da9fc; --blue2:#6fc3ff; --blue-deep:#1b6fd6; --accent:#8b5cff;
     --txt:#e7eefc; --muted:#93a3c9; --good:#36d399; --bad:#ff6b81;
     --radius:18px; --shadow:0 18px 50px rgba(0,0,0,.55);
+    --neon:#5aa9fc;
   }
+  @property --neon { syntax:"<color>"; inherits:true; initial-value:#5aa9fc; }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
   body{
@@ -21,22 +23,62 @@
       radial-gradient(900px 600px at -10% 110%, rgba(139,92,255,.16), transparent 60%),
       linear-gradient(180deg, var(--bg), var(--bg2));
     overflow-x:hidden;
+    animation:neonShift 14s ease-in-out infinite;
   }
-  #stars{position:fixed;inset:0;z-index:0;pointer-events:none}
-  .star{position:absolute;width:2px;height:2px;border-radius:50%;background:#cfe3ff;opacity:.5;animation:twinkle 3s ease-in-out infinite}
-  @keyframes twinkle{0%,100%{opacity:.15;transform:scale(.7)}50%{opacity:.9;transform:scale(1.3)}}
-  .ghost-wrap{position:fixed;top:18%;left:0;z-index:0;pointer-events:none;will-change:transform;animation:drift 34s linear infinite alternate}
-  .ghost-wrap.g2{top:64%;animation-duration:46s;animation-direction:alternate-reverse;opacity:.18}
-  .ghost-wrap.g3{top:40%;animation-duration:58s;animation-delay:-12s;opacity:.12}
-  .ghost{animation:bob 4s ease-in-out infinite;filter:drop-shadow(0 0 18px rgba(61,169,252,.55))}
-  @keyframes drift{from{transform:translateX(-12vw)}to{transform:translateX(108vw)}}
-  @keyframes bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-26px) rotate(4deg)}}
-  /* floating anime bits */
-  #floaties{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-  .floatie{position:absolute;bottom:-50px;opacity:0;will-change:transform,opacity;animation:floatUp linear infinite}
-  @keyframes floatUp{0%{transform:translateY(0) translateX(0) rotate(0)}10%{opacity:.45}90%{opacity:.45}100%{transform:translateY(-118vh) translateX(var(--dx,40px)) rotate(360deg);opacity:0}}
-  .shooting{position:fixed;left:0;top:0;z-index:0;pointer-events:none;width:120px;height:2px;border-radius:2px;opacity:0;background:linear-gradient(90deg,transparent,#cfe3ff);box-shadow:0 0 8px #6fc3ff;animation:shoot 12s linear infinite}
-  @keyframes shoot{0%{opacity:0;transform:translate(-12vw,6vh) rotate(18deg) scaleX(.4)}2%{opacity:.95}10%{opacity:0;transform:translate(78vw,40vh) rotate(18deg) scaleX(1)}100%{opacity:0}}
+  @keyframes neonShift{0%,100%{--neon:#3da9fc}50%{--neon:#9a6bff}}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-22px) rotate(3deg)}}
+  /* ---- nebula ---- */
+  #nebula{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;filter:blur(70px)}
+  .neb{position:absolute;border-radius:50%;mix-blend-mode:screen;opacity:.5;will-change:transform}
+  .neb.b1{width:70vw;height:70vw;left:-15vw;top:-20vh;background:radial-gradient(circle,rgba(61,120,252,.55),transparent 70%);animation:neb1 42s ease-in-out infinite}
+  .neb.b2{width:66vw;height:66vw;right:-16vw;top:8vh;background:radial-gradient(circle,rgba(139,92,255,.5),transparent 70%);animation:neb2 55s ease-in-out infinite}
+  .neb.b3{width:55vw;height:55vw;left:22vw;bottom:-26vh;background:radial-gradient(circle,rgba(80,200,255,.3),transparent 70%);animation:neb3 64s ease-in-out infinite}
+  @keyframes neb1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(16vw,12vh) scale(1.25)}}
+  @keyframes neb2{0%,100%{transform:translate(0,0) scale(1.1)}50%{transform:translate(-14vw,8vh) scale(.85)}}
+  @keyframes neb3{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(10vw,-10vh) scale(1.2)}}
+  /* ---- dot grid (depth) ---- */
+  #grid{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+    background-image:radial-gradient(rgba(125,160,230,.13) 1px, transparent 1.5px);background-size:34px 34px;
+    -webkit-mask-image:radial-gradient(ellipse at 50% 38%,#000 25%,transparent 85%);mask-image:radial-gradient(ellipse at 50% 38%,#000 25%,transparent 85%)}
+  /* ---- parallax starfield ---- */
+  #stars{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .starlayer{position:absolute;inset:-60% -10%;background-repeat:repeat;will-change:transform}
+  .sl1{background-image:
+      radial-gradient(1.6px 1.6px at 40px 60px,#e3f0ff,transparent),
+      radial-gradient(1.4px 1.4px at 150px 180px,#bcd8ff,transparent),
+      radial-gradient(1.6px 1.6px at 230px 90px,#fff,transparent),
+      radial-gradient(1.3px 1.3px at 100px 250px,#cfe3ff,transparent);
+    background-size:260px 260px;animation:fly1 55s linear infinite;opacity:.85}
+  .sl2{background-image:
+      radial-gradient(1.2px 1.2px at 60px 120px,#cfe3ff,transparent),
+      radial-gradient(1.2px 1.2px at 280px 60px,#aac8ff,transparent),
+      radial-gradient(1px 1px at 180px 300px,#fff,transparent);
+    background-size:380px 380px;animation:fly2 95s linear infinite;opacity:.6}
+  .sl3{background-image:
+      radial-gradient(2.4px 2.4px at 120px 90px,#dbe9ff,transparent),
+      radial-gradient(2px 2px at 360px 260px,#9fc3ff,transparent);
+    background-size:520px 520px;animation:fly3 150s linear infinite;opacity:.5}
+  @keyframes fly1{from{transform:translateY(0)}to{transform:translateY(260px)}}
+  @keyframes fly2{from{transform:translateY(0)}to{transform:translateY(380px)}}
+  @keyframes fly3{from{transform:translateY(0)}to{transform:translateY(520px)}}
+  #twinkle .star{position:absolute;width:2px;height:2px;border-radius:50%;background:#dbeaff;opacity:.5;animation:twinkle 3s ease-in-out infinite}
+  @keyframes twinkle{0%,100%{opacity:.12;transform:scale(.7)}50%{opacity:.95;transform:scale(1.4)}}
+  /* distant bigger star */
+  .bigstar{position:fixed;top:13%;left:79%;z-index:0;width:7px;height:7px;border-radius:50%;pointer-events:none;
+    background:radial-gradient(circle,#ffffff 0%,#bfe0ff 40%,transparent 72%);
+    box-shadow:0 0 12px 3px rgba(160,210,255,.6);animation:bigstar 5.5s ease-in-out infinite}
+  @keyframes bigstar{0%,100%{opacity:.55;transform:scale(.85)}50%{opacity:1;transform:scale(1.15)}}
+  /* shooting stars — streak travels head-first along its own line (vw on both axes = angle matches rotation) */
+  .shooting{position:fixed;left:0;top:0;z-index:0;pointer-events:none;width:140px;height:2px;border-radius:2px;opacity:0;background:linear-gradient(90deg,transparent,#dbeaff);box-shadow:0 0 10px var(--neon);transform-origin:left center;animation:shoot 13s linear infinite}
+  @keyframes shoot{0%{opacity:0;transform:translate(-16vw,-6vw) rotate(20deg) scaleX(.5)}4%{opacity:.95}14%{opacity:0;transform:translate(96vw,34vw) rotate(20deg) scaleX(1)}100%{opacity:0}}
+  /* ---- floating mascot motion: independent up-down + gentle tilt ---- */
+  .m-float{display:block;animation:floatY 2.8s ease-in-out infinite}
+  .m-tilt{display:block;animation:tiltX 3.9s ease-in-out infinite}
+  @keyframes floatY{0%,100%{transform:translateY(7px)}50%{transform:translateY(-9px)}}
+  @keyframes tiltX{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+  /* ---- decorative flying neko (home screen only) ---- */
+  #neko-bg{position:fixed;left:0;top:0;z-index:1;width:84px;pointer-events:none;opacity:.5;filter:drop-shadow(0 0 16px rgba(123,75,240,.5));will-change:transform}
+  .neko-svg{width:100%;height:auto;display:block}
 
   .wrap{position:relative;z-index:2;max-width:1180px;margin:0 auto;padding:22px 18px 70px}
   header{display:flex;align-items:center;gap:12px;justify-content:center;margin:10px 0 4px;cursor:pointer;user-select:none}
@@ -48,19 +90,20 @@
   @keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
   .hidden{display:none!important}
 
-  #start-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:54vh;gap:18px}
-  .hero-ghost{font-size:60px;animation:bob 4s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(139,92,255,.5))}
+  #start-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:calc(100vh - 150px);gap:18px}
+  .hero-mascot{width:120px;filter:drop-shadow(0 0 22px rgba(123,75,240,.55))}
+  .hero-mascot .neko-svg{width:100%;height:auto}
   .hero-title{font-size:clamp(28px,6vw,48px);font-weight:800;line-height:1.08;margin:2px 0 0;background:linear-gradient(90deg,#ffffff,var(--blue2),var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent}
   .hero-sub{color:var(--muted);font-size:clamp(14px,2.1vw,17px);margin:0;max-width:560px}
-  .big-btn{position:relative;border:none;cursor:pointer;color:#fff;font-size:clamp(18px,2.4vw,22px);font-weight:700;padding:20px 46px;border-radius:60px;letter-spacing:.4px;background:linear-gradient(120deg,var(--blue-deep),var(--blue),var(--accent));background-size:200% 200%;box-shadow:0 14px 40px rgba(61,169,252,.45),inset 0 0 0 1px rgba(255,255,255,.12);transition:transform .15s ease,box-shadow .25s ease;animation:glow 5s ease infinite}
+  .big-btn{position:relative;border:1px solid var(--neon);cursor:pointer;color:#fff;font-size:clamp(18px,2.4vw,22px);font-weight:700;padding:20px 46px;border-radius:60px;letter-spacing:.4px;background:linear-gradient(120deg,var(--blue-deep),var(--blue),var(--accent));background-size:200% 200%;box-shadow:0 14px 40px -6px var(--neon),0 0 22px -4px var(--neon),inset 0 0 0 1px rgba(255,255,255,.14);transition:transform .15s ease,box-shadow .25s ease;animation:glow 5s ease infinite}
   .big-btn:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 20px 55px rgba(139,92,255,.55)}
   @keyframes glow{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
   .alt-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
-  .alt-btn{cursor:pointer;border:1px solid var(--line);background:#0e1834;color:var(--txt);padding:13px 22px;border-radius:40px;font-size:15px;font-weight:600;transition:all .15s ease}
-  .alt-btn:hover{border-color:var(--blue);transform:translateY(-2px);color:var(--blue2)}
+  .alt-btn{cursor:pointer;border:1px solid rgba(125,165,255,.2);background:rgba(18,28,60,.5);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:var(--txt);padding:13px 22px;border-radius:40px;font-size:15px;font-weight:600;transition:all .15s ease}
+  .alt-btn:hover{border-color:var(--neon);transform:translateY(-2px);color:var(--blue2);box-shadow:0 0 18px -5px var(--neon)}
   .hint{color:var(--muted);font-size:13px;max-width:520px}
 
-  .panel{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);max-width:720px;margin:0 auto;padding:24px 24px 18px;position:relative;overflow:hidden}
+  .panel{background:rgba(18,28,60,.55);backdrop-filter:blur(16px) saturate(1.2);-webkit-backdrop-filter:blur(16px) saturate(1.2);border:1px solid rgba(125,165,255,.20);border-radius:var(--radius);box-shadow:var(--shadow),0 0 30px -8px var(--neon),inset 0 1px 0 rgba(255,255,255,.08);max-width:720px;margin:0 auto;padding:24px 24px 18px;position:relative;overflow:hidden}
   .panel::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--accent))}
   .progress{height:8px;border-radius:8px;background:#0a1430;overflow:hidden;margin-bottom:18px;border:1px solid var(--line)}
   .progress > i{display:block;height:100%;width:20%;border-radius:8px;background:linear-gradient(90deg,var(--blue),var(--accent));transition:width .35s ease}
@@ -111,14 +154,14 @@
   .nav{display:flex;justify-content:space-between;gap:12px;margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
   .btn{cursor:pointer;border:1px solid var(--line);background:#0e1834;color:var(--txt);padding:12px 22px;border-radius:30px;font-size:14.5px;font-weight:600;transition:all .15s ease}
   .btn:hover{border-color:var(--blue);transform:translateY(-1px)}
-  .btn.primary{background:linear-gradient(120deg,var(--blue-deep),var(--accent));border-color:transparent;color:#fff;box-shadow:0 8px 22px rgba(61,169,252,.35)}
+  .btn.primary{background:linear-gradient(120deg,var(--blue-deep),var(--accent));border-color:var(--neon);color:#fff;box-shadow:0 8px 22px -6px var(--neon),0 0 16px -4px var(--neon)}
   .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
   .loading-genres{color:var(--muted);font-size:14px;padding:14px}
 
   /* mood */
   .mood-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
-  .mood-card{cursor:pointer;border:1px solid var(--line);background:#0e1834;border-radius:16px;padding:18px 12px;text-align:center;transition:all .18s ease}
-  .mood-card:hover{transform:translateY(-4px);border-color:var(--blue);box-shadow:0 12px 30px rgba(61,169,252,.25)}
+  .mood-card{cursor:pointer;border:1px solid rgba(125,165,255,.16);background:rgba(18,28,60,.5);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:16px;padding:18px 12px;text-align:center;transition:all .18s ease}
+  .mood-card:hover{transform:translateY(-4px);border-color:var(--neon);box-shadow:0 12px 30px -8px var(--neon),0 0 16px -6px var(--neon)}
   .mood-card .e{font-size:34px;display:block;margin-bottom:8px}
   .mood-card .t{font-size:14px;font-weight:600}
 
@@ -152,8 +195,8 @@
   #filter-summary{display:flex;flex-wrap:wrap;gap:7px;justify-content:flex-end}
   .tag{font-size:11.5px;background:#0e1834;border:1px solid var(--line);color:var(--blue2);padding:4px 10px;border-radius:20px}
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:18px}
-  .card{position:relative;background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);transition:transform .2s ease,box-shadow .2s ease;display:flex;flex-direction:column;animation:fade .4s ease}
-  .card:hover{transform:translateY(-6px);box-shadow:0 24px 60px rgba(61,169,252,.3);border-color:var(--blue)}
+  .card{position:relative;background:rgba(18,28,60,.5);backdrop-filter:blur(12px) saturate(1.15);-webkit-backdrop-filter:blur(12px) saturate(1.15);border:1px solid rgba(125,165,255,.16);border-radius:16px;overflow:hidden;box-shadow:var(--shadow),0 0 18px -10px var(--neon);transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;display:flex;flex-direction:column;animation:fade .4s ease}
+  .card:hover{transform:translateY(-6px);box-shadow:0 24px 60px rgba(0,0,0,.5),0 0 26px -4px var(--neon);border-color:var(--neon)}
   .poster{position:relative;aspect-ratio:3/4;overflow:hidden;background:#0a1227;cursor:pointer}
   .poster img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s ease}
   .card:hover .poster img{transform:scale(1.06)}
@@ -175,7 +218,7 @@
   .b.mal:hover{border-color:var(--blue)}
 
   .expand-wrap{text-align:center;margin:30px 0 6px}
-  .msg{text-align:center;margin:30px auto;max-width:560px;background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:16px;padding:30px 24px;box-shadow:var(--shadow)}
+  .msg{text-align:center;margin:30px auto;max-width:560px;background:rgba(18,28,60,.55);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(125,165,255,.18);border-radius:16px;padding:30px 24px;box-shadow:var(--shadow),0 0 26px -10px var(--neon)}
   .msg .emoji{font-size:46px;display:block;margin-bottom:10px;animation:bob 4s ease-in-out infinite}
   .msg h3{margin:0 0 8px;font-size:19px}
   .msg p{margin:0;color:var(--muted);font-size:14px;line-height:1.6}
@@ -189,7 +232,7 @@
 
   /* modal */
   #modal{position:fixed;inset:0;z-index:60;display:flex;align-items:flex-start;justify-content:center;padding:30px 16px;background:rgba(4,7,16,.8);backdrop-filter:blur(6px);overflow:auto}
-  .modal-card{position:relative;width:100%;max-width:820px;background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:0 0 22px;animation:fade .3s ease;margin:auto}
+  .modal-card{position:relative;width:100%;max-width:820px;background:rgba(16,25,54,.72);backdrop-filter:blur(20px) saturate(1.2);-webkit-backdrop-filter:blur(20px) saturate(1.2);border:1px solid rgba(125,165,255,.2);border-radius:18px;box-shadow:var(--shadow),0 0 40px -10px var(--neon);padding:0 0 22px;animation:fade .3s ease;margin:auto}
   .modal-close{position:sticky;float:right;top:12px;right:12px;margin:12px 12px 0;z-index:3;cursor:pointer;border:1px solid var(--line);background:rgba(7,11,24,.8);color:var(--txt);width:38px;height:38px;border-radius:50%;font-size:18px;font-weight:700}
   .modal-close:hover{border-color:var(--blue);color:var(--blue2)}
   .modal-body{padding:6px 24px 0}
@@ -217,16 +260,86 @@
   .link-pill.watch{background:linear-gradient(120deg,rgba(54,211,153,.2),rgba(61,169,252,.2));color:#bff5dd;border-color:#1f6e52}
   .m-songs{font-size:12.5px;color:#cdd9f3;line-height:1.7;margin:0;padding-left:18px}
 
+  /* hidden-gem toggle */
+  .gem-toggle{display:flex;align-items:flex-start;gap:11px;margin-top:16px;padding:13px 14px;border:1px solid var(--line);border-radius:14px;background:#0a1227;cursor:pointer;transition:border-color .15s}
+  .gem-toggle:hover{border-color:var(--accent)}
+  .gem-toggle input{width:20px;height:20px;margin-top:1px;accent-color:var(--accent);cursor:pointer;flex:none}
+  .gem-toggle span{display:flex;flex-direction:column;font-size:14.5px}
+  .gem-toggle small{color:var(--muted);font-size:12px;margin-top:2px}
+  .gem-toggle.on{border-color:var(--accent);background:linear-gradient(120deg,rgba(139,92,255,.16),rgba(61,169,252,.10))}
+
+  /* splash / intro screen */
+  #splash{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(900px 600px at 50% 30%,rgba(61,169,252,.18),transparent 60%),linear-gradient(180deg,#05080f,#0b1226);
+    transition:opacity .6s ease,visibility .6s ease}
+  #splash.gone{opacity:0;visibility:hidden}
+  .splash-inner{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;padding:20px}
+  .splash-art{position:relative;width:172px;height:172px;display:flex;align-items:center;justify-content:center;
+    animation:splashPop .9s cubic-bezier(.2,.9,.3,1.3) both}
+  #splash-mascot{width:120px;filter:drop-shadow(0 0 22px rgba(123,75,240,.6))}
+  #splash-mascot .neko-svg{width:100%;height:auto}
+  .splash-ring{position:absolute;inset:-10px;border-radius:50%;border:2px solid transparent;border-top-color:var(--blue);border-right-color:var(--accent);animation:spin 1.4s linear infinite}
+  .splash-logo{font-size:clamp(30px,7vw,46px);font-weight:800;letter-spacing:.5px;opacity:0;
+    background:linear-gradient(90deg,#fff,var(--blue2),var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent;
+    animation:splashUp .7s ease .35s both}
+  .splash-logo span{font-family:"Segoe UI",sans-serif}
+  .splash-tag{color:var(--muted);font-size:14px;letter-spacing:3px;text-transform:uppercase;opacity:0;animation:splashUp .7s ease .55s both}
+  .splash-bar{width:200px;height:5px;border-radius:5px;background:#0e1834;overflow:hidden;margin-top:8px;opacity:0;animation:splashUp .6s ease .7s both}
+  .splash-bar > i{display:block;height:100%;width:0;border-radius:5px;background:linear-gradient(90deg,var(--blue),var(--accent));animation:splashLoad 1.5s ease .75s forwards}
+  @keyframes splashPop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+  @keyframes splashUp{from{transform:translateY(14px);opacity:0}to{transform:translateY(0);opacity:1}}
+  @keyframes splashGlow{0%,100%{box-shadow:0 0 30px rgba(61,169,252,.45)}50%{box-shadow:0 0 55px rgba(139,92,255,.7)}}
+  @keyframes splashLoad{to{width:100%}}
+
+  /* orbit loader (search) */
+  .loader-orbit{position:relative;width:110px;height:110px}
+  .loader-orbit .lo-ring{position:absolute;inset:0;border-radius:50%;border:3px dashed rgba(111,195,255,.25);animation:spin 7s linear infinite}
+  .loader-orbit .lo-mascot{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 0 12px rgba(123,75,240,.6))}
+  .loader-orbit .lo-mascot .neko-svg{width:58px;height:auto}
+  .loader-orbit .lo-dot{position:absolute;top:50%;left:50%;width:13px;height:13px;margin:-6.5px;border-radius:50%;
+    background:linear-gradient(120deg,var(--blue),var(--accent));box-shadow:0 0 12px rgba(61,169,252,.8)}
+  .loader-orbit .d1{animation:orbit 1.5s linear infinite}
+  .loader-orbit .d2{animation:orbit 1.5s linear infinite;animation-delay:-.5s}
+  .loader-orbit .d3{animation:orbit 1.5s linear infinite;animation-delay:-1s}
+  @keyframes orbit{from{transform:rotate(0) translateX(52px) rotate(0)}to{transform:rotate(360deg) translateX(52px) rotate(-360deg)}}
+
+  /* scroll-to-top */
+  #to-top{position:fixed;right:20px;bottom:22px;z-index:45;width:48px;height:48px;border-radius:50%;border:1px solid var(--line);
+    background:linear-gradient(120deg,var(--blue-deep),var(--accent));color:#fff;font-size:22px;font-weight:700;cursor:pointer;
+    box-shadow:0 10px 26px rgba(61,169,252,.45);opacity:0;visibility:hidden;transform:translateY(16px);transition:all .25s ease}
+  #to-top.show{opacity:1;visibility:visible;transform:translateY(0)}
+  #to-top:hover{filter:brightness(1.12);transform:translateY(-3px)}
+
   @media (max-width:560px){.panel{padding:20px 16px 14px}#filter-summary{justify-content:flex-start}.m-hero img{width:110px}}
 </style>
 </head>
 <body>
 
-<div id="stars"></div>
-<div id="floaties"></div>
-<div class="ghost-wrap"><div class="ghost">👻</div></div>
-<div class="ghost-wrap g2"><div class="ghost">👻</div></div>
-<div class="ghost-wrap g3"><div class="ghost">👻</div></div>
+<!-- splash / intro -->
+<div id="splash">
+  <div class="splash-inner">
+    <div class="splash-art"><div id="splash-mascot"></div><div class="splash-ring"></div></div>
+    <div class="splash-logo">アニメ <span>Finder</span></div>
+    <div class="splash-tag">поиск и подбор аниме</div>
+    <div class="splash-bar"><i></i></div>
+  </div>
+</div>
+
+<button id="to-top" title="Наверх">↑</button>
+
+<!-- background layers -->
+<div id="nebula"><span class="neb b1"></span><span class="neb b2"></span><span class="neb b3"></span></div>
+<div id="grid"></div>
+<div id="stars">
+  <span class="starlayer sl1"></span>
+  <span class="starlayer sl2"></span>
+  <span class="starlayer sl3"></span>
+  <span id="twinkle"></span>
+  <span class="bigstar"></span>
+  <span class="shooting" style="animation-delay:4s"></span>
+  <span class="shooting" style="animation-delay:16s;top:5vh"></span>
+</div>
+<div id="neko-bg"></div>
 
 <div class="wrap">
   <header id="home-btn" title="На главную">
@@ -237,7 +350,7 @@
 
   <!-- ===== START ===== -->
   <section id="start-screen" class="screen">
-    <div class="hero-ghost">👻</div>
+    <div class="hero-mascot" id="hero-mascot"></div>
     <h2 class="hero-title">Поиск и подбор аниме</h2>
     <p class="hero-sub">Найди своё идеальное аниме — по жанрам, настроению или любимым тайтлам. Всё на данных MyAnimeList.</p>
     <button id="open-wizard" class="big-btn">✨ Подобрать по параметрам ✨</button>
@@ -274,6 +387,10 @@
           <input type="range" id="score-slider" min="0" max="9" step="0.5" value="0">
           <div class="score-pill" id="score-pill">Любой</div>
         </div>
+        <label class="gem-toggle" id="gem-toggle">
+          <input type="checkbox" id="gem-check">
+          <span><b>💎 Только скрытые алмазы</b><small>высокий рейтинг, но мало зрителей — недооценённые жемчужины</small></span>
+        </label>
       </div>
 
       <div class="step" data-step="2">
@@ -389,10 +506,15 @@
 </div>
 
 <div id="loading" class="hidden">
-  <div class="spinner"></div>
+  <div class="loader-orbit">
+    <span class="lo-ring"></span>
+    <span class="lo-dot d1"></span>
+    <span class="lo-dot d2"></span>
+    <span class="lo-dot d3"></span>
+    <span class="lo-mascot" id="lo-mascot"></span>
+  </div>
   <div id="loading-text">Призываем духов аниме…</div>
   <div id="loading-sub"></div>
-  <div class="gh">👻</div>
 </div>
 
 <div id="modal" class="hidden"></div>
@@ -466,7 +588,25 @@ const MOODS = [
   {e:"🚀", t:"Космос и sci-fi", tags:[24,29,18], min:7},
   {e:"🎶", t:"Музыка и сцена", tags:[19,70], min:6.5},
   {e:"🕵️", t:"Детектив и загадка", tags:[39,7,41], min:7},
-  {e:"🍜", t:"Уют и еда", tags:[47,36,63], min:6.5}
+  {e:"🍜", t:"Уют и еда", tags:[47,36,63], min:6.5},
+  {e:"🏫", t:"Школьные будни", tags:[23,36,4], min:6.5},
+  {e:"🤖", t:"Меха-баталии", tags:[18,38,24], min:7},
+  {e:"🌀", t:"Исекай-приключения", tags:[62,10,72], min:6.8},
+  {e:"🥷", t:"Сёнэн-баттлы", tags:[1,31,27], min:7},
+  {e:"🎴", t:"Самураи и честь", tags:[21,13,1], min:7},
+  {e:"🧛", t:"Вампиры и тьма", tags:[32,37,14], min:6.5},
+  {e:"💞", t:"Гарем и милота", tags:[35,22,23], min:6.5},
+  {e:"🎤", t:"Идолы и блеск", tags:[60,19,70], min:6.5},
+  {e:"🪖", t:"Война и выживание", tags:[38,76,8], min:7},
+  {e:"🃏", t:"Игры разума", tags:[11,40,59], min:7.2},
+  {e:"⏳", t:"Путешествия во времени", tags:[78,24,8], min:7},
+  {e:"🩸", t:"Тёмное и жёсткое", tags:[58,42,41], min:7},
+  {e:"🪄", t:"Махо-сёдзё и магия", tags:[66,10,37], min:6.5},
+  {e:"🏎️", t:"Скорость и спорт", tags:[3,30,77], min:6.5},
+  {e:"👑", t:"Историческая драма", tags:[13,8,21], min:7},
+  {e:"🦸", t:"Суперсилы", tags:[31,1,37], min:7},
+  {e:"😱", t:"Психологический хоррор", tags:[40,14,41], min:7},
+  {e:"🌸", t:"Нежное сёдзё", tags:[22,25,23], min:6.5}
 ];
 
 /* sort modes (label per key); 'relevance' only used in similar mode */
@@ -477,13 +617,22 @@ const SORTS = [
   ["newest","🆕 Сначала новые"],
   ["oldest","📼 Сначала старые"],
   ["scored_by","🗳️ По числу оценок"],
+  ["gem","💎 Недооценённые (скрытые алмазы)"],
   ["random","🎲 Случайный порядок"]
 ];
 
 const LOADING_MSGS = [
-  "Призываем духов аниме…","Листаем весь MyAnimeList…","Спрашиваем совета у сенпая…",
-  "Сортируем по рейтингу…","Привидение роется в архивах…","Отделяем шедевры от филлеров…","Завариваем рамен и ищем…"
+  "Котик роется в архивах…","Листаем весь MyAnimeList…","Спрашиваем совета у сенпая…",
+  "Сортируем по рейтингу…","Отделяем шедевры от филлеров…","Завариваем рамен и ищем…",
+  "Активируем Гэндзюцу поиска…","Прокачиваем уровень рекомендаций…","Открываем третий глаз…",
+  "Заряжаем гэнки-даму подборки…","Котик мурчит и думает…","Сверяемся со свитком тайтлов…",
+  "Ловим вайб сезона…","Перематываем опенинги…","Ищем то самое аниме, ня~"
 ];
+
+/* hidden-gem thresholds: high score, few viewers */
+const GEM_MIN_SCORE = 7.0;
+const GEM_MAX_MEMBERS = 200000;   // not mainstream
+const GEM_MIN_MEMBERS = 1000;     // but rated by enough people
 
 /* beako's personal favorites — MAL IDs (resolved from her list, in her order) */
 const FAVORITES = [
@@ -493,6 +642,7 @@ const FAVORITES = [
   46095, 41457, 9253, 42249, 2167, 4224, 5530, 47194, 43439, 48316,
   52299, 18897, 14075, 34636
 ];
+const FAVORITES_DATA = {"1575":{"mal_id":1575,"url":"https://myanimelist.net/anime/1575/Code_Geass__Hangyaku_no_Lelouch","title":"Code Geass: Hangyaku no Lelouch","title_english":"Code Geass: Lelouch of the Rebellion","title_japanese":"コードギアス 反逆のルルーシュ","score":8.71,"scored_by":1530145,"members":2485213,"episodes":25,"type":"TV","year":2006,"aired":{"from":"2006-10-06T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1032/135088.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1032/135088l.jpg"}},"genres":[{"mal_id":46,"name":"Award Winning"},{"mal_id":8,"name":"Drama"},{"mal_id":24,"name":"Sci-Fi"}],"themes":[{"mal_id":18,"name":"Mecha"},{"mal_id":38,"name":"Military"},{"mal_id":23,"name":"School"},{"mal_id":31,"name":"Super Power"}],"demographics":[],"synopsis":"In the year 2010, the Holy Empire of Britannia is establishing itself as a dominant military nation, starting with the conquest of Japan. Renamed to Area 11 after its swift defeat, Japan has seen significant resistance against these tyrants"},"4898":{"mal_id":4898,"url":"https://myanimelist.net/anime/4898/Kuroshitsuji","title":"Kuroshitsuji","title_english":"Black Butler","title_japanese":"黒執事","score":7.65,"scored_by":648809,"members":1278249,"episodes":24,"type":"TV","year":2008,"aired":{"from":"2008-10-03T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1467/137783.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1467/137783l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":7,"name":"Mystery"},{"mal_id":37,"name":"Supernatural"}],"themes":[{"mal_id":13,"name":"Historical"},{"mal_id":6,"name":"Mythology"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Young Ciel Phantomhive is known as the Queen's Guard Dog, taking care of the many unsettling events that occur in Victorian England for Her Majesty. Aided by Sebastian Michaelis, his loyal butler with seemingly inhuman abilities, Ciel use"},"10161":{"mal_id":10161,"url":"https://myanimelist.net/anime/10161/No6","title":"No.6","title_english":"No. 6","title_japanese":"NO.6［ナンバー・シックス］","score":7.55,"scored_by":216409,"members":465057,"episodes":11,"type":"TV","year":2011,"aired":{"from":"2011-07-08T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1474/90768.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1474/90768l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":8,"name":"Drama"},{"mal_id":7,"name":"Mystery"},{"mal_id":24,"name":"Sci-Fi"}],"themes":[],"demographics":[],"synopsis":"Many years ago, after the end of a bloody world war, mankind took shelter in six city-states that were peaceful and perfect... at least on the surface. However, Shion—an elite resident of the city-state No. 6—gained a new perspective on the"},"10620":{"mal_id":10620,"url":"https://myanimelist.net/anime/10620/Mirai_Nikki_TV","title":"Mirai Nikki (TV)","title_english":"The Future Diary","title_japanese":"未来日記","score":7.38,"scored_by":1279374,"members":2143960,"episodes":26,"type":"TV","year":2011,"aired":{"from":"2011-10-09T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/13/33465.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/13/33465l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":37,"name":"Supernatural"},{"mal_id":41,"name":"Suspense"}],"themes":[{"mal_id":58,"name":"Gore"},{"mal_id":59,"name":"High Stakes Game"},{"mal_id":40,"name":"Psychological"},{"mal_id":76,"name":"Survival"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Yukiteru Amano is a shy middle schooler who regularly keeps track of what he does in his daily life by writing down all of his activities on his phone—a digital diary. Despite having no friends at school, Yukiteru is frequently seen talking"},"11061":{"mal_id":11061,"url":"https://myanimelist.net/anime/11061/Hunter_x_Hunter_2011","title":"Hunter x Hunter (2011)","title_english":"Hunter x Hunter","title_japanese":"HUNTER×HUNTER（ハンター×ハンター）","score":9.03,"scored_by":1990785,"members":3206484,"episodes":148,"type":"TV","year":2011,"aired":{"from":"2011-10-02T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1337/99013.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1337/99013l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":2,"name":"Adventure"},{"mal_id":10,"name":"Fantasy"}],"themes":[],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Hunters devote themselves to accomplishing hazardous tasks, all from traversing the world's uncharted territories to locating rare items and monsters. Before becoming a Hunter, one must pass the Hunter Examination—a high-risk selection proc"},"11757":{"mal_id":11757,"url":"https://myanimelist.net/anime/11757/Sword_Art_Online","title":"Sword Art Online","title_english":"Sword Art Online","title_japanese":"ソードアート・オンライン","score":7.23,"scored_by":2287320,"members":3311764,"episodes":25,"type":"TV","year":2012,"aired":{"from":"2012-07-08T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/11/39717.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/11/39717l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":2,"name":"Adventure"},{"mal_id":10,"name":"Fantasy"},{"mal_id":22,"name":"Romance"}],"themes":[{"mal_id":79,"name":"Video Game"}],"demographics":[],"synopsis":"Ever since the release of the innovative NerveGear, gamers from all around the globe have been given the opportunity to experience a completely immersive virtual reality. Sword Art Online (SAO), one of the most recent games on the console,"},"14719":{"mal_id":14719,"url":"https://myanimelist.net/anime/14719/JoJo_no_Kimyou_na_Bouken_TV","title":"JoJo no Kimyou na Bouken (TV)","title_english":"JoJo's Bizarre Adventure (2012)","title_japanese":"ジョジョの奇妙な冒険","score":7.87,"scored_by":1208317,"members":1872559,"episodes":26,"type":"TV","year":2012,"aired":{"from":"2012-10-06T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/3/40409.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/3/40409l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":2,"name":"Adventure"},{"mal_id":37,"name":"Supernatural"}],"themes":[{"mal_id":13,"name":"Historical"},{"mal_id":32,"name":"Vampire"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"The year is 1868; English nobleman George Joestar and his son Jonathan become indebted to Dario Brando after being rescued from a carriage incident. What the Joestars don't realize, however, is that Dario had no intention of helping them; h"},"14741":{"mal_id":14741,"url":"https://myanimelist.net/anime/14741/Chuunibyou_demo_Koi_ga_Shitai","title":"Chuunibyou demo Koi ga Shitai!","title_english":"Love, Chunibyo & Other Delusions!","title_japanese":"中二病でも恋がしたい!","score":7.7,"scored_by":836042,"members":1470825,"episodes":12,"type":"TV","year":2012,"aired":{"from":"2012-10-04T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1905/142840.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1905/142840l.jpg"}},"genres":[{"mal_id":4,"name":"Comedy"},{"mal_id":22,"name":"Romance"}],"themes":[{"mal_id":23,"name":"School"}],"demographics":[],"synopsis":"Everybody has had that stage in their life where they have thought themselves to be special, different from the masses of ordinary humans. They might go as far as seeing themselves capable of wielding mystical powers, or maybe even believe"},"15583":{"mal_id":15583,"url":"https://myanimelist.net/anime/15583/Date_A_Live","title":"Date A Live","title_english":"Date A Live","title_japanese":"デート・ア・ライブ","score":7.14,"scored_by":626045,"members":1121409,"episodes":12,"type":"TV","year":2013,"aired":{"from":"2013-04-06T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/13/44844.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/13/44844l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":10,"name":"Fantasy"},{"mal_id":22,"name":"Romance"},{"mal_id":24,"name":"Sci-Fi"}],"themes":[{"mal_id":35,"name":"Harem"},{"mal_id":23,"name":"School"},{"mal_id":82,"name":"Urban Fantasy"}],"demographics":[],"synopsis":"Thirty years ago, the Eurasian continent was devastated by a supermassive spatial quake—a phenomenon involving space vibrations of unknown origin—resulting in the deaths of over 150 million people. Since then, these quakes have been plagu"},"16498":{"mal_id":16498,"url":"https://myanimelist.net/anime/16498/Shingeki_no_Kyojin","title":"Shingeki no Kyojin","title_english":"Attack on Titan","title_japanese":"進撃の巨人","score":8.57,"scored_by":3082596,"members":4383618,"episodes":25,"type":"TV","year":2013,"aired":{"from":"2013-04-07T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/10/47347.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/10/47347l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":46,"name":"Award Winning"},{"mal_id":8,"name":"Drama"},{"mal_id":41,"name":"Suspense"}],"themes":[{"mal_id":58,"name":"Gore"},{"mal_id":38,"name":"Military"},{"mal_id":76,"name":"Survival"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Centuries ago, mankind was slaughtered to near extinction by monstrous humanoid creatures called Titans, forcing humans to hide in fear behind enormous concentric walls. What makes these giants truly terrifying is that their taste for human"},"17895":{"mal_id":17895,"url":"https://myanimelist.net/anime/17895/Golden_Time","title":"Golden Time","title_english":"Golden Time","title_japanese":"ゴールデンタイム","score":7.74,"scored_by":597732,"members":1143120,"episodes":24,"type":"TV","year":2013,"aired":{"from":"2013-10-04T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/12/52091.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/12/52091l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":22,"name":"Romance"}],"themes":[{"mal_id":50,"name":"Adult Cast"},{"mal_id":64,"name":"Love Polygon"}],"demographics":[],"synopsis":"Due to a tragic accident, Banri Tada is struck with amnesia, dissolving the memories of his hometown and past. However, after befriending Mitsuo Yanagisawa, he decides to move on and begin a new life at law school in Tokyo. But just as he i"},"22319":{"mal_id":22319,"url":"https://myanimelist.net/anime/22319/Tokyo_Ghoul","title":"Tokyo Ghoul","title_english":"Tokyo Ghoul","title_japanese":"東京喰種-トーキョーグール-","score":7.79,"scored_by":2010205,"members":3068770,"episodes":12,"type":"TV","year":2014,"aired":{"from":"2014-07-04T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1498/134443.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1498/134443l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":10,"name":"Fantasy"},{"mal_id":14,"name":"Horror"},{"mal_id":41,"name":"Suspense"}],"themes":[{"mal_id":58,"name":"Gore"},{"mal_id":40,"name":"Psychological"},{"mal_id":82,"name":"Urban Fantasy"}],"demographics":[{"mal_id":42,"name":"Seinen"}],"synopsis":"A sinister threat is invading Tokyo: flesh-eating ghouls who appear identical to humans and blend into their population. Reserved college student Ken Kaneki buries his nose in books and avoids the news of the growing crisis. However, the"},"23755":{"mal_id":23755,"url":"https://myanimelist.net/anime/23755/Nanatsu_no_Taizai","title":"Nanatsu no Taizai","title_english":"The Seven Deadly Sins","title_japanese":"七つの大罪","score":7.6,"scored_by":1437449,"members":2218787,"episodes":24,"type":"TV","year":2014,"aired":{"from":"2014-10-05T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/8/65409.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/8/65409l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":2,"name":"Adventure"},{"mal_id":10,"name":"Fantasy"}],"themes":[],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"In a world similar to the European Middle Ages, the feared yet revered Holy Knights of Britannia use immensely powerful magic to protect the region of Britannia and its kingdoms. However, a small subset of the Knights supposedly betrayed th"},"27775":{"mal_id":27775,"url":"https://myanimelist.net/anime/27775/Plastic_Memories","title":"Plastic Memories","title_english":"Plastic Memories","title_japanese":"プラスティック・メモリーズ","score":7.92,"scored_by":515333,"members":1035115,"episodes":13,"type":"TV","year":2015,"aired":{"from":"2015-04-05T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/4/72750.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/4/72750l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":22,"name":"Romance"},{"mal_id":24,"name":"Sci-Fi"}],"themes":[],"demographics":[],"synopsis":"Eighteen-year-old Tsukasa Mizugaki has failed his college entrance exams, but after pulling some strings, he manages to land a job at the Sion Artificial Intelligence Corporation. SAI Corp is responsible for the creation of Giftias—highly"},"30831":{"mal_id":30831,"url":"https://myanimelist.net/anime/30831/Kono_Subarashii_Sekai_ni_Shukufuku_wo","title":"Kono Subarashii Sekai ni Shukufuku wo!","title_english":"KonoSuba: God's Blessing on This Wonderful World!","title_japanese":"この素晴らしい世界に祝福を！","score":8.09,"scored_by":1391065,"members":2162056,"episodes":10,"type":"TV","year":2016,"aired":{"from":"2016-01-14T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1895/142748.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1895/142748l.jpg"}},"genres":[{"mal_id":2,"name":"Adventure"},{"mal_id":4,"name":"Comedy"},{"mal_id":10,"name":"Fantasy"}],"themes":[{"mal_id":62,"name":"Isekai"},{"mal_id":20,"name":"Parody"}],"demographics":[],"synopsis":"After dying a laughable and pathetic death on his way back from buying a game, high school student and recluse Kazuma Satou finds himself sitting before a beautiful but obnoxious goddess named Aqua. She provides the NEET with two options: c"},"31240":{"mal_id":31240,"url":"https://myanimelist.net/anime/31240/Re_Zero_kara_Hajimeru_Isekai_Seikatsu","title":"Re:Zero kara Hajimeru Isekai Seikatsu","title_english":"Re:ZERO -Starting Life in Another World-","title_japanese":"Re:ゼロから始める異世界生活","score":8.25,"scored_by":1579550,"members":2477654,"episodes":25,"type":"TV","year":2016,"aired":{"from":"2016-04-04T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1522/128039.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1522/128039l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":10,"name":"Fantasy"},{"mal_id":41,"name":"Suspense"}],"themes":[{"mal_id":62,"name":"Isekai"},{"mal_id":40,"name":"Psychological"},{"mal_id":78,"name":"Time Travel"}],"demographics":[],"synopsis":"When Subaru Natsuki leaves the convenience store, the last thing he expects is to be wrenched from his everyday life and dropped into a fantasy world. Things are not looking good for the bewildered teenager; however, not long after his arri"},"32729":{"mal_id":32729,"url":"https://myanimelist.net/anime/32729/Orange","title":"Orange","title_english":"Orange","title_japanese":"orange（オレンジ）","score":7.63,"scored_by":434703,"members":904121,"episodes":13,"type":"TV","year":2016,"aired":{"from":"2016-07-04T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1415/102477.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1415/102477l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":22,"name":"Romance"},{"mal_id":24,"name":"Sci-Fi"}],"themes":[{"mal_id":64,"name":"Love Polygon"},{"mal_id":23,"name":"School"},{"mal_id":78,"name":"Time Travel"}],"demographics":[{"mal_id":25,"name":"Shoujo"}],"synopsis":"Naho Takamiya's first day of her sophomore year of high school is off to an uneasy start. After waking up late, she receives a strange letter addressed to her. However, the letter is from herself—10 years in the future! At first, Naho is sk"},"33352":{"mal_id":33352,"url":"https://myanimelist.net/anime/33352/Violet_Evergarden","title":"Violet Evergarden","title_english":"Violet Evergarden","title_japanese":"ヴァイオレット・エヴァーガーデン","score":8.69,"scored_by":1097066,"members":2008799,"episodes":13,"type":"TV","year":2018,"aired":{"from":"2018-01-11T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1795/95088.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1795/95088l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"}],"themes":[],"demographics":[],"synopsis":"The Great War finally came to an end after four long years of conflict; fractured in two, the continent of Telesis slowly began to flourish once again. Caught up in the bloodshed was Violet Evergarden, a young girl raised for the sole purpo"},"37450":{"mal_id":37450,"url":"https://myanimelist.net/anime/37450/Seishun_Buta_Yarou_wa_Bunny_Girl_Senpai_no_Yume_wo_Minai","title":"Seishun Buta Yarou wa Bunny Girl Senpai no Yume wo Minai","title_english":"Rascal Does Not Dream of Bunny Girl Senpai","title_japanese":"青春ブタ野郎はバニーガール先輩の夢を見ない","score":8.23,"scored_by":1246585,"members":1971978,"episodes":13,"type":"TV","year":2018,"aired":{"from":"2018-10-04T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1301/93586.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1301/93586l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":22,"name":"Romance"},{"mal_id":37,"name":"Supernatural"}],"themes":[{"mal_id":23,"name":"School"}],"demographics":[],"synopsis":"The rare and inexplicable Puberty Syndrome is thought of as a myth. It is a rare disease which only affects teenagers, and its symptoms are so supernatural that hardly anyone recognizes it as a legitimate occurrence. However, high school st"},"37779":{"mal_id":37779,"url":"https://myanimelist.net/anime/37779/Yakusoku_no_Neverland","title":"Yakusoku no Neverland","title_english":"The Promised Neverland","title_japanese":"約束のネバーランド","score":8.47,"scored_by":1403728,"members":2164152,"episodes":12,"type":"TV","year":2019,"aired":{"from":"2019-01-11T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1830/118780.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1830/118780l.jpg"}},"genres":[{"mal_id":7,"name":"Mystery"},{"mal_id":41,"name":"Suspense"}],"themes":[{"mal_id":40,"name":"Psychological"},{"mal_id":76,"name":"Survival"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Surrounded by a forest and a gated entrance, the Grace Field House is inhabited by orphans happily living together as one big family, looked after by their Mama, Isabella. Although they are required to take tests daily, the children are f"},"41433":{"mal_id":41433,"url":"https://myanimelist.net/anime/41433/Akudama_Drive","title":"Akudama Drive","title_english":"Akudama Drive","title_japanese":"アクダマドライブ","score":7.56,"scored_by":227731,"members":493810,"episodes":12,"type":"TV","year":2020,"aired":{"from":"2020-10-08T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1468/109172.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1468/109172l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":24,"name":"Sci-Fi"},{"mal_id":41,"name":"Suspense"}],"themes":[{"mal_id":50,"name":"Adult Cast"},{"mal_id":58,"name":"Gore"}],"demographics":[],"synopsis":"The bustling metropolis of Kansai, where cybernetic screens litter the neon landscape, may seem like a technological utopia at first glance. But in the dark alleys around the brightly-lit buildings, an unforgiving criminal underbelly still"},"41930":{"mal_id":41930,"url":"https://myanimelist.net/anime/41930/Kamisama_ni_Natta_Hi","title":"Kamisama ni Natta Hi","title_english":"The Day I Became a God","title_japanese":"神様になった日","score":6.81,"scored_by":127118,"members":285969,"episodes":12,"type":"TV","year":2020,"aired":{"from":"2020-10-11T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1396/109465.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1396/109465l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"}],"themes":[{"mal_id":31,"name":"Super Power"}],"demographics":[],"synopsis":"Dressed in a conspicuous outfit and armed with an eccentric spirit, Hina Satou goes around insisting that she is the Asgardian god Odin. When she crosses paths with a boy named Youta Narukami, she uses her precognition abilities to warn h"},"2001":{"mal_id":2001,"url":"https://myanimelist.net/anime/2001/Tengen_Toppa_Gurren_Lagann","title":"Tengen Toppa Gurren Lagann","title_english":"Gurren Lagann","title_japanese":"天元突破グレンラガン","score":8.64,"scored_by":981554,"members":1776385,"episodes":27,"type":"TV","year":2007,"aired":{"from":"2007-04-01T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/4/5123.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/4/5123l.jpg"}},"genres":[{"mal_id":2,"name":"Adventure"},{"mal_id":46,"name":"Award Winning"},{"mal_id":24,"name":"Sci-Fi"}],"themes":[{"mal_id":18,"name":"Mecha"}],"demographics":[],"synopsis":"Simon and Kamina were born and raised in a deep, underground village, hidden from the fabled surface. Kamina is a free-spirited loose cannon bent on making a name for himself, while Simon is a timid young boy with no real aspirations. One d"},"2167":{"mal_id":2167,"url":"https://myanimelist.net/anime/2167/Clannad","title":"Clannad","title_english":"Clannad","title_japanese":"CLANNAD","score":7.99,"scored_by":799357,"members":1516564,"episodes":23,"type":"TV","year":2007,"aired":{"from":"2007-10-05T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1804/95033.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1804/95033l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":22,"name":"Romance"}],"themes":[{"mal_id":23,"name":"School"}],"demographics":[],"synopsis":"Tomoya Okazaki is a delinquent who finds life dull and believes he'll never amount to anything. Along with his friend Youhei Sunohara, he skips school and plans to waste his high school days away. One day while walking to school, Tomoya pas"},"4224":{"mal_id":4224,"url":"https://myanimelist.net/anime/4224/Toradora","title":"Toradora!","title_english":"Toradora!","title_japanese":"とらドラ！","score":8.04,"scored_by":1476480,"members":2375509,"episodes":25,"type":"TV","year":2008,"aired":{"from":"2008-10-02T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/13/22128.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/13/22128l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":22,"name":"Romance"}],"themes":[{"mal_id":64,"name":"Love Polygon"},{"mal_id":23,"name":"School"}],"demographics":[],"synopsis":"Ryuuji Takasu is a gentle high school student with a love for housework; but in contrast to his kind nature, he has an intimidating face that often gets him labeled as a delinquent. On the other hand is Taiga Aisaka, a small, doll-like stud"},"5114":{"mal_id":5114,"url":"https://myanimelist.net/anime/5114/Fullmetal_Alchemist__Brotherhood","title":"Fullmetal Alchemist: Brotherhood","title_english":"Fullmetal Alchemist: Brotherhood","title_japanese":"鋼の錬金術師 FULLMETAL ALCHEMIST","score":9.11,"scored_by":2321844,"members":3701228,"episodes":64,"type":"TV","year":2009,"aired":{"from":"2009-04-05T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1208/94745.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1208/94745l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":2,"name":"Adventure"},{"mal_id":8,"name":"Drama"},{"mal_id":10,"name":"Fantasy"}],"themes":[{"mal_id":38,"name":"Military"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"After a horrific alchemy experiment goes wrong in the Elric household, brothers Edward and Alphonse are left in a catastrophic new reality. Ignoring the alchemical principle banning human transmutation, the boys attempted to bring their rec"},"5530":{"mal_id":5530,"url":"https://myanimelist.net/anime/5530/Pandora_Hearts","title":"Pandora Hearts","title_english":"Pandora Hearts","title_japanese":"パンドラハーツ","score":7.64,"scored_by":181789,"members":454504,"episodes":25,"type":"TV","year":2009,"aired":{"from":"2009-04-03T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/4/75535.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/4/75535l.jpg"}},"genres":[{"mal_id":2,"name":"Adventure"},{"mal_id":10,"name":"Fantasy"},{"mal_id":7,"name":"Mystery"}],"themes":[],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"To young Oz Vessalius, heir to the Vessalius Duke House, the perilous world called the Abyss is nothing more than a folktale used to scare misbehaving children. However, when Oz's coming-of-age ceremony is interrupted by the malicious Baske"},"8425":{"mal_id":8425,"url":"https://myanimelist.net/anime/8425/Gosick","title":"Gosick","title_english":null,"title_japanese":"GOSICK -ゴシック-","score":8.04,"scored_by":248896,"members":607580,"episodes":24,"type":"TV","year":2011,"aired":{"from":"2011-01-08T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/11/27906.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/11/27906l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":7,"name":"Mystery"},{"mal_id":22,"name":"Romance"}],"themes":[{"mal_id":13,"name":"Historical"}],"demographics":[],"synopsis":"Kazuya Kujou is a foreign student at Saint Marguerite Academy, a luxurious boarding school in the Southern European country of Sauville. Originally from Japan, his jet-black hair and dark brown eyes cause his peers to shun him and give him"},"9253":{"mal_id":9253,"url":"https://myanimelist.net/anime/9253/Steins_Gate","title":"Steins;Gate","title_english":"Steins;Gate","title_japanese":"STEINS;GATE","score":9.07,"scored_by":1527441,"members":2826347,"episodes":24,"type":"TV","year":2011,"aired":{"from":"2011-04-06T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1935/127974.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1935/127974l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":24,"name":"Sci-Fi"},{"mal_id":41,"name":"Suspense"}],"themes":[{"mal_id":40,"name":"Psychological"},{"mal_id":78,"name":"Time Travel"}],"demographics":[],"synopsis":"Eccentric scientist Rintarou Okabe has a never-ending thirst for scientific exploration. Together with his ditzy but well-meaning friend Mayuri Shiina and his roommate Itaru Hashida, Okabe founds the Future Gadget Laboratory in the hopes of"},"14075":{"mal_id":14075,"url":"https://myanimelist.net/anime/14075/Zetsuen_no_Tempest","title":"Zetsuen no Tempest","title_english":"Blast of Tempest","title_japanese":"絶園のテンペスト","score":7.88,"scored_by":270714,"members":627246,"episodes":24,"type":"TV","year":2012,"aired":{"from":"2012-10-05T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/7/42453.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/7/42453l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":8,"name":"Drama"},{"mal_id":10,"name":"Fantasy"},{"mal_id":7,"name":"Mystery"}],"themes":[{"mal_id":40,"name":"Psychological"},{"mal_id":82,"name":"Urban Fantasy"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Yoshino Takigawa, an ordinary teenager, is secretly dating his best friend Mahiro Fuwa's younger sister, Aika. But when Aika mysteriously dies, Mahiro disappears, vowing to find the one responsible and make them pay for murdering his belove"},"18897":{"mal_id":18897,"url":"https://myanimelist.net/anime/18897/Nisekoi","title":"Nisekoi","title_english":"Nisekoi: False Love","title_japanese":"ニセコイ","score":7.55,"scored_by":696408,"members":1250031,"episodes":20,"type":"TV","year":2014,"aired":{"from":"2014-01-11T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/13/75587.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/13/75587l.jpg"}},"genres":[{"mal_id":4,"name":"Comedy"},{"mal_id":22,"name":"Romance"}],"themes":[{"mal_id":35,"name":"Harem"},{"mal_id":23,"name":"School"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Raku Ichijou, a first-year student at Bonyari High School, is the sole heir to an intimidating yakuza family. Ten years ago, Raku made a promise to his childhood friend. Now, all he has to go on is a pendant with a lock, which can only be u"},"34599":{"mal_id":34599,"url":"https://myanimelist.net/anime/34599/Made_in_Abyss","title":"Made in Abyss","title_english":"Made in Abyss","title_japanese":"メイドインアビス","score":8.62,"scored_by":841350,"members":1560410,"episodes":13,"type":"TV","year":2017,"aired":{"from":"2017-07-07T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/6/86733.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/6/86733l.jpg"}},"genres":[{"mal_id":2,"name":"Adventure"},{"mal_id":8,"name":"Drama"},{"mal_id":10,"name":"Fantasy"},{"mal_id":7,"name":"Mystery"},{"mal_id":24,"name":"Sci-Fi"}],"themes":[{"mal_id":58,"name":"Gore"}],"demographics":[],"synopsis":"The Abyss—a gaping chasm stretching down into the depths of the earth, filled with mysterious creatures and relics from a time long past. How did it come to be? What lies at the bottom? Countless brave individuals, known as Divers, have sou"},"34636":{"mal_id":34636,"url":"https://myanimelist.net/anime/34636/Ballroom_e_Youkoso","title":"Ballroom e Youkoso","title_english":"Welcome to the Ballroom","title_japanese":"ボールルームへようこそ","score":8.18,"scored_by":160782,"members":364202,"episodes":24,"type":"TV","year":2017,"aired":{"from":"2017-07-09T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/5/86739.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/5/86739l.jpg"}},"genres":[{"mal_id":30,"name":"Sports"}],"themes":[{"mal_id":70,"name":"Performing Arts"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Tatara Fujita is a shy middle schooler who has no particular plan for the future. He has gotten through life by avoiding any kind of confrontation and blending in with the crowd. But blending in isn't enough to get out of trouble, as some b"},"35849":{"mal_id":35849,"url":"https://myanimelist.net/anime/35849/Darling_in_the_FranXX","title":"Darling in the FranXX","title_english":"DARLING in the FRANXX","title_japanese":"ダーリン・イン・ザ・フランキス","score":7.2,"scored_by":1122643,"members":1824967,"episodes":24,"type":"TV","year":2018,"aired":{"from":"2018-01-13T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1614/90408.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1614/90408l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":22,"name":"Romance"},{"mal_id":24,"name":"Sci-Fi"}],"themes":[{"mal_id":18,"name":"Mecha"}],"demographics":[],"synopsis":"In the distant future, humanity has been driven to near-extinction by giant beasts known as Klaxosaurs, forcing the surviving humans to take refuge in massive fortress cities called Plantations. Children raised here are trained to pilot gia"},"37430":{"mal_id":37430,"url":"https://myanimelist.net/anime/37430/Tensei_shitara_Slime_Datta_Ken","title":"Tensei shitara Slime Datta Ken","title_english":"That Time I Got Reincarnated as a Slime","title_japanese":"転生したらスライムだった件","score":8.13,"scored_by":1000664,"members":1656763,"episodes":24,"type":"TV","year":2018,"aired":{"from":"2018-10-02T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1069/123309.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1069/123309l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":4,"name":"Comedy"},{"mal_id":10,"name":"Fantasy"}],"themes":[{"mal_id":62,"name":"Isekai"},{"mal_id":72,"name":"Reincarnation"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Thirty-seven-year-old Satoru Mikami is a typical corporate worker, who is perfectly content with his monotonous lifestyle in Tokyo, other than failing to nail down a girlfriend even once throughout his life. In the midst of a casual encount"},"39198":{"mal_id":39198,"url":"https://myanimelist.net/anime/39198/Kanata_no_Astra","title":"Kanata no Astra","title_english":"Astra Lost in Space","title_japanese":"彼方のアストラ","score":8.07,"scored_by":162828,"members":347745,"episodes":12,"type":"TV","year":2019,"aired":{"from":"2019-07-03T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1784/106428.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1784/106428l.jpg"}},"genres":[{"mal_id":2,"name":"Adventure"},{"mal_id":46,"name":"Award Winning"},{"mal_id":7,"name":"Mystery"},{"mal_id":24,"name":"Sci-Fi"},{"mal_id":41,"name":"Suspense"}],"themes":[{"mal_id":29,"name":"Space"},{"mal_id":76,"name":"Survival"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"In the year 2063, space travel is feasible and commercially available. As the cheerful Aries Spring arrives at the spaceport to attend a camp on the distant planet McPa, her purse is suddenly snatched by a reckless thief. Luckily, the athle"},"39535":{"mal_id":39535,"url":"https://myanimelist.net/anime/39535/Mushoku_Tensei__Isekai_Ittara_Honki_Dasu","title":"Mushoku Tensei: Isekai Ittara Honki Dasu","title_english":"Mushoku Tensei: Jobless Reincarnation","title_japanese":"無職転生 ～異世界行ったら本気だす～","score":8.32,"scored_by":982052,"members":1588567,"episodes":11,"type":"TV","year":2021,"aired":{"from":"2021-01-11T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1530/117776.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1530/117776l.jpg"}},"genres":[{"mal_id":2,"name":"Adventure"},{"mal_id":8,"name":"Drama"},{"mal_id":10,"name":"Fantasy"},{"mal_id":9,"name":"Ecchi"}],"themes":[{"mal_id":62,"name":"Isekai"},{"mal_id":72,"name":"Reincarnation"}],"demographics":[],"synopsis":"Despite being bullied, scorned, and oppressed all of his life, a 34-year-old shut-in still found the resolve to attempt something heroic—only for it to end in a tragic accident. But in a twist of fate, he awakens in another world as Rudeus"},"41457":{"mal_id":41457,"url":"https://myanimelist.net/anime/41457/86","title":"86","title_english":"86 Eighty-Six","title_japanese":"86―エイティシックス―","score":8.35,"scored_by":515463,"members":984479,"episodes":11,"type":"TV","year":2021,"aired":{"from":"2021-04-11T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1987/117507.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1987/117507l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":24,"name":"Sci-Fi"}],"themes":[{"mal_id":18,"name":"Mecha"},{"mal_id":38,"name":"Military"}],"demographics":[],"synopsis":"According to the Republic of San Magnolia, their ongoing war against the Giadian Empire has no casualties—however, that is mere propaganda. While the silver-haired Alba of the Republic's eighty-five sectors live safely behind protective wal"},"42249":{"mal_id":42249,"url":"https://myanimelist.net/anime/42249/Tokyo_Revengers","title":"Tokyo Revengers","title_english":"Tokyo Revengers","title_japanese":"東京リベンジャーズ","score":7.81,"scored_by":784057,"members":1414530,"episodes":24,"type":"TV","year":2021,"aired":{"from":"2021-04-11T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1839/122012.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1839/122012l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":8,"name":"Drama"}],"themes":[{"mal_id":55,"name":"Delinquents"},{"mal_id":78,"name":"Time Travel"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Takemichi Hanagaki's second year of middle school was the highest point in his life. He had respect, a gang of friends he could count on, and even a girlfriend. But that was twelve years ago. Today, he's a nobody: a washed-up nonentity made"},"43439":{"mal_id":43439,"url":"https://myanimelist.net/anime/43439/Shadows_House","title":"Shadows House","title_english":"Shadows House","title_japanese":"シャドーハウス","score":7.81,"scored_by":114126,"members":284612,"episodes":13,"type":"TV","year":2021,"aired":{"from":"2021-04-11T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1424/113342.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1424/113342l.jpg"}},"genres":[{"mal_id":10,"name":"Fantasy"},{"mal_id":7,"name":"Mystery"}],"themes":[],"demographics":[{"mal_id":42,"name":"Seinen"}],"synopsis":"The Shadows, characterized by their pitch-black appearance and tendency to emit soot when agitated, are a family of nobles who reside in a colossal manor deep within the mountains far from other humans. When a Shadow child is nearly of-age,"},"46095":{"mal_id":46095,"url":"https://myanimelist.net/anime/46095/Vivy__Fluorite_Eyes_Song","title":"Vivy: Fluorite Eye's Song","title_english":"Vivy -Fluorite Eye's Song-","title_japanese":"Vivy -Fluorite Eye's Song- (ヴィヴィ -フローライトアイズソング-)","score":8.37,"scored_by":274597,"members":612713,"episodes":13,"type":"TV","year":2021,"aired":{"from":"2021-04-03T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1551/128960.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1551/128960l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":24,"name":"Sci-Fi"},{"mal_id":41,"name":"Suspense"}],"themes":[{"mal_id":19,"name":"Music"},{"mal_id":78,"name":"Time Travel"}],"demographics":[],"synopsis":"When highly evolved AIs set out to eradicate mankind, the carnage that ensues fills the air with the stench of fresh blood and burning bodies. In a desperate bid to prevent the calamity from ever occurring, a scientist bets everything on a"},"47194":{"mal_id":47194,"url":"https://myanimelist.net/anime/47194/Summertime_Render","title":"Summertime Render","title_english":"Summer Time Rendering","title_japanese":"サマータイムレンダ","score":8.46,"scored_by":294082,"members":684601,"episodes":25,"type":"TV","year":2022,"aired":{"from":"2022-04-15T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1120/120796.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1120/120796l.jpg"}},"genres":[{"mal_id":7,"name":"Mystery"},{"mal_id":37,"name":"Supernatural"},{"mal_id":41,"name":"Suspense"}],"themes":[{"mal_id":78,"name":"Time Travel"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Since the death of his parents, Shinpei Ajiro had lived with the Kofune family and their two daughters—Mio and Ushio. Although he then left his home island to continue his education in Tokyo, Shinpei returns after Ushio tragically drowns du"},"48316":{"mal_id":48316,"url":"https://myanimelist.net/anime/48316/Kage_no_Jitsuryokusha_ni_Naritakute","title":"Kage no Jitsuryokusha ni Naritakute!","title_english":"The Eminence in Shadow","title_japanese":"陰の実力者になりたくて！","score":8.21,"scored_by":476615,"members":876989,"episodes":20,"type":"TV","year":2022,"aired":{"from":"2022-10-05T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1091/128729.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1091/128729l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":4,"name":"Comedy"},{"mal_id":10,"name":"Fantasy"}],"themes":[{"mal_id":62,"name":"Isekai"},{"mal_id":72,"name":"Reincarnation"}],"demographics":[],"synopsis":"For as long as he can remember, Minoru Kagenou has been fixated on becoming as strong as possible, which has led him to undertake all kinds of rigorous training. This wish, however, does not stem from a desire to be recognized by others; ra"},"52299":{"mal_id":52299,"url":"https://myanimelist.net/anime/52299/Ore_dake_Level_Up_na_Ken","title":"Ore dake Level Up na Ken","title_english":"Solo Leveling","title_japanese":"俺だけレベルアップな件","score":8.15,"scored_by":718980,"members":1156513,"episodes":12,"type":"TV","year":2024,"aired":{"from":"2024-01-07T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1801/142390.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1801/142390l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":2,"name":"Adventure"},{"mal_id":10,"name":"Fantasy"}],"themes":[{"mal_id":50,"name":"Adult Cast"},{"mal_id":82,"name":"Urban Fantasy"}],"demographics":[],"synopsis":"Humanity was caught at a precipice a decade ago when the first gates—portals linked with other dimensions that harbor monsters immune to conventional weaponry—emerged around the world. Alongside the appearance of the gates, various humans w"}};
 
 /* ============ state ============ */
 let genresList = [], demoList = [], themesList = [], tagName = {}, dataLoaded = false;
@@ -666,6 +816,7 @@ function resetParams(){
   $("ep-min").value = ""; $("ep-max").value = "";
   $("ep-presets").querySelectorAll(".chip").forEach(c=>c.classList.remove("sel"));
   ["status-opts","type-opts"].forEach(id=>$(id).querySelectorAll(".opt").forEach((o,i)=>o.classList.toggle("sel", i===0)));
+  $("gem-check").checked = false; $("gem-toggle").classList.remove("on");
 }
 function resetWizard(){
   selTags.clear();
@@ -682,14 +833,16 @@ function collectParams(){
   let epMin = parseInt($("ep-min").value,10); if(isNaN(epMin)) epMin=null;
   let epMax = parseInt($("ep-max").value,10); if(isNaN(epMax)) epMax=null;
   if(epMin!=null && epMax!=null && epMin>epMax){ const t=epMin; epMin=epMax; epMax=t; }
-  return { minScore, status, type, epMin, epMax };
+  const gem = $("gem-check").checked;
+  return { minScore, status, type, epMin, epMax, gem };
 }
 function buildUrl(gid, page, f){
   const p = new URLSearchParams();
   p.set("page", page); p.set("limit", 25);
   p.set("order_by","score"); p.set("sort","desc"); p.set("sfw","true");
   if(gid!=null) p.set("genres", gid);
-  if(f.minScore>0) p.set("min_score", f.minScore);
+  const minScore = f.gem ? Math.max(f.minScore||0, GEM_MIN_SCORE) : f.minScore;
+  if(minScore>0) p.set("min_score", minScore);
   if(f.status) p.set("status", f.status);
   if(f.type) p.set("type", f.type);
   return `${API}/anime?` + p.toString();
@@ -702,9 +855,15 @@ function passesEpisodes(a, f){
   if(f.epMax!=null && e>f.epMax) return false;
   return true;
 }
+function passesGem(a, f){
+  if(!f || !f.gem) return true;
+  if(!(a.score>=GEM_MIN_SCORE)) return false;
+  if(a.members==null || a.members>GEM_MAX_MEMBERS || a.members<GEM_MIN_MEMBERS) return false;
+  return true;
+}
 function filterPool(){
   const f = search.filters;
-  return [...search.pool.values()].filter(a=>passesEpisodes(a,f));
+  return [...search.pool.values()].filter(a=>passesEpisodes(a,f) && passesGem(a,f));
 }
 const allExhausted = () => search.streams.every(s=>s.exhausted);
 
@@ -757,6 +916,7 @@ function passesParams(a){
   if(p.type && (a.type||"").toLowerCase()!==p.type) return false;
   if(p.status){ const map={airing:"Currently Airing",complete:"Finished Airing",upcoming:"Not yet aired"}; if((a.status||"")!==map[p.status]) return false; }
   if(!passesEpisodes(a,p)) return false;
+  if(!passesGem(a,p)) return false;
   return true;
 }
 
@@ -801,6 +961,7 @@ function applySort(arr){
     case "oldest":     a.sort((x,y)=>dateNum(x)-dateNum(y)); break;
     case "scored_by":  a.sort((x,y)=>(y.scored_by||0)-(x.scored_by||0)); break;
     case "random":     a.sort((x,y)=>(x.__rnd||0)-(y.__rnd||0)); break;
+    case "gem":        { const g=v=>(v.score||0)-Math.log10(Math.max(v.members||1,10))*0.55; a.sort((x,y)=>g(y)-g(x)); } break;
     case "relevance":  a.sort((x,y)=>(y.__match||0)-(x.__match||0) || (y.score||0)-(x.score||0)); break;
     default:           a.sort((x,y)=>(y.score||0)-(x.score||0) || (y.members||0)-(x.members||0));
   }
@@ -820,6 +981,7 @@ function buildSummary(){
     else if(f.epMin!=null) e+="от "+f.epMin+" сер."; else e+="до "+f.epMax+" сер.";
     tags.push(e);
   }
+  if(f.gem) tags.push("💎 скрытые алмазы");
   if(search.mode==="similar"){
     [...incTags].forEach(id=>{ if(tagName[id]) tags.push("➕ "+ru(tagName[id])); });
     [...excTags].forEach(id=>{ if(tagName[id]) tags.push("➖ "+ru(tagName[id])); });
@@ -919,6 +1081,7 @@ function hideLoading(){ clearInterval(loadingTimer); $("loading").classList.add(
 function populateSortSelect(){
   const sel = $("sort-select");
   let opts = SORTS.slice();
+  if(search.mode==="list") opts = opts.filter(o=>o[0]!=="gem"); // gems excluded from personal favorites
   if(search.mode==="similar") opts = [["relevance","🔮 По похожести (рекомендации)"], ...opts];
   sel.innerHTML = opts.map(([v,l])=>`<option value="${v}">${l}</option>`).join("");
   sel.value = search.sortKey;
@@ -926,6 +1089,7 @@ function populateSortSelect(){
 
 /* ============ run: filter ============ */
 function showResultsScreen(){
+  setCatVisible(false);
   ["start-screen","wizard","mood-screen","similar-screen"].forEach(id=>$(id).classList.add("hidden"));
   $("results-screen").classList.remove("hidden");
   $("results-grid").innerHTML=""; clearMessage(); $("expand-btn").classList.add("hidden"); $("result-count").textContent="";
@@ -1017,19 +1181,24 @@ async function runFavorites(){
     showMessage("📝","Список ещё не настроен","beako, пришли список любимых аниме — и они появятся здесь целиком, как обычные карточки.");
     return;
   }
-  showLoading();
+  // данные встроены заранее → список открывается мгновенно, без ожидания
+  const missing = [];
   for(const id of FAVORITES){
-    let a = detailBasic.get(id);
-    if(!a){ try{ a = (await jikan(`${API}/anime/${id}`)).data; detailBasic.set(id, a); }catch(e){ continue; } }
-    a.__rnd = Math.random();
-    search.collected.push(a);
-    $("loading-sub").textContent = `Загружаю любимые beako… ${search.collected.length}/${FAVORITES.length}`;
+    let a = (typeof FAVORITES_DATA!=="undefined" && FAVORITES_DATA[id]) || detailBasic.get(id);
+    if(a){ if(a.__rnd==null) a.__rnd=Math.random(); search.collected.push(a); }
+    else missing.push(id);
   }
-  hideLoading();
-  if(!search.collected.length){ showMessage("😶","Не загрузилось","Не удалось получить список с Jikan. Попробуй ещё раз чуть позже."); return; }
-  search.target = search.collected.length; search.targetIndex = TARGETS.length-1;
-  renderCards();
-  $("expand-btn").classList.add("hidden");
+  if(search.collected.length){ search.target=search.collected.length; search.targetIndex=TARGETS.length-1; renderCards(); $("expand-btn").classList.add("hidden"); }
+  // дозагрузим только то, чего вдруг не оказалось в встроенных данных
+  if(missing.length){
+    showLoading();
+    for(const id of missing){
+      try{ const a=(await jikan(`${API}/anime/${id}`)).data; a.__rnd=Math.random(); detailBasic.set(id,a); search.collected.push(a); }catch(e){}
+    }
+    hideLoading();
+    search.target=search.collected.length; renderCards(); $("expand-btn").classList.add("hidden");
+  }
+  if(!search.collected.length){ showMessage("😶","Не загрузилось","Не удалось получить список. Попробуй ещё раз чуть позже."); }
 }
 
 /* ============ expand ============ */
@@ -1224,10 +1393,11 @@ function goHome(){
   ["wizard","mood-screen","similar-screen","results-screen"].forEach(id=>$(id).classList.add("hidden"));
   closeModal();
   $("start-screen").classList.remove("hidden");
+  setCatVisible(true);
 }
-function openWizard(){ resetWizard(); startWizard("filter"); }
-function openMood(){ ["start-screen","wizard","similar-screen","results-screen"].forEach(id=>$(id).classList.add("hidden")); $("mood-screen").classList.remove("hidden"); }
-function openSimilar(){ resetSimilar(); ["start-screen","wizard","mood-screen","results-screen"].forEach(id=>$(id).classList.add("hidden")); $("similar-screen").classList.remove("hidden"); }
+function openWizard(){ resetWizard(); setCatVisible(false); startWizard("filter"); }
+function openMood(){ setCatVisible(false); ["start-screen","wizard","similar-screen","results-screen"].forEach(id=>$(id).classList.add("hidden")); $("mood-screen").classList.remove("hidden"); }
+function openSimilar(){ resetSimilar(); setCatVisible(false); ["start-screen","wizard","mood-screen","results-screen"].forEach(id=>$(id).classList.add("hidden")); $("similar-screen").classList.remove("hidden"); }
 
 /* ============ mood grid ============ */
 function renderMoodGrid(){
@@ -1259,6 +1429,7 @@ $("next-btn").onclick = wizardNext;
 bindOptGroup("status-opts"); bindOptGroup("type-opts");
 
 $("score-slider").addEventListener("input", e=>{ const v=parseFloat(e.target.value); $("score-pill").textContent = v>0?("от "+v.toFixed(1)+" ⭐"):"Любой"; });
+$("gem-check").addEventListener("change", e=> $("gem-toggle").classList.toggle("on", e.target.checked));
 $("tag-search").addEventListener("input", e=> renderTagPicker("tag-box", selTags, e.target.value, "", updateTagCount));
 $("tag-clear").onclick = ()=>{ selTags.clear(); $("tag-search").value=""; renderTagPicker("tag-box", selTags, "", "", updateTagCount); };
 
@@ -1300,20 +1471,78 @@ document.addEventListener("keydown", e=>{
   if(e.key==="Enter" && !$("wizard").classList.contains("hidden") && document.activeElement.id!=="tag-search"){ $("next-btn").click(); }
 });
 
-/* starfield */
-(function(){ let html=""; for(let i=0;i<34;i++){ const x=Math.random()*100,y=Math.random()*100,d=(Math.random()*3+1.5).toFixed(2),de=(Math.random()*3).toFixed(2); html+=`<span class="star" style="left:${x}%;top:${y}%;animation-duration:${d}s;animation-delay:${de}s"></span>`; } $("stars").innerHTML=html; })();
+/* mascot: a neon chibi "neko" companion (custom SVG, not an image) */
+const MASCOT = `<svg class="neko-svg" viewBox="0 0 120 110" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <linearGradient id="nkLine" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7fd0ff"/><stop offset="1" stop-color="#9a6bff"/></linearGradient>
+    <radialGradient id="nkEye" cx="0.5" cy="0.34" r="0.78"><stop offset="0" stop-color="#ffffff"/><stop offset="0.45" stop-color="#5bb8ff"/><stop offset="1" stop-color="#7b4bf0"/></radialGradient>
+    <radialGradient id="nkFace" cx="0.5" cy="0.4" r="0.85"><stop offset="0" stop-color="rgba(36,50,96,0.95)"/><stop offset="1" stop-color="rgba(14,22,48,0.95)"/></radialGradient>
+  </defs>
+  <g stroke="url(#nkLine)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M40 38 L31 13 L57 31 Z" fill="url(#nkFace)"/>
+    <path d="M80 38 L89 13 L63 31 Z" fill="url(#nkFace)"/>
+    <rect x="24" y="33" width="72" height="64" rx="31" fill="url(#nkFace)"/>
+    <g stroke-width="2.2" opacity="0.85">
+      <path d="M28 66 L9 61"/><path d="M28 73 L10 76"/>
+      <path d="M92 66 L111 61"/><path d="M92 73 L110 76"/>
+    </g>
+  </g>
+  <ellipse cx="47" cy="66" rx="9" ry="12" fill="url(#nkEye)"/>
+  <ellipse cx="73" cy="66" rx="9" ry="12" fill="url(#nkEye)"/>
+  <circle cx="44" cy="61" r="2.8" fill="#fff"/><circle cx="70" cy="61" r="2.8" fill="#fff"/>
+  <circle cx="50" cy="71" r="1.4" fill="#fff" opacity="0.85"/><circle cx="76" cy="71" r="1.4" fill="#fff" opacity="0.85"/>
+  <path d="M57 78 L63 78 L60 82 Z" fill="#ff9ecf"/>
+  <path d="M60 82 Q56 87 52 83 M60 82 Q64 87 68 83" fill="none" stroke="url(#nkLine)" stroke-width="2.2" stroke-linecap="round"/>
+  <ellipse cx="37" cy="78" rx="5.5" ry="3.2" fill="rgba(255,130,190,0.42)"/>
+  <ellipse cx="83" cy="78" rx="5.5" ry="3.2" fill="rgba(255,130,190,0.42)"/>
+</svg>`;
+const mascotHTML = ()=>`<span class="m-float"><span class="m-tilt">${MASCOT}</span></span>`;
+["hero-mascot","lo-mascot","splash-mascot"].forEach(id=>{ const el=$(id); if(el) el.innerHTML=mascotHTML(); });
 
-/* floating anime bits + shooting stars */
+/* twinkle stars (static sparkle on top of the parallax layers) */
+(function(){ let html=""; for(let i=0;i<26;i++){ const x=Math.random()*100,y=Math.random()*100,d=(Math.random()*3+1.5).toFixed(2),de=(Math.random()*3).toFixed(2); html+=`<span class="star" style="left:${x}%;top:${y}%;animation-duration:${d}s;animation-delay:${de}s"></span>`; } $("twinkle").innerHTML=html; })();
+
+/* ---- decorative flying neko: gentle random wander + wobble, ONLY on the home screen ---- */
 (function(){
-  const emo=["🌸","✨","⭐","🍡","🌙","⚡","🎐","🍥","🪐","💫","🍙","🗡️","🏮","🎴"];
-  let html="";
-  for(let i=0;i<14;i++){
-    const left=(Math.random()*100).toFixed(1), size=(Math.random()*14+13).toFixed(0),
-          dur=(Math.random()*16+20).toFixed(1), delay=(Math.random()*30).toFixed(1), dx=(Math.random()*140-70).toFixed(0);
-    html+=`<span class="floatie" style="left:${left}%;font-size:${size}px;animation-duration:${dur}s;animation-delay:-${delay}s;--dx:${dx}px">${emo[i%emo.length]}</span>`;
+  const el=$("neko-bg"); if(!el) return;
+  el.innerHTML = `<span class="m-float" style="animation-duration:${(2.4+Math.random()*1.6).toFixed(2)}s"><span class="m-tilt" style="animation-duration:${(3.2+Math.random()*2).toFixed(2)}s">${MASCOT}</span></span>`;
+  const VW=()=> innerWidth || document.documentElement.clientWidth || 1200;
+  const VH=()=> innerHeight || document.documentElement.clientHeight || 800;
+  const sz=()=> el.offsetWidth||86;
+  let x=Math.random()*(VW()-160)+30, y=Math.random()*(VH()*0.4)+50;
+  let vx=(Math.random()*2-1)*0.8, vy=(Math.random()*2-1)*0.8;
+  let tvx=vx, tvy=vy, wander=0;
+  el.style.transform=`translate(${x}px,${y}px)`;
+  function step(){
+    const s=sz(), W=VW(), H=VH();
+    if(--wander<=0){ wander=150+Math.random()*220; tvx=(Math.random()*2-1)*0.8; tvy=(Math.random()*2-1)*0.6; } // new random heading
+    vx+=(tvx-vx)*0.01; vy+=(tvy-vy)*0.01;
+    x+=vx; y+=vy;
+    if(x<=0){ x=0; vx=Math.abs(vx); } if(x>=W-s){ x=W-s; vx=-Math.abs(vx); }
+    if(y<=0){ y=0; vy=Math.abs(vy); } if(y>=H-s){ y=H-s; vy=-Math.abs(vy); }
+    el.style.transform=`translate(${x}px,${y}px)`;
   }
-  html+=`<span class="shooting" style="animation-delay:3s"></span><span class="shooting" style="animation-delay:14s;top:5vh"></span><span class="shooting" style="animation-delay:24s;top:2vh"></span>`;
-  $("floaties").innerHTML=html;
+  function loop(){ step(); requestAnimationFrame(loop); }
+  loop();
+  setInterval(()=>{ if(document.hidden) step(); }, 33); // fallback when rAF is throttled
+})();
+/* show the neko only on the home screen */
+function setCatVisible(v){ const c=$("neko-bg"); if(c) c.style.display = v ? "block" : "none"; }
+
+/* splash intro (no images, just the mascot + animated logo) */
+(function(){
+  const sp=$("splash");
+  const done=()=>{ sp.classList.add("gone"); setTimeout(()=>{ if(sp&&sp.parentNode) sp.parentNode.removeChild(sp); }, 700); };
+  window.addEventListener("load", ()=> setTimeout(done, 1900));
+  setTimeout(done, 3500); // safety: never trap the user
+})();
+
+/* scroll-to-top */
+(function(){
+  const btn=$("to-top");
+  const onScroll=()=>{ (window.scrollY>420) ? btn.classList.add("show") : btn.classList.remove("show"); };
+  window.addEventListener("scroll", onScroll, {passive:true}); onScroll();
+  btn.onclick=()=> window.scrollTo({top:0, behavior:"smooth"});
 })();
 
 renderMoodGrid();
