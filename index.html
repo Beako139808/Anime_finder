@@ -90,7 +90,12 @@
   @keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
   .hidden{display:none!important}
 
-  #start-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:calc(100vh - 150px);gap:18px}
+  #start-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:calc(100vh - 150px);gap:18px;position:relative}
+  .lang-switch{position:absolute;top:-6px;right:0;display:flex;gap:0;border:1px solid var(--line);border-radius:30px;overflow:hidden;background:rgba(18,28,60,.5);backdrop-filter:blur(8px);z-index:5}
+  .lang-opt{cursor:pointer;border:none;background:transparent;color:var(--muted);font-size:13px;font-weight:700;padding:8px 15px;transition:all .15s}
+  .lang-opt:hover{color:var(--blue2)}
+  .lang-opt.active{background:linear-gradient(120deg,var(--blue-deep),var(--accent));color:#fff}
+  @media (max-width:560px){.lang-switch{top:-40px}}
   .hero-mascot{width:120px;filter:drop-shadow(0 0 22px rgba(123,75,240,.55))}
   .hero-mascot .neko-svg{width:100%;height:auto}
   .hero-title{font-size:clamp(28px,6vw,48px);font-weight:800;line-height:1.08;margin:2px 0 0;background:linear-gradient(90deg,#ffffff,var(--blue2),var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -346,20 +351,24 @@
     <span class="logo">🎌</span>
     <h1>アニメ Finder</h1>
   </header>
-  <p class="subtitle">Умный подбор аниме · данные напрямую с MyAnimeList (Jikan API)</p>
+  <p class="subtitle" data-i18n="subtitle">Умный подбор аниме · данные напрямую с MyAnimeList (Jikan API)</p>
 
   <!-- ===== START ===== -->
   <section id="start-screen" class="screen">
-    <div class="hero-mascot" id="hero-mascot"></div>
-    <h2 class="hero-title">Поиск и подбор аниме</h2>
-    <p class="hero-sub">Найди своё идеальное аниме — по жанрам, настроению или любимым тайтлам. Всё на данных MyAnimeList.</p>
-    <button id="open-wizard" class="big-btn">✨ Подобрать по параметрам ✨</button>
-    <div class="alt-actions">
-      <button class="alt-btn" id="open-mood">🎭 По настроению</button>
-      <button class="alt-btn" id="open-similar">🔮 Похожее на любимое</button>
-      <button class="alt-btn" id="open-fav">⭐ Любимые аниме beako</button>
+    <div class="lang-switch">
+      <button class="lang-opt" data-lang="ru">RU</button>
+      <button class="lang-opt" data-lang="en">EN</button>
     </div>
-    <p class="hint">Выбери жанры и фильтры вручную, иди от настроения, укажи 1–3 любимых аниме — или открой личную подборку beako 🪄</p>
+    <div class="hero-mascot" id="hero-mascot"></div>
+    <h2 class="hero-title" data-i18n="hero_title">Поиск и подбор аниме</h2>
+    <p class="hero-sub" data-i18n="hero_sub">Найди своё идеальное аниме — по жанрам, настроению или любимым тайтлам. Всё на данных MyAnimeList.</p>
+    <button id="open-wizard" class="big-btn" data-i18n="btn_wizard">✨ Подобрать по параметрам ✨</button>
+    <div class="alt-actions">
+      <button class="alt-btn" id="open-mood" data-i18n="btn_mood">🎭 По настроению</button>
+      <button class="alt-btn" id="open-similar" data-i18n="btn_similar">🔮 Похожее на любимое</button>
+      <button class="alt-btn" id="open-fav" data-i18n="btn_fav">⭐ Любимые аниме beako</button>
+    </div>
+    <p class="hint" data-i18n="hint">Выбери жанры и фильтры вручную, иди от настроения, укажи 1–3 любимых аниме — или открой личную подборку beako 🪄</p>
   </section>
 
   <!-- ===== WIZARD ===== -->
@@ -368,35 +377,35 @@
       <div class="progress"><i id="progress-fill"></i></div>
 
       <div class="step active" data-step="0">
-        <div class="step-no">Шаг 1 из 5</div>
-        <h2 class="step-title">🎭 Жанры и темы</h2>
-        <p class="step-desc">Выбери сколько угодно тегов — найдём аниме, где есть <b>хотя бы один</b> из них (логика «ИЛИ»). Можно ничего не выбирать — покажем лучшее из всего.</p>
+        <div class="step-no"></div>
+        <h2 class="step-title" data-i18n="w1_title">🎭 Жанры и темы</h2>
+        <p class="step-desc" data-i18n="w1_desc">Выбери сколько угодно тегов…</p>
         <div class="tagbar">
-          <input type="text" id="tag-search" class="tag-search" placeholder="🔎 найти жанр или тему…">
+          <input type="text" id="tag-search" class="tag-search" data-i18n-ph="tag_search_ph" placeholder="🔎 найти жанр или тему…">
           <span class="count-pill" id="tag-count">Выбрано: 0</span>
-          <button class="mini-btn" id="tag-clear">Сбросить</button>
+          <button class="mini-btn" id="tag-clear" data-i18n="reset">Сбросить</button>
         </div>
-        <div id="tag-box" class="chips scroll"><div class="loading-genres">Тянем полный список жанров и тем с MyAnimeList… 👻</div></div>
+        <div id="tag-box" class="chips scroll"></div>
       </div>
 
       <div class="step" data-step="1">
-        <div class="step-no">Шаг 2 из 5</div>
-        <h2 class="step-title">⭐ Минимальный рейтинг</h2>
-        <p class="step-desc">Покажем аниме с оценкой <b>от</b> выбранной. Поставь 0 — и сойдёт любой рейтинг.</p>
+        <div class="step-no"></div>
+        <h2 class="step-title" data-i18n="w2_title">⭐ Минимальный рейтинг</h2>
+        <p class="step-desc" data-i18n="w2_desc">Покажем аниме с оценкой от выбранной…</p>
         <div class="slider-row">
           <input type="range" id="score-slider" min="0" max="9" step="0.5" value="0">
           <div class="score-pill" id="score-pill">Любой</div>
         </div>
         <label class="gem-toggle" id="gem-toggle">
           <input type="checkbox" id="gem-check">
-          <span><b>💎 Только скрытые алмазы</b><small>высокий рейтинг, но мало зрителей — недооценённые жемчужины</small></span>
+          <span><b data-i18n="gem_title">💎 Только скрытые алмазы</b><small data-i18n="gem_desc">высокий рейтинг, но мало зрителей</small></span>
         </label>
       </div>
 
       <div class="step" data-step="2">
-        <div class="step-no">Шаг 3 из 5</div>
-        <h2 class="step-title">📡 Статус выхода</h2>
-        <p class="step-desc">Выходит сейчас, законченное или будущие премьеры?</p>
+        <div class="step-no"></div>
+        <h2 class="step-title" data-i18n="w3_title">📡 Статус выхода</h2>
+        <p class="step-desc" data-i18n="w3_desc">Выходит сейчас, законченное или будущие премьеры?</p>
         <div class="opt-grid" id="status-opts">
           <div class="opt sel" data-val="">Любой<small>без разницы</small></div>
           <div class="opt" data-val="airing">Онгоинг<small>выходит сейчас</small></div>
@@ -406,26 +415,26 @@
       </div>
 
       <div class="step" data-step="3">
-        <div class="step-no">Шаг 4 из 5</div>
-        <h2 class="step-title">🎞️ Количество серий</h2>
-        <p class="step-desc">Можно задать «от», «до», диапазон или оставить пусто.</p>
+        <div class="step-no"></div>
+        <h2 class="step-title" data-i18n="w4_title">🎞️ Количество серий</h2>
+        <p class="step-desc" data-i18n="w4_desc">Можно задать «от», «до», диапазон или оставить пусто.</p>
         <div class="ep-row">
-          <div class="ep-field"><label>От (серий)</label><input type="number" id="ep-min" min="1" placeholder="напр. 1"></div>
-          <div class="ep-field"><label>До (серий)</label><input type="number" id="ep-max" min="1" placeholder="напр. 24"></div>
+          <div class="ep-field"><label data-i18n="ep_from">От (серий)</label><input type="number" id="ep-min" min="1" placeholder="1"></div>
+          <div class="ep-field"><label data-i18n="ep_to">До (серий)</label><input type="number" id="ep-max" min="1" placeholder="24"></div>
         </div>
         <div class="chips" id="ep-presets">
-          <button class="chip" data-min="" data-max="">Любое</button>
-          <button class="chip" data-min="1" data-max="1">Фильм/1 серия</button>
-          <button class="chip" data-min="2" data-max="12">Короткое ≤12</button>
-          <button class="chip" data-min="13" data-max="26">Сезон 13–26</button>
-          <button class="chip" data-min="27" data-max="">Длинное 27+</button>
+          <button class="chip" data-min="" data-max="" data-i18n="ep_any">Любое</button>
+          <button class="chip" data-min="1" data-max="1" data-i18n="ep_movie">Фильм/1 серия</button>
+          <button class="chip" data-min="2" data-max="12" data-i18n="ep_short">Короткое ≤12</button>
+          <button class="chip" data-min="13" data-max="26" data-i18n="ep_season">Сезон 13–26</button>
+          <button class="chip" data-min="27" data-max="" data-i18n="ep_long">Длинное 27+</button>
         </div>
       </div>
 
       <div class="step" data-step="4">
-        <div class="step-no">Шаг 5 из 5</div>
-        <h2 class="step-title">📺 Тип</h2>
-        <p class="step-desc">Сериал, полнометражка, OVA или что угодно?</p>
+        <div class="step-no"></div>
+        <h2 class="step-title" data-i18n="w5_title">📺 Тип</h2>
+        <p class="step-desc" data-i18n="w5_desc">Сериал, полнометражка, OVA или что угодно?</p>
         <div class="opt-grid" id="type-opts">
           <div class="opt sel" data-val="">Любой<small>всё подряд</small></div>
           <div class="opt" data-val="tv">TV-сериал<small>обычный сериал</small></div>
@@ -437,8 +446,8 @@
       </div>
 
       <div class="nav">
-        <button class="btn" id="prev-btn" disabled>← Назад</button>
-        <button class="btn primary" id="next-btn">Далее →</button>
+        <button class="btn" id="prev-btn" disabled data-i18n="back">← Назад</button>
+        <button class="btn primary" id="next-btn" data-i18n="next">Далее →</button>
       </div>
     </div>
   </section>
@@ -446,43 +455,43 @@
   <!-- ===== MOOD ===== -->
   <section id="mood-screen" class="screen hidden">
     <div class="panel">
-      <div class="step-no">Подбор по настроению</div>
-      <h2 class="step-title">🎭 Какое настроение хочешь словить?</h2>
-      <p class="step-desc">Выбери вайб — система сама подберёт подходящие жанры и отранжирует лучшее по рейтингу.</p>
+      <div class="step-no" data-i18n="mood_kicker">Подбор по настроению</div>
+      <h2 class="step-title" data-i18n="mood_title">🎭 Какое настроение хочешь словить?</h2>
+      <p class="step-desc" data-i18n="mood_desc">Выбери вайб…</p>
       <div class="mood-grid" id="mood-grid"></div>
-      <div class="nav"><button class="btn" id="mood-back">← Назад</button><span></span></div>
+      <div class="nav"><button class="btn" id="mood-back" data-i18n="back">← Назад</button><span></span></div>
     </div>
   </section>
 
   <!-- ===== SIMILAR ===== -->
   <section id="similar-screen" class="screen hidden">
     <div class="panel">
-      <div class="step-no">Поиск похожего</div>
-      <h2 class="step-title">🔮 Похожее на любимое</h2>
-      <p class="step-desc">Укажи <b>1–3</b> любимых аниме. Найдём то, что максимально похоже сразу на все — по рекомендациям зрителей MyAnimeList (жанры, темы, атмосфера, персонажи).</p>
+      <div class="step-no" data-i18n="sim_kicker">Поиск похожего</div>
+      <h2 class="step-title" data-i18n="sim_title">🔮 Похожее на любимое</h2>
+      <p class="step-desc" data-i18n="sim_desc">Укажи 1–3 любимых аниме…</p>
       <div class="ref-search-wrap">
-        <input type="text" id="ref-input" class="ref-input" placeholder="🔎 начни вводить название аниме…" autocomplete="off">
+        <input type="text" id="ref-input" class="ref-input" data-i18n-ph="ref_ph" placeholder="🔎 начни вводить название аниме…" autocomplete="off">
         <div id="suggest" class="suggest hidden"></div>
       </div>
       <div id="ref-chips" class="ref-chips"></div>
 
-      <div class="ie-toggle" id="ie-toggle">⚙️ Тонкая настройка: добавить / исключить черты ▾</div>
+      <div class="ie-toggle" id="ie-toggle" data-i18n="ie_show">⚙️ Тонкая настройка ▾</div>
       <div id="ie-wrap" class="hidden">
         <div class="ie-block">
-          <div class="group-label" style="color:var(--good)">➕ Обязательно ДОБАВИТЬ черты (аниме должно их иметь)</div>
-          <input type="text" id="inc-search" class="tag-search" placeholder="🔎 фильтр…" style="margin-bottom:8px">
+          <div class="group-label" style="color:var(--good)" data-i18n="inc_label">➕ Обязательно ДОБАВИТЬ черты</div>
+          <input type="text" id="inc-search" class="tag-search" data-i18n-ph="filter_ph" placeholder="🔎 фильтр…" style="margin-bottom:8px">
           <div id="inc-box" class="chips scroll sm"></div>
         </div>
         <div class="ie-block">
-          <div class="group-label" style="color:var(--bad)">➖ ИСКЛЮЧИТЬ черты (аниме НЕ должно их иметь)</div>
-          <input type="text" id="exc-search" class="tag-search" placeholder="🔎 фильтр…" style="margin-bottom:8px">
+          <div class="group-label" style="color:var(--bad)" data-i18n="exc_label">➖ ИСКЛЮЧИТЬ черты</div>
+          <input type="text" id="exc-search" class="tag-search" data-i18n-ph="filter_ph" placeholder="🔎 фильтр…" style="margin-bottom:8px">
           <div id="exc-box" class="chips scroll sm"></div>
         </div>
       </div>
 
       <div class="nav">
-        <button class="btn" id="similar-back">← Назад</button>
-        <button class="btn primary" id="similar-go" disabled>Далее →</button>
+        <button class="btn" id="similar-back" data-i18n="back">← Назад</button>
+        <button class="btn primary" id="similar-go" disabled data-i18n="next">Далее →</button>
       </div>
     </div>
   </section>
@@ -490,12 +499,12 @@
   <!-- ===== RESULTS ===== -->
   <section id="results-screen" class="screen hidden">
     <div class="results-head">
-      <button class="btn" id="new-search">← Новый поиск</button>
+      <button class="btn" id="new-search" data-i18n="new_search">← Новый поиск</button>
       <div id="filter-summary"></div>
     </div>
     <div id="sim-banner"></div>
     <div class="toolbar">
-      <label for="sort-select">Сортировка:</label>
+      <label for="sort-select" data-i18n="sort_label">Сортировка:</label>
       <select id="sort-select"></select>
     </div>
     <p id="result-count"></p>
@@ -552,7 +561,137 @@ const RU = {
   "Urban Fantasy":"Городское фэнтези","Villainess":"Злодейка","Magical Sex Shift":"Смена пола",
   "Josei":"Дзёсэй","Kids":"Детское","Seinen":"Сэйнэн","Shoujo":"Сёдзё","Shounen":"Сёнэн"
 };
-const ru = (n) => RU[n] || n;
+let LANG = (localStorage.getItem("af_lang")==="en") ? "en" : "ru";  // default Russian
+/* genre/theme name: Russian label in RU mode, original English in EN mode */
+const ru = (n) => (LANG==="ru" && RU[n]) ? RU[n] : n;
+
+/* ===== UI translation dictionary ===== */
+const T = {
+  subtitle:{ru:"Умный подбор аниме · данные напрямую с MyAnimeList (Jikan API)", en:"Smart anime finder · data straight from MyAnimeList (Jikan API)"},
+  hero_title:{ru:"Поиск и подбор аниме", en:"Find & discover anime"},
+  hero_sub:{ru:"Найди своё идеальное аниме — по жанрам, настроению или любимым тайтлам. Всё на данных MyAnimeList.", en:"Find your perfect anime — by genre, mood or favorite titles. All powered by MyAnimeList."},
+  btn_wizard:{ru:"✨ Подобрать по параметрам ✨", en:"✨ Search by parameters ✨"},
+  btn_mood:{ru:"🎭 По настроению", en:"🎭 By mood"},
+  btn_similar:{ru:"🔮 Похожее на любимое", en:"🔮 Similar to a favorite"},
+  btn_fav:{ru:"⭐ Любимые аниме beako", en:"⭐ beako's favorites"},
+  hint:{ru:"Выбери жанры и фильтры вручную, иди от настроения, укажи 1–3 любимых аниме — или открой личную подборку beako 🪄", en:"Pick genres & filters, go by mood, name 1–3 favorites — or open beako's personal collection 🪄"},
+  w1_title:{ru:"🎭 Жанры и темы", en:"🎭 Genres & themes"},
+  w1_desc:{ru:"Выбери сколько угодно тегов — найдём аниме, где есть <b>хотя бы один</b> из них (логика «ИЛИ»). Можно ничего не выбирать — покажем лучшее из всего.", en:"Pick as many tags as you like — we'll find anime that has <b>at least one</b> of them (OR logic). Pick nothing to see the overall best."},
+  tag_search_ph:{ru:"🔎 найти жанр или тему…", en:"🔎 find a genre or theme…"},
+  chosen:{ru:"Выбрано", en:"Selected"},
+  reset:{ru:"Сбросить", en:"Reset"},
+  grp_genres:{ru:"Жанры", en:"Genres"},
+  grp_demo:{ru:"Аудитория", en:"Demographics"},
+  grp_themes:{ru:"Темы и теги", en:"Themes & tags"},
+  nothing_found:{ru:"Ничего не нашлось 🤷", en:"Nothing found 🤷"},
+  w2_title:{ru:"⭐ Минимальный рейтинг", en:"⭐ Minimum rating"},
+  w2_desc:{ru:"Покажем аниме с оценкой <b>от</b> выбранной. Поставь 0 — и сойдёт любой рейтинг.", en:"We'll show anime rated <b>at or above</b> your pick. Set 0 for any rating."},
+  score_any:{ru:"Любой", en:"Any"},
+  score_from:{ru:"от", en:"from"},
+  gem_title:{ru:"💎 Только скрытые алмазы", en:"💎 Hidden gems only"},
+  gem_desc:{ru:"высокий рейтинг, но мало зрителей — недооценённые жемчужины", en:"high score but few viewers — underrated gems"},
+  w3_title:{ru:"📡 Статус выхода", en:"📡 Airing status"},
+  w3_desc:{ru:"Выходит сейчас, законченное или будущие премьеры?", en:"Airing now, finished, or upcoming?"},
+  st_any:{ru:"Любой", en:"Any"}, st_any_s:{ru:"без разницы", en:"whatever"},
+  st_airing:{ru:"Онгоинг", en:"Airing"}, st_airing_s:{ru:"выходит сейчас", en:"ongoing now"},
+  st_complete:{ru:"Завершено", en:"Finished"}, st_complete_s:{ru:"можно запоем", en:"binge it"},
+  st_upcoming:{ru:"Анонс", en:"Upcoming"}, st_upcoming_s:{ru:"скоро выйдет", en:"coming soon"},
+  w4_title:{ru:"🎞️ Количество серий", en:"🎞️ Number of episodes"},
+  w4_desc:{ru:"Можно задать «от», «до», диапазон или оставить пусто.", en:"Set a min, a max, a range, or leave empty."},
+  ep_from:{ru:"От (серий)", en:"From (eps)"}, ep_to:{ru:"До (серий)", en:"To (eps)"},
+  ep_any:{ru:"Любое", en:"Any"}, ep_movie:{ru:"Фильм/1 серия", en:"Movie/1 ep"}, ep_short:{ru:"Короткое ≤12", en:"Short ≤12"}, ep_season:{ru:"Сезон 13–26", en:"Season 13–26"}, ep_long:{ru:"Длинное 27+", en:"Long 27+"},
+  w5_title:{ru:"📺 Тип", en:"📺 Type"},
+  w5_desc:{ru:"Сериал, полнометражка, OVA или что угодно?", en:"Series, movie, OVA, or anything?"},
+  ty_any:{ru:"Любой", en:"Any"}, ty_any_s:{ru:"всё подряд", en:"anything"},
+  ty_tv:{ru:"TV-сериал", en:"TV series"}, ty_tv_s:{ru:"обычный сериал", en:"regular series"},
+  ty_movie:{ru:"Фильм", en:"Movie"}, ty_movie_s:{ru:"полный метр", en:"feature film"},
+  ty_ova:{ru:"OVA", en:"OVA"}, ty_ova_s:{ru:"спецвыпуски", en:"special episodes"},
+  ty_ona:{ru:"ONA", en:"ONA"}, ty_ona_s:{ru:"веб-аниме", en:"web anime"},
+  ty_special:{ru:"Special", en:"Special"}, ty_special_s:{ru:"спешлы", en:"specials"},
+  back:{ru:"← Назад", en:"← Back"},
+  next:{ru:"Далее →", en:"Next →"},
+  do_search:{ru:"🔍 Приступить к поиску", en:"🔍 Start the search"},
+  do_similar:{ru:"🔮 Найти похожее", en:"🔮 Find similar"},
+  step:{ru:"Шаг", en:"Step"}, of:{ru:"из", en:"of"},
+  mood_kicker:{ru:"Подбор по настроению", en:"Mood-based picks"},
+  mood_title:{ru:"🎭 Какое настроение хочешь словить?", en:"🎭 What mood are you after?"},
+  mood_desc:{ru:"Выбери вайб — система сама подберёт подходящие жанры и отранжирует лучшее по рейтингу.", en:"Pick a vibe — we'll choose matching genres and rank the best by rating."},
+  sim_kicker:{ru:"Поиск похожего", en:"Find similar"},
+  sim_title:{ru:"🔮 Похожее на любимое", en:"🔮 Similar to a favorite"},
+  sim_desc:{ru:"Укажи <b>1–3</b> любимых аниме. Найдём то, что максимально похоже сразу на все — по рекомендациям зрителей MyAnimeList (жанры, темы, атмосфера, персонажи).", en:"Name <b>1–3</b> favorite anime. We'll find what's most similar to all of them — from MyAnimeList viewer recommendations (genres, themes, mood, characters)."},
+  ref_ph:{ru:"🔎 начни вводить название аниме…", en:"🔎 start typing an anime title…"},
+  ref_max:{ru:"Максимум 3 тайтла выбрано", en:"Max 3 titles selected"},
+  ie_show:{ru:"⚙️ Тонкая настройка: добавить / исключить черты ▾", en:"⚙️ Fine-tune: add / exclude traits ▾"},
+  ie_hide:{ru:"⚙️ Тонкая настройка: добавить / исключить черты ▴", en:"⚙️ Fine-tune: add / exclude traits ▴"},
+  inc_label:{ru:"➕ Обязательно ДОБАВИТЬ черты (аниме должно их иметь)", en:"➕ Must INCLUDE traits (anime must have them)"},
+  exc_label:{ru:"➖ ИСКЛЮЧИТЬ черты (аниме НЕ должно их иметь)", en:"➖ EXCLUDE traits (anime must NOT have them)"},
+  filter_ph:{ru:"🔎 фильтр…", en:"🔎 filter…"},
+  new_search:{ru:"← Новый поиск", en:"← New search"},
+  sort_label:{ru:"Сортировка:", en:"Sort:"},
+  found:{ru:"Найдено", en:"Found"}, shown:{ru:"показано", en:"shown"},
+  more_hint:{ru:"(есть ещё — жми «Расширить»)", en:"(more available — hit “Expand”)"},
+  expand_to:{ru:"➕ Расширить список (до", en:"➕ Expand list (up to"},
+  expand_all:{ru:"✨ Это весь подходящий список", en:"✨ That's the whole matching list"},
+  expand_top100:{ru:"🏆 Показан полный топ-100", en:"🏆 Full top-100 shown"},
+  expand_searching:{ru:"⏳ Ищем ещё…", en:"⏳ Searching…"},
+  expand_nomore:{ru:"🚫 Больше вариантов нет", en:"🚫 No more options"},
+  s_score_desc:{ru:"⭐ Рейтинг: высокий → низкий", en:"⭐ Rating: high → low"},
+  s_score_asc:{ru:"⭐ Рейтинг: низкий → высокий", en:"⭐ Rating: low → high"},
+  s_pop:{ru:"🔥 По популярности", en:"🔥 By popularity"},
+  s_new:{ru:"🆕 Сначала новые", en:"🆕 Newest first"},
+  s_old:{ru:"📼 Сначала старые", en:"📼 Oldest first"},
+  s_scored:{ru:"🗳️ По числу оценок", en:"🗳️ By number of ratings"},
+  s_gem:{ru:"💎 Недооценённые (скрытые алмазы)", en:"💎 Underrated (hidden gems)"},
+  s_random:{ru:"🎲 Случайный порядок", en:"🎲 Random order"},
+  s_relevance:{ru:"🔮 По похожести (рекомендации)", en:"🔮 By similarity (recommendations)"},
+  more_btn:{ru:"ℹ️ Подробнее", en:"ℹ️ Details"},
+  eps:{ru:"эп.", en:"eps"}, eps_unknown:{ru:"? эп.", en:"? eps"},
+  no_genre:{ru:"жанр не указан", en:"no genre listed"},
+  match_with:{ru:"🔗 совпало с", en:"🔗 matches"},
+  fav_banner:{ru:"⭐ Личная подборка <b>beako</b>", en:"⭐ <b>beako</b>'s personal collection"},
+  fav_titles:{ru:"тайтлов · полный список сразу", en:"titles · full list at once"},
+  sim_to:{ru:"🔮 Похоже на:", en:"🔮 Similar to:"},
+  sim_common:{ru:"Общие черты:", en:"Common traits:"},
+  sim_common_none:{ru:"явных пересечений мало — ранжируем по рекомендациям зрителей.", en:"few clear overlaps — ranking by viewer recommendations."},
+  sum_nofilter:{ru:"✨ без фильтров — общий топ", en:"✨ no filters — overall top"},
+  sum_from:{ru:"⭐ от", en:"⭐ from"},
+  sum_gem:{ru:"💎 скрытые алмазы", en:"💎 hidden gems"},
+  sum_eps:{ru:"сер.", en:"eps"},
+  m_trailer:{ru:"▶️ Трейлер", en:"▶️ Trailer"},
+  m_desc:{ru:"📖 Описание", en:"📖 Description"},
+  m_bg:{ru:"За кадром:", en:"Background:"},
+  m_music:{ru:"🎵 Музыка", en:"🎵 Music"},
+  m_openings:{ru:"Опенинги:", en:"Openings:"},
+  m_endings:{ru:"Эндинги:", en:"Endings:"},
+  m_chars:{ru:"👥 Персонажи и сэйю", en:"👥 Characters & voice actors"},
+  m_main:{ru:"Главный", en:"Main"}, m_supp:{ru:"Второстеп.", en:"Supporting"},
+  m_watch:{ru:"📺 Где смотреть и искать", en:"📺 Where to watch & search"},
+  m_nostream:{ru:"Легальных стримингов в базе MAL не указано.", en:"No legal streaming listed on MAL."},
+  m_ratings:{ru:"оценок", en:"ratings"}, m_rank:{ru:"в рейтинге", en:"in ranking"}, m_pop:{ru:"по популярности", en:"by popularity"},
+  m_loading:{ru:"Призываем подробности… 🐾", en:"Summoning details… 🐾"},
+  m_err:{ru:"Не удалось загрузить детали. Попробуй позже.", en:"Couldn't load details. Try again later."},
+  msg_offline_t:{ru:"Духи аниме офлайн", en:"The anime spirits are offline"},
+  msg_offline_p:{ru:"Не удалось достучаться до MyAnimeList (Jikan API). Подожди пару секунд и попробуй снова.", en:"Couldn't reach MyAnimeList (Jikan API). Wait a couple seconds and try again."},
+  msg_empty_t:{ru:"Такого аниме не существует… или оно слишком секретное", en:"No such anime… or it's too secret"},
+  msg_empty_p:{ru:"Под эти условия ничего не нашлось. Ослабь фильтры: снизь рейтинг, расширь количество серий или добавь ещё жанров (логика «ИЛИ» — больше тегов = больше вариантов).", en:"Nothing matched these filters. Loosen them: lower the rating, widen the episode count, or add more genres (OR logic — more tags = more results)."},
+  msg_allshown_t:{ru:"Это всё, что нашлось в этой вселенной", en:"That's everything in this universe"},
+  msg_allshown_p:{ru:"Больше подходящего нет — ты видишь весь список. Смягчи фильтры или поменяй вводные для новых находок.", en:"Nothing more matches — you're seeing the whole list. Ease the filters or change inputs for new finds."},
+  msg_conn_t:{ru:"Связь прервалась", en:"Connection lost"},
+  msg_conn_p:{ru:"Jikan API не ответил. Нажми ещё раз чуть позже.", en:"Jikan API didn't respond. Try again shortly."},
+  msg_simnone_t:{ru:"Похожих под такие условия нет", en:"No similar titles under these conditions"},
+  msg_simnone_ie:{ru:"Рекомендации есть, но фильтры «добавить/исключить черты» отсеяли всё. Ослабь их и попробуй снова.", en:"Recommendations exist, but your include/exclude filters removed them all. Ease them and retry."},
+  msg_simnone_p:{ru:"Странно, но похожих не нашлось. Попробуй другой набор тайтлов.", en:"Oddly, nothing similar was found. Try a different set of titles."},
+  msg_simfb_t:{ru:"Точных рекомендаций не нашлось", en:"No exact recommendations found"},
+  msg_simfb_p:{ru:"У выбранных тайтлов нет связки рекомендаций на MyAnimeList — поэтому подобрали похожее по их общим жанрам.", en:"The chosen titles have no recommendation links on MyAnimeList — so we matched by their shared genres."},
+  msg_nohook_t:{ru:"Не за что зацепиться", en:"Nothing to go on"},
+  msg_nohook_p:{ru:"У выбранного аниме нет ни рекомендаций, ни жанров в базе. Попробуй другой тайтл.", en:"The chosen anime has no recommendations or genres in the database. Try another title."},
+  msg_favfail_t:{ru:"Не загрузилось", en:"Failed to load"},
+  msg_favfail_p:{ru:"Не удалось получить список. Попробуй ещё раз чуть позже.", en:"Couldn't fetch the list. Try again shortly."},
+  suggest_none:{ru:"Ничего не нашлось 🤷", en:"Nothing found 🤷"}
+};
+function t(k){ const e=T[k]; return e ? (e[LANG]||e.ru) : k; }
+const STATUS_KEY = {airing:"st_airing", complete:"st_complete", upcoming:"st_upcoming"};
+const TYPE_KEY   = {tv:"ty_tv", movie:"ty_movie", ova:"ty_ova", ona:"ty_ona", special:"ty_special"};
 
 const FALLBACK = {
   genres:[[1,"Action"],[2,"Adventure"],[5,"Avant Garde"],[46,"Award Winning"],[4,"Comedy"],[8,"Drama"],
@@ -570,64 +709,65 @@ const FALLBACK = {
     [82,"Urban Fantasy"],[83,"Villainess"]]
 };
 
-const STATUS_RU = {airing:"Онгоинг", complete:"Завершено", upcoming:"Анонс"};
-const TYPE_RU   = {tv:"TV-сериал", movie:"Фильм", ova:"OVA", ona:"ONA", special:"Special"};
+const statusLabel = (s)=> s ? t(STATUS_KEY[s]) : "";
+const typeLabel   = (s)=> s ? t(TYPE_KEY[s]) : "";
 
-/* moods -> genre IDs */
+/* moods -> genre/theme IDs */
 const MOODS = [
-  {e:"😂", t:"Посмеяться", tags:[4,57,20], min:6.5},
-  {e:"😭", t:"Поплакать", tags:[8,22], min:7},
-  {e:"😰", t:"Напряжённый сюжет", tags:[41,7,40], min:7},
-  {e:"☕", t:"Расслабиться", tags:[36,63,52], min:6.5},
-  {e:"🔥", t:"Мотивация", tags:[30,77,31], min:7},
-  {e:"💘", t:"Романтика", tags:[22,23], min:6.5},
-  {e:"👻", t:"Тревожно и жутко", tags:[14,37,58], min:6},
-  {e:"🧠", t:"Философия и смысл", tags:[40,5,8], min:7.2},
-  {e:"⚡", t:"Адреналин и экшен", tags:[1,2,31], min:7},
-  {e:"🗡️", t:"Эпичное фэнтези", tags:[10,2,62], min:7},
-  {e:"🚀", t:"Космос и sci-fi", tags:[24,29,18], min:7},
-  {e:"🎶", t:"Музыка и сцена", tags:[19,70], min:6.5},
-  {e:"🕵️", t:"Детектив и загадка", tags:[39,7,41], min:7},
-  {e:"🍜", t:"Уют и еда", tags:[47,36,63], min:6.5},
-  {e:"🏫", t:"Школьные будни", tags:[23,36,4], min:6.5},
-  {e:"🤖", t:"Меха-баталии", tags:[18,38,24], min:7},
-  {e:"🌀", t:"Исекай-приключения", tags:[62,10,72], min:6.8},
-  {e:"🥷", t:"Сёнэн-баттлы", tags:[1,31,27], min:7},
-  {e:"🎴", t:"Самураи и честь", tags:[21,13,1], min:7},
-  {e:"🧛", t:"Вампиры и тьма", tags:[32,37,14], min:6.5},
-  {e:"💞", t:"Гарем и милота", tags:[35,22,23], min:6.5},
-  {e:"🎤", t:"Идолы и блеск", tags:[60,19,70], min:6.5},
-  {e:"🪖", t:"Война и выживание", tags:[38,76,8], min:7},
-  {e:"🃏", t:"Игры разума", tags:[11,40,59], min:7.2},
-  {e:"⏳", t:"Путешествия во времени", tags:[78,24,8], min:7},
-  {e:"🩸", t:"Тёмное и жёсткое", tags:[58,42,41], min:7},
-  {e:"🪄", t:"Махо-сёдзё и магия", tags:[66,10,37], min:6.5},
-  {e:"🏎️", t:"Скорость и спорт", tags:[3,30,77], min:6.5},
-  {e:"👑", t:"Историческая драма", tags:[13,8,21], min:7},
-  {e:"🦸", t:"Суперсилы", tags:[31,1,37], min:7},
-  {e:"😱", t:"Психологический хоррор", tags:[40,14,41], min:7},
-  {e:"🌸", t:"Нежное сёдзё", tags:[22,25,23], min:6.5}
+  {e:"😂", t:"Посмеяться", te:"Laugh out loud", tags:[4,57,20], min:6.5},
+  {e:"😭", t:"Поплакать", te:"Cry a little", tags:[8,22], min:7},
+  {e:"😰", t:"Напряжённый сюжет", te:"Tense plot", tags:[41,7,40], min:7},
+  {e:"☕", t:"Расслабиться", te:"Relax", tags:[36,63,52], min:6.5},
+  {e:"🔥", t:"Мотивация", te:"Motivation", tags:[30,77,31], min:7},
+  {e:"💘", t:"Романтика", te:"Romance", tags:[22,23], min:6.5},
+  {e:"👻", t:"Тревожно и жутко", te:"Eerie & creepy", tags:[14,37,58], min:6},
+  {e:"🧠", t:"Философия и смысл", te:"Deep & meaningful", tags:[40,5,8], min:7.2},
+  {e:"⚡", t:"Адреналин и экшен", te:"Adrenaline & action", tags:[1,2,31], min:7},
+  {e:"🗡️", t:"Эпичное фэнтези", te:"Epic fantasy", tags:[10,2,62], min:7},
+  {e:"🚀", t:"Космос и sci-fi", te:"Space & sci-fi", tags:[24,29,18], min:7},
+  {e:"🎶", t:"Музыка и сцена", te:"Music & stage", tags:[19,70], min:6.5},
+  {e:"🕵️", t:"Детектив и загадка", te:"Mystery & detective", tags:[39,7,41], min:7},
+  {e:"🍜", t:"Уют и еда", te:"Cozy & food", tags:[47,36,63], min:6.5},
+  {e:"🏫", t:"Школьные будни", te:"School life", tags:[23,36,4], min:6.5},
+  {e:"🤖", t:"Меха-баталии", te:"Mecha battles", tags:[18,38,24], min:7},
+  {e:"🌀", t:"Исекай-приключения", te:"Isekai adventure", tags:[62,10,72], min:6.8},
+  {e:"🥷", t:"Сёнэн-баттлы", te:"Shounen battles", tags:[1,31,27], min:7},
+  {e:"🎴", t:"Самураи и честь", te:"Samurai & honor", tags:[21,13,1], min:7},
+  {e:"🧛", t:"Вампиры и тьма", te:"Vampires & darkness", tags:[32,37,14], min:6.5},
+  {e:"💞", t:"Гарем и милота", te:"Harem & cuteness", tags:[35,22,23], min:6.5},
+  {e:"🎤", t:"Идолы и блеск", te:"Idols & glitter", tags:[60,19,70], min:6.5},
+  {e:"🪖", t:"Война и выживание", te:"War & survival", tags:[38,76,8], min:7},
+  {e:"🃏", t:"Игры разума", te:"Mind games", tags:[11,40,59], min:7.2},
+  {e:"⏳", t:"Путешествия во времени", te:"Time travel", tags:[78,24,8], min:7},
+  {e:"🩸", t:"Тёмное и жёсткое", te:"Dark & brutal", tags:[58,42,41], min:7},
+  {e:"🪄", t:"Махо-сёдзё и магия", te:"Magical girls", tags:[66,10,37], min:6.5},
+  {e:"🏎️", t:"Скорость и спорт", te:"Speed & sports", tags:[3,30,77], min:6.5},
+  {e:"👑", t:"Историческая драма", te:"Historical drama", tags:[13,8,21], min:7},
+  {e:"🦸", t:"Суперсилы", te:"Super powers", tags:[31,1,37], min:7},
+  {e:"😱", t:"Психологический хоррор", te:"Psychological horror", tags:[40,14,41], min:7},
+  {e:"🌸", t:"Нежное сёдзё", te:"Sweet shoujo", tags:[22,25,23], min:6.5}
 ];
+const moodName = (m)=> LANG==="en" ? m.te : m.t;
 
-/* sort modes (label per key); 'relevance' only used in similar mode */
+/* sort modes: [key, i18n-key]; 'relevance' only in similar mode */
 const SORTS = [
-  ["score_desc","⭐ Рейтинг: высокий → низкий"],
-  ["score_asc","⭐ Рейтинг: низкий → высокий"],
-  ["popularity","🔥 По популярности"],
-  ["newest","🆕 Сначала новые"],
-  ["oldest","📼 Сначала старые"],
-  ["scored_by","🗳️ По числу оценок"],
-  ["gem","💎 Недооценённые (скрытые алмазы)"],
-  ["random","🎲 Случайный порядок"]
+  ["score_desc","s_score_desc"],["score_asc","s_score_asc"],["popularity","s_pop"],
+  ["newest","s_new"],["oldest","s_old"],["scored_by","s_scored"],["gem","s_gem"],["random","s_random"]
 ];
 
-const LOADING_MSGS = [
+const LOADING_MSGS_RU = [
   "Котик роется в архивах…","Листаем весь MyAnimeList…","Спрашиваем совета у сенпая…",
   "Сортируем по рейтингу…","Отделяем шедевры от филлеров…","Завариваем рамен и ищем…",
   "Активируем Гэндзюцу поиска…","Прокачиваем уровень рекомендаций…","Открываем третий глаз…",
-  "Заряжаем гэнки-даму подборки…","Котик мурчит и думает…","Сверяемся со свитком тайтлов…",
-  "Ловим вайб сезона…","Перематываем опенинги…","Ищем то самое аниме, ня~"
+  "Котик мурчит и думает…","Сверяемся со свитком тайтлов…","Ловим вайб сезона…","Ищем то самое аниме, ня~"
 ];
+const LOADING_MSGS_EN = [
+  "The cat digs through the archives…","Flipping through all of MyAnimeList…","Asking senpai for advice…",
+  "Sorting by rating…","Sorting masterpieces from fillers…","Brewing ramen and searching…",
+  "Casting the search jutsu…","Leveling up recommendations…","Opening the third eye…",
+  "The cat purrs and ponders…","Consulting the scroll of titles…","Catching the season's vibe…","Finding the one, nya~"
+];
+const loadingMsgs = ()=> LANG==="en" ? LOADING_MSGS_EN : LOADING_MSGS_RU;
 
 /* hidden-gem thresholds: high score, few viewers */
 const GEM_MIN_SCORE = 7.0;
@@ -640,9 +780,9 @@ const FAVORITES = [
   32729, 27775, 37779, 16498, 33352, 10161, 11757, 41433, 41930, 1575,
   4898, 14719, 2001, 39535, 37430, 34599, 35849, 5114, 8425, 39198,
   46095, 41457, 9253, 42249, 2167, 4224, 5530, 47194, 43439, 48316,
-  52299, 18897, 14075, 34636
+  52299, 18897, 14075, 34636, 23273
 ];
-const FAVORITES_DATA = {"1575":{"mal_id":1575,"url":"https://myanimelist.net/anime/1575/Code_Geass__Hangyaku_no_Lelouch","title":"Code Geass: Hangyaku no Lelouch","title_english":"Code Geass: Lelouch of the Rebellion","title_japanese":"コードギアス 反逆のルルーシュ","score":8.71,"scored_by":1530145,"members":2485213,"episodes":25,"type":"TV","year":2006,"aired":{"from":"2006-10-06T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1032/135088.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1032/135088l.jpg"}},"genres":[{"mal_id":46,"name":"Award Winning"},{"mal_id":8,"name":"Drama"},{"mal_id":24,"name":"Sci-Fi"}],"themes":[{"mal_id":18,"name":"Mecha"},{"mal_id":38,"name":"Military"},{"mal_id":23,"name":"School"},{"mal_id":31,"name":"Super Power"}],"demographics":[],"synopsis":"In the year 2010, the Holy Empire of Britannia is establishing itself as a dominant military nation, starting with the conquest of Japan. Renamed to Area 11 after its swift defeat, Japan has seen significant resistance against these tyrants"},"4898":{"mal_id":4898,"url":"https://myanimelist.net/anime/4898/Kuroshitsuji","title":"Kuroshitsuji","title_english":"Black Butler","title_japanese":"黒執事","score":7.65,"scored_by":648809,"members":1278249,"episodes":24,"type":"TV","year":2008,"aired":{"from":"2008-10-03T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1467/137783.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1467/137783l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":7,"name":"Mystery"},{"mal_id":37,"name":"Supernatural"}],"themes":[{"mal_id":13,"name":"Historical"},{"mal_id":6,"name":"Mythology"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Young Ciel Phantomhive is known as the Queen's Guard Dog, taking care of the many unsettling events that occur in Victorian England for Her Majesty. Aided by Sebastian Michaelis, his loyal butler with seemingly inhuman abilities, Ciel use"},"10161":{"mal_id":10161,"url":"https://myanimelist.net/anime/10161/No6","title":"No.6","title_english":"No. 6","title_japanese":"NO.6［ナンバー・シックス］","score":7.55,"scored_by":216409,"members":465057,"episodes":11,"type":"TV","year":2011,"aired":{"from":"2011-07-08T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1474/90768.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1474/90768l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":8,"name":"Drama"},{"mal_id":7,"name":"Mystery"},{"mal_id":24,"name":"Sci-Fi"}],"themes":[],"demographics":[],"synopsis":"Many years ago, after the end of a bloody world war, mankind took shelter in six city-states that were peaceful and perfect... at least on the surface. However, Shion—an elite resident of the city-state No. 6—gained a new perspective on the"},"10620":{"mal_id":10620,"url":"https://myanimelist.net/anime/10620/Mirai_Nikki_TV","title":"Mirai Nikki (TV)","title_english":"The Future Diary","title_japanese":"未来日記","score":7.38,"scored_by":1279374,"members":2143960,"episodes":26,"type":"TV","year":2011,"aired":{"from":"2011-10-09T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/13/33465.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/13/33465l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":37,"name":"Supernatural"},{"mal_id":41,"name":"Suspense"}],"themes":[{"mal_id":58,"name":"Gore"},{"mal_id":59,"name":"High Stakes Game"},{"mal_id":40,"name":"Psychological"},{"mal_id":76,"name":"Survival"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Yukiteru Amano is a shy middle schooler who regularly keeps track of what he does in his daily life by writing down all of his activities on his phone—a digital diary. Despite having no friends at school, Yukiteru is frequently seen talking"},"11061":{"mal_id":11061,"url":"https://myanimelist.net/anime/11061/Hunter_x_Hunter_2011","title":"Hunter x Hunter (2011)","title_english":"Hunter x Hunter","title_japanese":"HUNTER×HUNTER（ハンター×ハンター）","score":9.03,"scored_by":1990785,"members":3206484,"episodes":148,"type":"TV","year":2011,"aired":{"from":"2011-10-02T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1337/99013.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1337/99013l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":2,"name":"Adventure"},{"mal_id":10,"name":"Fantasy"}],"themes":[],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Hunters devote themselves to accomplishing hazardous tasks, all from traversing the world's uncharted territories to locating rare items and monsters. Before becoming a Hunter, one must pass the Hunter Examination—a high-risk selection proc"},"11757":{"mal_id":11757,"url":"https://myanimelist.net/anime/11757/Sword_Art_Online","title":"Sword Art Online","title_english":"Sword Art Online","title_japanese":"ソードアート・オンライン","score":7.23,"scored_by":2287320,"members":3311764,"episodes":25,"type":"TV","year":2012,"aired":{"from":"2012-07-08T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/11/39717.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/11/39717l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":2,"name":"Adventure"},{"mal_id":10,"name":"Fantasy"},{"mal_id":22,"name":"Romance"}],"themes":[{"mal_id":79,"name":"Video Game"}],"demographics":[],"synopsis":"Ever since the release of the innovative NerveGear, gamers from all around the globe have been given the opportunity to experience a completely immersive virtual reality. Sword Art Online (SAO), one of the most recent games on the console,"},"14719":{"mal_id":14719,"url":"https://myanimelist.net/anime/14719/JoJo_no_Kimyou_na_Bouken_TV","title":"JoJo no Kimyou na Bouken (TV)","title_english":"JoJo's Bizarre Adventure (2012)","title_japanese":"ジョジョの奇妙な冒険","score":7.87,"scored_by":1208317,"members":1872559,"episodes":26,"type":"TV","year":2012,"aired":{"from":"2012-10-06T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/3/40409.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/3/40409l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":2,"name":"Adventure"},{"mal_id":37,"name":"Supernatural"}],"themes":[{"mal_id":13,"name":"Historical"},{"mal_id":32,"name":"Vampire"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"The year is 1868; English nobleman George Joestar and his son Jonathan become indebted to Dario Brando after being rescued from a carriage incident. What the Joestars don't realize, however, is that Dario had no intention of helping them; h"},"14741":{"mal_id":14741,"url":"https://myanimelist.net/anime/14741/Chuunibyou_demo_Koi_ga_Shitai","title":"Chuunibyou demo Koi ga Shitai!","title_english":"Love, Chunibyo & Other Delusions!","title_japanese":"中二病でも恋がしたい!","score":7.7,"scored_by":836042,"members":1470825,"episodes":12,"type":"TV","year":2012,"aired":{"from":"2012-10-04T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1905/142840.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1905/142840l.jpg"}},"genres":[{"mal_id":4,"name":"Comedy"},{"mal_id":22,"name":"Romance"}],"themes":[{"mal_id":23,"name":"School"}],"demographics":[],"synopsis":"Everybody has had that stage in their life where they have thought themselves to be special, different from the masses of ordinary humans. They might go as far as seeing themselves capable of wielding mystical powers, or maybe even believe"},"15583":{"mal_id":15583,"url":"https://myanimelist.net/anime/15583/Date_A_Live","title":"Date A Live","title_english":"Date A Live","title_japanese":"デート・ア・ライブ","score":7.14,"scored_by":626045,"members":1121409,"episodes":12,"type":"TV","year":2013,"aired":{"from":"2013-04-06T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/13/44844.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/13/44844l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":10,"name":"Fantasy"},{"mal_id":22,"name":"Romance"},{"mal_id":24,"name":"Sci-Fi"}],"themes":[{"mal_id":35,"name":"Harem"},{"mal_id":23,"name":"School"},{"mal_id":82,"name":"Urban Fantasy"}],"demographics":[],"synopsis":"Thirty years ago, the Eurasian continent was devastated by a supermassive spatial quake—a phenomenon involving space vibrations of unknown origin—resulting in the deaths of over 150 million people. Since then, these quakes have been plagu"},"16498":{"mal_id":16498,"url":"https://myanimelist.net/anime/16498/Shingeki_no_Kyojin","title":"Shingeki no Kyojin","title_english":"Attack on Titan","title_japanese":"進撃の巨人","score":8.57,"scored_by":3082596,"members":4383618,"episodes":25,"type":"TV","year":2013,"aired":{"from":"2013-04-07T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/10/47347.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/10/47347l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":46,"name":"Award Winning"},{"mal_id":8,"name":"Drama"},{"mal_id":41,"name":"Suspense"}],"themes":[{"mal_id":58,"name":"Gore"},{"mal_id":38,"name":"Military"},{"mal_id":76,"name":"Survival"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Centuries ago, mankind was slaughtered to near extinction by monstrous humanoid creatures called Titans, forcing humans to hide in fear behind enormous concentric walls. What makes these giants truly terrifying is that their taste for human"},"17895":{"mal_id":17895,"url":"https://myanimelist.net/anime/17895/Golden_Time","title":"Golden Time","title_english":"Golden Time","title_japanese":"ゴールデンタイム","score":7.74,"scored_by":597732,"members":1143120,"episodes":24,"type":"TV","year":2013,"aired":{"from":"2013-10-04T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/12/52091.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/12/52091l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":22,"name":"Romance"}],"themes":[{"mal_id":50,"name":"Adult Cast"},{"mal_id":64,"name":"Love Polygon"}],"demographics":[],"synopsis":"Due to a tragic accident, Banri Tada is struck with amnesia, dissolving the memories of his hometown and past. However, after befriending Mitsuo Yanagisawa, he decides to move on and begin a new life at law school in Tokyo. But just as he i"},"22319":{"mal_id":22319,"url":"https://myanimelist.net/anime/22319/Tokyo_Ghoul","title":"Tokyo Ghoul","title_english":"Tokyo Ghoul","title_japanese":"東京喰種-トーキョーグール-","score":7.79,"scored_by":2010205,"members":3068770,"episodes":12,"type":"TV","year":2014,"aired":{"from":"2014-07-04T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1498/134443.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1498/134443l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":10,"name":"Fantasy"},{"mal_id":14,"name":"Horror"},{"mal_id":41,"name":"Suspense"}],"themes":[{"mal_id":58,"name":"Gore"},{"mal_id":40,"name":"Psychological"},{"mal_id":82,"name":"Urban Fantasy"}],"demographics":[{"mal_id":42,"name":"Seinen"}],"synopsis":"A sinister threat is invading Tokyo: flesh-eating ghouls who appear identical to humans and blend into their population. Reserved college student Ken Kaneki buries his nose in books and avoids the news of the growing crisis. However, the"},"23755":{"mal_id":23755,"url":"https://myanimelist.net/anime/23755/Nanatsu_no_Taizai","title":"Nanatsu no Taizai","title_english":"The Seven Deadly Sins","title_japanese":"七つの大罪","score":7.6,"scored_by":1437449,"members":2218787,"episodes":24,"type":"TV","year":2014,"aired":{"from":"2014-10-05T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/8/65409.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/8/65409l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":2,"name":"Adventure"},{"mal_id":10,"name":"Fantasy"}],"themes":[],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"In a world similar to the European Middle Ages, the feared yet revered Holy Knights of Britannia use immensely powerful magic to protect the region of Britannia and its kingdoms. However, a small subset of the Knights supposedly betrayed th"},"27775":{"mal_id":27775,"url":"https://myanimelist.net/anime/27775/Plastic_Memories","title":"Plastic Memories","title_english":"Plastic Memories","title_japanese":"プラスティック・メモリーズ","score":7.92,"scored_by":515333,"members":1035115,"episodes":13,"type":"TV","year":2015,"aired":{"from":"2015-04-05T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/4/72750.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/4/72750l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":22,"name":"Romance"},{"mal_id":24,"name":"Sci-Fi"}],"themes":[],"demographics":[],"synopsis":"Eighteen-year-old Tsukasa Mizugaki has failed his college entrance exams, but after pulling some strings, he manages to land a job at the Sion Artificial Intelligence Corporation. SAI Corp is responsible for the creation of Giftias—highly"},"30831":{"mal_id":30831,"url":"https://myanimelist.net/anime/30831/Kono_Subarashii_Sekai_ni_Shukufuku_wo","title":"Kono Subarashii Sekai ni Shukufuku wo!","title_english":"KonoSuba: God's Blessing on This Wonderful World!","title_japanese":"この素晴らしい世界に祝福を！","score":8.09,"scored_by":1391065,"members":2162056,"episodes":10,"type":"TV","year":2016,"aired":{"from":"2016-01-14T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1895/142748.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1895/142748l.jpg"}},"genres":[{"mal_id":2,"name":"Adventure"},{"mal_id":4,"name":"Comedy"},{"mal_id":10,"name":"Fantasy"}],"themes":[{"mal_id":62,"name":"Isekai"},{"mal_id":20,"name":"Parody"}],"demographics":[],"synopsis":"After dying a laughable and pathetic death on his way back from buying a game, high school student and recluse Kazuma Satou finds himself sitting before a beautiful but obnoxious goddess named Aqua. She provides the NEET with two options: c"},"31240":{"mal_id":31240,"url":"https://myanimelist.net/anime/31240/Re_Zero_kara_Hajimeru_Isekai_Seikatsu","title":"Re:Zero kara Hajimeru Isekai Seikatsu","title_english":"Re:ZERO -Starting Life in Another World-","title_japanese":"Re:ゼロから始める異世界生活","score":8.25,"scored_by":1579550,"members":2477654,"episodes":25,"type":"TV","year":2016,"aired":{"from":"2016-04-04T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1522/128039.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1522/128039l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":10,"name":"Fantasy"},{"mal_id":41,"name":"Suspense"}],"themes":[{"mal_id":62,"name":"Isekai"},{"mal_id":40,"name":"Psychological"},{"mal_id":78,"name":"Time Travel"}],"demographics":[],"synopsis":"When Subaru Natsuki leaves the convenience store, the last thing he expects is to be wrenched from his everyday life and dropped into a fantasy world. Things are not looking good for the bewildered teenager; however, not long after his arri"},"32729":{"mal_id":32729,"url":"https://myanimelist.net/anime/32729/Orange","title":"Orange","title_english":"Orange","title_japanese":"orange（オレンジ）","score":7.63,"scored_by":434703,"members":904121,"episodes":13,"type":"TV","year":2016,"aired":{"from":"2016-07-04T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1415/102477.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1415/102477l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":22,"name":"Romance"},{"mal_id":24,"name":"Sci-Fi"}],"themes":[{"mal_id":64,"name":"Love Polygon"},{"mal_id":23,"name":"School"},{"mal_id":78,"name":"Time Travel"}],"demographics":[{"mal_id":25,"name":"Shoujo"}],"synopsis":"Naho Takamiya's first day of her sophomore year of high school is off to an uneasy start. After waking up late, she receives a strange letter addressed to her. However, the letter is from herself—10 years in the future! At first, Naho is sk"},"33352":{"mal_id":33352,"url":"https://myanimelist.net/anime/33352/Violet_Evergarden","title":"Violet Evergarden","title_english":"Violet Evergarden","title_japanese":"ヴァイオレット・エヴァーガーデン","score":8.69,"scored_by":1097066,"members":2008799,"episodes":13,"type":"TV","year":2018,"aired":{"from":"2018-01-11T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1795/95088.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1795/95088l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"}],"themes":[],"demographics":[],"synopsis":"The Great War finally came to an end after four long years of conflict; fractured in two, the continent of Telesis slowly began to flourish once again. Caught up in the bloodshed was Violet Evergarden, a young girl raised for the sole purpo"},"37450":{"mal_id":37450,"url":"https://myanimelist.net/anime/37450/Seishun_Buta_Yarou_wa_Bunny_Girl_Senpai_no_Yume_wo_Minai","title":"Seishun Buta Yarou wa Bunny Girl Senpai no Yume wo Minai","title_english":"Rascal Does Not Dream of Bunny Girl Senpai","title_japanese":"青春ブタ野郎はバニーガール先輩の夢を見ない","score":8.23,"scored_by":1246585,"members":1971978,"episodes":13,"type":"TV","year":2018,"aired":{"from":"2018-10-04T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1301/93586.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1301/93586l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":22,"name":"Romance"},{"mal_id":37,"name":"Supernatural"}],"themes":[{"mal_id":23,"name":"School"}],"demographics":[],"synopsis":"The rare and inexplicable Puberty Syndrome is thought of as a myth. It is a rare disease which only affects teenagers, and its symptoms are so supernatural that hardly anyone recognizes it as a legitimate occurrence. However, high school st"},"37779":{"mal_id":37779,"url":"https://myanimelist.net/anime/37779/Yakusoku_no_Neverland","title":"Yakusoku no Neverland","title_english":"The Promised Neverland","title_japanese":"約束のネバーランド","score":8.47,"scored_by":1403728,"members":2164152,"episodes":12,"type":"TV","year":2019,"aired":{"from":"2019-01-11T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1830/118780.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1830/118780l.jpg"}},"genres":[{"mal_id":7,"name":"Mystery"},{"mal_id":41,"name":"Suspense"}],"themes":[{"mal_id":40,"name":"Psychological"},{"mal_id":76,"name":"Survival"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Surrounded by a forest and a gated entrance, the Grace Field House is inhabited by orphans happily living together as one big family, looked after by their Mama, Isabella. Although they are required to take tests daily, the children are f"},"41433":{"mal_id":41433,"url":"https://myanimelist.net/anime/41433/Akudama_Drive","title":"Akudama Drive","title_english":"Akudama Drive","title_japanese":"アクダマドライブ","score":7.56,"scored_by":227731,"members":493810,"episodes":12,"type":"TV","year":2020,"aired":{"from":"2020-10-08T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1468/109172.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1468/109172l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":24,"name":"Sci-Fi"},{"mal_id":41,"name":"Suspense"}],"themes":[{"mal_id":50,"name":"Adult Cast"},{"mal_id":58,"name":"Gore"}],"demographics":[],"synopsis":"The bustling metropolis of Kansai, where cybernetic screens litter the neon landscape, may seem like a technological utopia at first glance. But in the dark alleys around the brightly-lit buildings, an unforgiving criminal underbelly still"},"41930":{"mal_id":41930,"url":"https://myanimelist.net/anime/41930/Kamisama_ni_Natta_Hi","title":"Kamisama ni Natta Hi","title_english":"The Day I Became a God","title_japanese":"神様になった日","score":6.81,"scored_by":127118,"members":285969,"episodes":12,"type":"TV","year":2020,"aired":{"from":"2020-10-11T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1396/109465.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1396/109465l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"}],"themes":[{"mal_id":31,"name":"Super Power"}],"demographics":[],"synopsis":"Dressed in a conspicuous outfit and armed with an eccentric spirit, Hina Satou goes around insisting that she is the Asgardian god Odin. When she crosses paths with a boy named Youta Narukami, she uses her precognition abilities to warn h"},"2001":{"mal_id":2001,"url":"https://myanimelist.net/anime/2001/Tengen_Toppa_Gurren_Lagann","title":"Tengen Toppa Gurren Lagann","title_english":"Gurren Lagann","title_japanese":"天元突破グレンラガン","score":8.64,"scored_by":981554,"members":1776385,"episodes":27,"type":"TV","year":2007,"aired":{"from":"2007-04-01T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/4/5123.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/4/5123l.jpg"}},"genres":[{"mal_id":2,"name":"Adventure"},{"mal_id":46,"name":"Award Winning"},{"mal_id":24,"name":"Sci-Fi"}],"themes":[{"mal_id":18,"name":"Mecha"}],"demographics":[],"synopsis":"Simon and Kamina were born and raised in a deep, underground village, hidden from the fabled surface. Kamina is a free-spirited loose cannon bent on making a name for himself, while Simon is a timid young boy with no real aspirations. One d"},"2167":{"mal_id":2167,"url":"https://myanimelist.net/anime/2167/Clannad","title":"Clannad","title_english":"Clannad","title_japanese":"CLANNAD","score":7.99,"scored_by":799357,"members":1516564,"episodes":23,"type":"TV","year":2007,"aired":{"from":"2007-10-05T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1804/95033.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1804/95033l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":22,"name":"Romance"}],"themes":[{"mal_id":23,"name":"School"}],"demographics":[],"synopsis":"Tomoya Okazaki is a delinquent who finds life dull and believes he'll never amount to anything. Along with his friend Youhei Sunohara, he skips school and plans to waste his high school days away. One day while walking to school, Tomoya pas"},"4224":{"mal_id":4224,"url":"https://myanimelist.net/anime/4224/Toradora","title":"Toradora!","title_english":"Toradora!","title_japanese":"とらドラ！","score":8.04,"scored_by":1476480,"members":2375509,"episodes":25,"type":"TV","year":2008,"aired":{"from":"2008-10-02T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/13/22128.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/13/22128l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":22,"name":"Romance"}],"themes":[{"mal_id":64,"name":"Love Polygon"},{"mal_id":23,"name":"School"}],"demographics":[],"synopsis":"Ryuuji Takasu is a gentle high school student with a love for housework; but in contrast to his kind nature, he has an intimidating face that often gets him labeled as a delinquent. On the other hand is Taiga Aisaka, a small, doll-like stud"},"5114":{"mal_id":5114,"url":"https://myanimelist.net/anime/5114/Fullmetal_Alchemist__Brotherhood","title":"Fullmetal Alchemist: Brotherhood","title_english":"Fullmetal Alchemist: Brotherhood","title_japanese":"鋼の錬金術師 FULLMETAL ALCHEMIST","score":9.11,"scored_by":2321844,"members":3701228,"episodes":64,"type":"TV","year":2009,"aired":{"from":"2009-04-05T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1208/94745.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1208/94745l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":2,"name":"Adventure"},{"mal_id":8,"name":"Drama"},{"mal_id":10,"name":"Fantasy"}],"themes":[{"mal_id":38,"name":"Military"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"After a horrific alchemy experiment goes wrong in the Elric household, brothers Edward and Alphonse are left in a catastrophic new reality. Ignoring the alchemical principle banning human transmutation, the boys attempted to bring their rec"},"5530":{"mal_id":5530,"url":"https://myanimelist.net/anime/5530/Pandora_Hearts","title":"Pandora Hearts","title_english":"Pandora Hearts","title_japanese":"パンドラハーツ","score":7.64,"scored_by":181789,"members":454504,"episodes":25,"type":"TV","year":2009,"aired":{"from":"2009-04-03T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/4/75535.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/4/75535l.jpg"}},"genres":[{"mal_id":2,"name":"Adventure"},{"mal_id":10,"name":"Fantasy"},{"mal_id":7,"name":"Mystery"}],"themes":[],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"To young Oz Vessalius, heir to the Vessalius Duke House, the perilous world called the Abyss is nothing more than a folktale used to scare misbehaving children. However, when Oz's coming-of-age ceremony is interrupted by the malicious Baske"},"8425":{"mal_id":8425,"url":"https://myanimelist.net/anime/8425/Gosick","title":"Gosick","title_english":null,"title_japanese":"GOSICK -ゴシック-","score":8.04,"scored_by":248896,"members":607580,"episodes":24,"type":"TV","year":2011,"aired":{"from":"2011-01-08T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/11/27906.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/11/27906l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":7,"name":"Mystery"},{"mal_id":22,"name":"Romance"}],"themes":[{"mal_id":13,"name":"Historical"}],"demographics":[],"synopsis":"Kazuya Kujou is a foreign student at Saint Marguerite Academy, a luxurious boarding school in the Southern European country of Sauville. Originally from Japan, his jet-black hair and dark brown eyes cause his peers to shun him and give him"},"9253":{"mal_id":9253,"url":"https://myanimelist.net/anime/9253/Steins_Gate","title":"Steins;Gate","title_english":"Steins;Gate","title_japanese":"STEINS;GATE","score":9.07,"scored_by":1527441,"members":2826347,"episodes":24,"type":"TV","year":2011,"aired":{"from":"2011-04-06T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1935/127974.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1935/127974l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":24,"name":"Sci-Fi"},{"mal_id":41,"name":"Suspense"}],"themes":[{"mal_id":40,"name":"Psychological"},{"mal_id":78,"name":"Time Travel"}],"demographics":[],"synopsis":"Eccentric scientist Rintarou Okabe has a never-ending thirst for scientific exploration. Together with his ditzy but well-meaning friend Mayuri Shiina and his roommate Itaru Hashida, Okabe founds the Future Gadget Laboratory in the hopes of"},"14075":{"mal_id":14075,"url":"https://myanimelist.net/anime/14075/Zetsuen_no_Tempest","title":"Zetsuen no Tempest","title_english":"Blast of Tempest","title_japanese":"絶園のテンペスト","score":7.88,"scored_by":270714,"members":627246,"episodes":24,"type":"TV","year":2012,"aired":{"from":"2012-10-05T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/7/42453.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/7/42453l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":8,"name":"Drama"},{"mal_id":10,"name":"Fantasy"},{"mal_id":7,"name":"Mystery"}],"themes":[{"mal_id":40,"name":"Psychological"},{"mal_id":82,"name":"Urban Fantasy"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Yoshino Takigawa, an ordinary teenager, is secretly dating his best friend Mahiro Fuwa's younger sister, Aika. But when Aika mysteriously dies, Mahiro disappears, vowing to find the one responsible and make them pay for murdering his belove"},"18897":{"mal_id":18897,"url":"https://myanimelist.net/anime/18897/Nisekoi","title":"Nisekoi","title_english":"Nisekoi: False Love","title_japanese":"ニセコイ","score":7.55,"scored_by":696408,"members":1250031,"episodes":20,"type":"TV","year":2014,"aired":{"from":"2014-01-11T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/13/75587.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/13/75587l.jpg"}},"genres":[{"mal_id":4,"name":"Comedy"},{"mal_id":22,"name":"Romance"}],"themes":[{"mal_id":35,"name":"Harem"},{"mal_id":23,"name":"School"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Raku Ichijou, a first-year student at Bonyari High School, is the sole heir to an intimidating yakuza family. Ten years ago, Raku made a promise to his childhood friend. Now, all he has to go on is a pendant with a lock, which can only be u"},"34599":{"mal_id":34599,"url":"https://myanimelist.net/anime/34599/Made_in_Abyss","title":"Made in Abyss","title_english":"Made in Abyss","title_japanese":"メイドインアビス","score":8.62,"scored_by":841350,"members":1560410,"episodes":13,"type":"TV","year":2017,"aired":{"from":"2017-07-07T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/6/86733.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/6/86733l.jpg"}},"genres":[{"mal_id":2,"name":"Adventure"},{"mal_id":8,"name":"Drama"},{"mal_id":10,"name":"Fantasy"},{"mal_id":7,"name":"Mystery"},{"mal_id":24,"name":"Sci-Fi"}],"themes":[{"mal_id":58,"name":"Gore"}],"demographics":[],"synopsis":"The Abyss—a gaping chasm stretching down into the depths of the earth, filled with mysterious creatures and relics from a time long past. How did it come to be? What lies at the bottom? Countless brave individuals, known as Divers, have sou"},"34636":{"mal_id":34636,"url":"https://myanimelist.net/anime/34636/Ballroom_e_Youkoso","title":"Ballroom e Youkoso","title_english":"Welcome to the Ballroom","title_japanese":"ボールルームへようこそ","score":8.18,"scored_by":160782,"members":364202,"episodes":24,"type":"TV","year":2017,"aired":{"from":"2017-07-09T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/5/86739.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/5/86739l.jpg"}},"genres":[{"mal_id":30,"name":"Sports"}],"themes":[{"mal_id":70,"name":"Performing Arts"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Tatara Fujita is a shy middle schooler who has no particular plan for the future. He has gotten through life by avoiding any kind of confrontation and blending in with the crowd. But blending in isn't enough to get out of trouble, as some b"},"35849":{"mal_id":35849,"url":"https://myanimelist.net/anime/35849/Darling_in_the_FranXX","title":"Darling in the FranXX","title_english":"DARLING in the FRANXX","title_japanese":"ダーリン・イン・ザ・フランキス","score":7.2,"scored_by":1122643,"members":1824967,"episodes":24,"type":"TV","year":2018,"aired":{"from":"2018-01-13T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1614/90408.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1614/90408l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":22,"name":"Romance"},{"mal_id":24,"name":"Sci-Fi"}],"themes":[{"mal_id":18,"name":"Mecha"}],"demographics":[],"synopsis":"In the distant future, humanity has been driven to near-extinction by giant beasts known as Klaxosaurs, forcing the surviving humans to take refuge in massive fortress cities called Plantations. Children raised here are trained to pilot gia"},"37430":{"mal_id":37430,"url":"https://myanimelist.net/anime/37430/Tensei_shitara_Slime_Datta_Ken","title":"Tensei shitara Slime Datta Ken","title_english":"That Time I Got Reincarnated as a Slime","title_japanese":"転生したらスライムだった件","score":8.13,"scored_by":1000664,"members":1656763,"episodes":24,"type":"TV","year":2018,"aired":{"from":"2018-10-02T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1069/123309.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1069/123309l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":4,"name":"Comedy"},{"mal_id":10,"name":"Fantasy"}],"themes":[{"mal_id":62,"name":"Isekai"},{"mal_id":72,"name":"Reincarnation"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Thirty-seven-year-old Satoru Mikami is a typical corporate worker, who is perfectly content with his monotonous lifestyle in Tokyo, other than failing to nail down a girlfriend even once throughout his life. In the midst of a casual encount"},"39198":{"mal_id":39198,"url":"https://myanimelist.net/anime/39198/Kanata_no_Astra","title":"Kanata no Astra","title_english":"Astra Lost in Space","title_japanese":"彼方のアストラ","score":8.07,"scored_by":162828,"members":347745,"episodes":12,"type":"TV","year":2019,"aired":{"from":"2019-07-03T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1784/106428.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1784/106428l.jpg"}},"genres":[{"mal_id":2,"name":"Adventure"},{"mal_id":46,"name":"Award Winning"},{"mal_id":7,"name":"Mystery"},{"mal_id":24,"name":"Sci-Fi"},{"mal_id":41,"name":"Suspense"}],"themes":[{"mal_id":29,"name":"Space"},{"mal_id":76,"name":"Survival"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"In the year 2063, space travel is feasible and commercially available. As the cheerful Aries Spring arrives at the spaceport to attend a camp on the distant planet McPa, her purse is suddenly snatched by a reckless thief. Luckily, the athle"},"39535":{"mal_id":39535,"url":"https://myanimelist.net/anime/39535/Mushoku_Tensei__Isekai_Ittara_Honki_Dasu","title":"Mushoku Tensei: Isekai Ittara Honki Dasu","title_english":"Mushoku Tensei: Jobless Reincarnation","title_japanese":"無職転生 ～異世界行ったら本気だす～","score":8.32,"scored_by":982052,"members":1588567,"episodes":11,"type":"TV","year":2021,"aired":{"from":"2021-01-11T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1530/117776.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1530/117776l.jpg"}},"genres":[{"mal_id":2,"name":"Adventure"},{"mal_id":8,"name":"Drama"},{"mal_id":10,"name":"Fantasy"},{"mal_id":9,"name":"Ecchi"}],"themes":[{"mal_id":62,"name":"Isekai"},{"mal_id":72,"name":"Reincarnation"}],"demographics":[],"synopsis":"Despite being bullied, scorned, and oppressed all of his life, a 34-year-old shut-in still found the resolve to attempt something heroic—only for it to end in a tragic accident. But in a twist of fate, he awakens in another world as Rudeus"},"41457":{"mal_id":41457,"url":"https://myanimelist.net/anime/41457/86","title":"86","title_english":"86 Eighty-Six","title_japanese":"86―エイティシックス―","score":8.35,"scored_by":515463,"members":984479,"episodes":11,"type":"TV","year":2021,"aired":{"from":"2021-04-11T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1987/117507.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1987/117507l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":24,"name":"Sci-Fi"}],"themes":[{"mal_id":18,"name":"Mecha"},{"mal_id":38,"name":"Military"}],"demographics":[],"synopsis":"According to the Republic of San Magnolia, their ongoing war against the Giadian Empire has no casualties—however, that is mere propaganda. While the silver-haired Alba of the Republic's eighty-five sectors live safely behind protective wal"},"42249":{"mal_id":42249,"url":"https://myanimelist.net/anime/42249/Tokyo_Revengers","title":"Tokyo Revengers","title_english":"Tokyo Revengers","title_japanese":"東京リベンジャーズ","score":7.81,"scored_by":784057,"members":1414530,"episodes":24,"type":"TV","year":2021,"aired":{"from":"2021-04-11T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1839/122012.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1839/122012l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":8,"name":"Drama"}],"themes":[{"mal_id":55,"name":"Delinquents"},{"mal_id":78,"name":"Time Travel"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Takemichi Hanagaki's second year of middle school was the highest point in his life. He had respect, a gang of friends he could count on, and even a girlfriend. But that was twelve years ago. Today, he's a nobody: a washed-up nonentity made"},"43439":{"mal_id":43439,"url":"https://myanimelist.net/anime/43439/Shadows_House","title":"Shadows House","title_english":"Shadows House","title_japanese":"シャドーハウス","score":7.81,"scored_by":114126,"members":284612,"episodes":13,"type":"TV","year":2021,"aired":{"from":"2021-04-11T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1424/113342.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1424/113342l.jpg"}},"genres":[{"mal_id":10,"name":"Fantasy"},{"mal_id":7,"name":"Mystery"}],"themes":[],"demographics":[{"mal_id":42,"name":"Seinen"}],"synopsis":"The Shadows, characterized by their pitch-black appearance and tendency to emit soot when agitated, are a family of nobles who reside in a colossal manor deep within the mountains far from other humans. When a Shadow child is nearly of-age,"},"46095":{"mal_id":46095,"url":"https://myanimelist.net/anime/46095/Vivy__Fluorite_Eyes_Song","title":"Vivy: Fluorite Eye's Song","title_english":"Vivy -Fluorite Eye's Song-","title_japanese":"Vivy -Fluorite Eye's Song- (ヴィヴィ -フローライトアイズソング-)","score":8.37,"scored_by":274597,"members":612713,"episodes":13,"type":"TV","year":2021,"aired":{"from":"2021-04-03T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1551/128960.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1551/128960l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":24,"name":"Sci-Fi"},{"mal_id":41,"name":"Suspense"}],"themes":[{"mal_id":19,"name":"Music"},{"mal_id":78,"name":"Time Travel"}],"demographics":[],"synopsis":"When highly evolved AIs set out to eradicate mankind, the carnage that ensues fills the air with the stench of fresh blood and burning bodies. In a desperate bid to prevent the calamity from ever occurring, a scientist bets everything on a"},"47194":{"mal_id":47194,"url":"https://myanimelist.net/anime/47194/Summertime_Render","title":"Summertime Render","title_english":"Summer Time Rendering","title_japanese":"サマータイムレンダ","score":8.46,"scored_by":294082,"members":684601,"episodes":25,"type":"TV","year":2022,"aired":{"from":"2022-04-15T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1120/120796.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1120/120796l.jpg"}},"genres":[{"mal_id":7,"name":"Mystery"},{"mal_id":37,"name":"Supernatural"},{"mal_id":41,"name":"Suspense"}],"themes":[{"mal_id":78,"name":"Time Travel"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Since the death of his parents, Shinpei Ajiro had lived with the Kofune family and their two daughters—Mio and Ushio. Although he then left his home island to continue his education in Tokyo, Shinpei returns after Ushio tragically drowns du"},"48316":{"mal_id":48316,"url":"https://myanimelist.net/anime/48316/Kage_no_Jitsuryokusha_ni_Naritakute","title":"Kage no Jitsuryokusha ni Naritakute!","title_english":"The Eminence in Shadow","title_japanese":"陰の実力者になりたくて！","score":8.21,"scored_by":476615,"members":876989,"episodes":20,"type":"TV","year":2022,"aired":{"from":"2022-10-05T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1091/128729.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1091/128729l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":4,"name":"Comedy"},{"mal_id":10,"name":"Fantasy"}],"themes":[{"mal_id":62,"name":"Isekai"},{"mal_id":72,"name":"Reincarnation"}],"demographics":[],"synopsis":"For as long as he can remember, Minoru Kagenou has been fixated on becoming as strong as possible, which has led him to undertake all kinds of rigorous training. This wish, however, does not stem from a desire to be recognized by others; ra"},"52299":{"mal_id":52299,"url":"https://myanimelist.net/anime/52299/Ore_dake_Level_Up_na_Ken","title":"Ore dake Level Up na Ken","title_english":"Solo Leveling","title_japanese":"俺だけレベルアップな件","score":8.15,"scored_by":718980,"members":1156513,"episodes":12,"type":"TV","year":2024,"aired":{"from":"2024-01-07T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1801/142390.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1801/142390l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":2,"name":"Adventure"},{"mal_id":10,"name":"Fantasy"}],"themes":[{"mal_id":50,"name":"Adult Cast"},{"mal_id":82,"name":"Urban Fantasy"}],"demographics":[],"synopsis":"Humanity was caught at a precipice a decade ago when the first gates—portals linked with other dimensions that harbor monsters immune to conventional weaponry—emerged around the world. Alongside the appearance of the gates, various humans w"}};
+const FAVORITES_DATA = {"1575":{"mal_id":1575,"url":"https://myanimelist.net/anime/1575/Code_Geass__Hangyaku_no_Lelouch","title":"Code Geass: Hangyaku no Lelouch","title_english":"Code Geass: Lelouch of the Rebellion","title_japanese":"コードギアス 反逆のルルーシュ","score":8.71,"scored_by":1530145,"members":2485213,"episodes":25,"type":"TV","year":2006,"aired":{"from":"2006-10-06T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1032/135088.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1032/135088l.jpg"}},"genres":[{"mal_id":46,"name":"Award Winning"},{"mal_id":8,"name":"Drama"},{"mal_id":24,"name":"Sci-Fi"}],"themes":[{"mal_id":18,"name":"Mecha"},{"mal_id":38,"name":"Military"},{"mal_id":23,"name":"School"},{"mal_id":31,"name":"Super Power"}],"demographics":[],"synopsis":"In the year 2010, the Holy Empire of Britannia is establishing itself as a dominant military nation, starting with the conquest of Japan. Renamed to Area 11 after its swift defeat, Japan has seen significant resistance against these tyrants"},"4898":{"mal_id":4898,"url":"https://myanimelist.net/anime/4898/Kuroshitsuji","title":"Kuroshitsuji","title_english":"Black Butler","title_japanese":"黒執事","score":7.65,"scored_by":648809,"members":1278249,"episodes":24,"type":"TV","year":2008,"aired":{"from":"2008-10-03T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1467/137783.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1467/137783l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":7,"name":"Mystery"},{"mal_id":37,"name":"Supernatural"}],"themes":[{"mal_id":13,"name":"Historical"},{"mal_id":6,"name":"Mythology"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Young Ciel Phantomhive is known as the Queen's Guard Dog, taking care of the many unsettling events that occur in Victorian England for Her Majesty. Aided by Sebastian Michaelis, his loyal butler with seemingly inhuman abilities, Ciel use"},"10161":{"mal_id":10161,"url":"https://myanimelist.net/anime/10161/No6","title":"No.6","title_english":"No. 6","title_japanese":"NO.6［ナンバー・シックス］","score":7.55,"scored_by":216409,"members":465057,"episodes":11,"type":"TV","year":2011,"aired":{"from":"2011-07-08T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1474/90768.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1474/90768l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":8,"name":"Drama"},{"mal_id":7,"name":"Mystery"},{"mal_id":24,"name":"Sci-Fi"}],"themes":[],"demographics":[],"synopsis":"Many years ago, after the end of a bloody world war, mankind took shelter in six city-states that were peaceful and perfect... at least on the surface. However, Shion—an elite resident of the city-state No. 6—gained a new perspective on the"},"10620":{"mal_id":10620,"url":"https://myanimelist.net/anime/10620/Mirai_Nikki_TV","title":"Mirai Nikki (TV)","title_english":"The Future Diary","title_japanese":"未来日記","score":7.38,"scored_by":1279374,"members":2143960,"episodes":26,"type":"TV","year":2011,"aired":{"from":"2011-10-09T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/13/33465.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/13/33465l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":37,"name":"Supernatural"},{"mal_id":41,"name":"Suspense"}],"themes":[{"mal_id":58,"name":"Gore"},{"mal_id":59,"name":"High Stakes Game"},{"mal_id":40,"name":"Psychological"},{"mal_id":76,"name":"Survival"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Yukiteru Amano is a shy middle schooler who regularly keeps track of what he does in his daily life by writing down all of his activities on his phone—a digital diary. Despite having no friends at school, Yukiteru is frequently seen talking"},"11061":{"mal_id":11061,"url":"https://myanimelist.net/anime/11061/Hunter_x_Hunter_2011","title":"Hunter x Hunter (2011)","title_english":"Hunter x Hunter","title_japanese":"HUNTER×HUNTER（ハンター×ハンター）","score":9.03,"scored_by":1990785,"members":3206484,"episodes":148,"type":"TV","year":2011,"aired":{"from":"2011-10-02T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1337/99013.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1337/99013l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":2,"name":"Adventure"},{"mal_id":10,"name":"Fantasy"}],"themes":[],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Hunters devote themselves to accomplishing hazardous tasks, all from traversing the world's uncharted territories to locating rare items and monsters. Before becoming a Hunter, one must pass the Hunter Examination—a high-risk selection proc"},"11757":{"mal_id":11757,"url":"https://myanimelist.net/anime/11757/Sword_Art_Online","title":"Sword Art Online","title_english":"Sword Art Online","title_japanese":"ソードアート・オンライン","score":7.23,"scored_by":2287320,"members":3311764,"episodes":25,"type":"TV","year":2012,"aired":{"from":"2012-07-08T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/11/39717.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/11/39717l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":2,"name":"Adventure"},{"mal_id":10,"name":"Fantasy"},{"mal_id":22,"name":"Romance"}],"themes":[{"mal_id":79,"name":"Video Game"}],"demographics":[],"synopsis":"Ever since the release of the innovative NerveGear, gamers from all around the globe have been given the opportunity to experience a completely immersive virtual reality. Sword Art Online (SAO), one of the most recent games on the console,"},"14719":{"mal_id":14719,"url":"https://myanimelist.net/anime/14719/JoJo_no_Kimyou_na_Bouken_TV","title":"JoJo no Kimyou na Bouken (TV)","title_english":"JoJo's Bizarre Adventure (2012)","title_japanese":"ジョジョの奇妙な冒険","score":7.87,"scored_by":1208317,"members":1872559,"episodes":26,"type":"TV","year":2012,"aired":{"from":"2012-10-06T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/3/40409.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/3/40409l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":2,"name":"Adventure"},{"mal_id":37,"name":"Supernatural"}],"themes":[{"mal_id":13,"name":"Historical"},{"mal_id":32,"name":"Vampire"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"The year is 1868; English nobleman George Joestar and his son Jonathan become indebted to Dario Brando after being rescued from a carriage incident. What the Joestars don't realize, however, is that Dario had no intention of helping them; h"},"14741":{"mal_id":14741,"url":"https://myanimelist.net/anime/14741/Chuunibyou_demo_Koi_ga_Shitai","title":"Chuunibyou demo Koi ga Shitai!","title_english":"Love, Chunibyo & Other Delusions!","title_japanese":"中二病でも恋がしたい!","score":7.7,"scored_by":836042,"members":1470825,"episodes":12,"type":"TV","year":2012,"aired":{"from":"2012-10-04T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1905/142840.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1905/142840l.jpg"}},"genres":[{"mal_id":4,"name":"Comedy"},{"mal_id":22,"name":"Romance"}],"themes":[{"mal_id":23,"name":"School"}],"demographics":[],"synopsis":"Everybody has had that stage in their life where they have thought themselves to be special, different from the masses of ordinary humans. They might go as far as seeing themselves capable of wielding mystical powers, or maybe even believe"},"15583":{"mal_id":15583,"url":"https://myanimelist.net/anime/15583/Date_A_Live","title":"Date A Live","title_english":"Date A Live","title_japanese":"デート・ア・ライブ","score":7.14,"scored_by":626045,"members":1121409,"episodes":12,"type":"TV","year":2013,"aired":{"from":"2013-04-06T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/13/44844.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/13/44844l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":10,"name":"Fantasy"},{"mal_id":22,"name":"Romance"},{"mal_id":24,"name":"Sci-Fi"}],"themes":[{"mal_id":35,"name":"Harem"},{"mal_id":23,"name":"School"},{"mal_id":82,"name":"Urban Fantasy"}],"demographics":[],"synopsis":"Thirty years ago, the Eurasian continent was devastated by a supermassive spatial quake—a phenomenon involving space vibrations of unknown origin—resulting in the deaths of over 150 million people. Since then, these quakes have been plagu"},"16498":{"mal_id":16498,"url":"https://myanimelist.net/anime/16498/Shingeki_no_Kyojin","title":"Shingeki no Kyojin","title_english":"Attack on Titan","title_japanese":"進撃の巨人","score":8.57,"scored_by":3082596,"members":4383618,"episodes":25,"type":"TV","year":2013,"aired":{"from":"2013-04-07T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/10/47347.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/10/47347l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":46,"name":"Award Winning"},{"mal_id":8,"name":"Drama"},{"mal_id":41,"name":"Suspense"}],"themes":[{"mal_id":58,"name":"Gore"},{"mal_id":38,"name":"Military"},{"mal_id":76,"name":"Survival"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Centuries ago, mankind was slaughtered to near extinction by monstrous humanoid creatures called Titans, forcing humans to hide in fear behind enormous concentric walls. What makes these giants truly terrifying is that their taste for human"},"17895":{"mal_id":17895,"url":"https://myanimelist.net/anime/17895/Golden_Time","title":"Golden Time","title_english":"Golden Time","title_japanese":"ゴールデンタイム","score":7.74,"scored_by":597732,"members":1143120,"episodes":24,"type":"TV","year":2013,"aired":{"from":"2013-10-04T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/12/52091.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/12/52091l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":22,"name":"Romance"}],"themes":[{"mal_id":50,"name":"Adult Cast"},{"mal_id":64,"name":"Love Polygon"}],"demographics":[],"synopsis":"Due to a tragic accident, Banri Tada is struck with amnesia, dissolving the memories of his hometown and past. However, after befriending Mitsuo Yanagisawa, he decides to move on and begin a new life at law school in Tokyo. But just as he i"},"22319":{"mal_id":22319,"url":"https://myanimelist.net/anime/22319/Tokyo_Ghoul","title":"Tokyo Ghoul","title_english":"Tokyo Ghoul","title_japanese":"東京喰種-トーキョーグール-","score":7.79,"scored_by":2010205,"members":3068770,"episodes":12,"type":"TV","year":2014,"aired":{"from":"2014-07-04T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1498/134443.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1498/134443l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":10,"name":"Fantasy"},{"mal_id":14,"name":"Horror"},{"mal_id":41,"name":"Suspense"}],"themes":[{"mal_id":58,"name":"Gore"},{"mal_id":40,"name":"Psychological"},{"mal_id":82,"name":"Urban Fantasy"}],"demographics":[{"mal_id":42,"name":"Seinen"}],"synopsis":"A sinister threat is invading Tokyo: flesh-eating ghouls who appear identical to humans and blend into their population. Reserved college student Ken Kaneki buries his nose in books and avoids the news of the growing crisis. However, the"},"23755":{"mal_id":23755,"url":"https://myanimelist.net/anime/23755/Nanatsu_no_Taizai","title":"Nanatsu no Taizai","title_english":"The Seven Deadly Sins","title_japanese":"七つの大罪","score":7.6,"scored_by":1437449,"members":2218787,"episodes":24,"type":"TV","year":2014,"aired":{"from":"2014-10-05T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/8/65409.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/8/65409l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":2,"name":"Adventure"},{"mal_id":10,"name":"Fantasy"}],"themes":[],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"In a world similar to the European Middle Ages, the feared yet revered Holy Knights of Britannia use immensely powerful magic to protect the region of Britannia and its kingdoms. However, a small subset of the Knights supposedly betrayed th"},"27775":{"mal_id":27775,"url":"https://myanimelist.net/anime/27775/Plastic_Memories","title":"Plastic Memories","title_english":"Plastic Memories","title_japanese":"プラスティック・メモリーズ","score":7.92,"scored_by":515333,"members":1035115,"episodes":13,"type":"TV","year":2015,"aired":{"from":"2015-04-05T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/4/72750.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/4/72750l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":22,"name":"Romance"},{"mal_id":24,"name":"Sci-Fi"}],"themes":[],"demographics":[],"synopsis":"Eighteen-year-old Tsukasa Mizugaki has failed his college entrance exams, but after pulling some strings, he manages to land a job at the Sion Artificial Intelligence Corporation. SAI Corp is responsible for the creation of Giftias—highly"},"30831":{"mal_id":30831,"url":"https://myanimelist.net/anime/30831/Kono_Subarashii_Sekai_ni_Shukufuku_wo","title":"Kono Subarashii Sekai ni Shukufuku wo!","title_english":"KonoSuba: God's Blessing on This Wonderful World!","title_japanese":"この素晴らしい世界に祝福を！","score":8.09,"scored_by":1391065,"members":2162056,"episodes":10,"type":"TV","year":2016,"aired":{"from":"2016-01-14T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1895/142748.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1895/142748l.jpg"}},"genres":[{"mal_id":2,"name":"Adventure"},{"mal_id":4,"name":"Comedy"},{"mal_id":10,"name":"Fantasy"}],"themes":[{"mal_id":62,"name":"Isekai"},{"mal_id":20,"name":"Parody"}],"demographics":[],"synopsis":"After dying a laughable and pathetic death on his way back from buying a game, high school student and recluse Kazuma Satou finds himself sitting before a beautiful but obnoxious goddess named Aqua. She provides the NEET with two options: c"},"31240":{"mal_id":31240,"url":"https://myanimelist.net/anime/31240/Re_Zero_kara_Hajimeru_Isekai_Seikatsu","title":"Re:Zero kara Hajimeru Isekai Seikatsu","title_english":"Re:ZERO -Starting Life in Another World-","title_japanese":"Re:ゼロから始める異世界生活","score":8.25,"scored_by":1579550,"members":2477654,"episodes":25,"type":"TV","year":2016,"aired":{"from":"2016-04-04T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1522/128039.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1522/128039l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":10,"name":"Fantasy"},{"mal_id":41,"name":"Suspense"}],"themes":[{"mal_id":62,"name":"Isekai"},{"mal_id":40,"name":"Psychological"},{"mal_id":78,"name":"Time Travel"}],"demographics":[],"synopsis":"When Subaru Natsuki leaves the convenience store, the last thing he expects is to be wrenched from his everyday life and dropped into a fantasy world. Things are not looking good for the bewildered teenager; however, not long after his arri"},"32729":{"mal_id":32729,"url":"https://myanimelist.net/anime/32729/Orange","title":"Orange","title_english":"Orange","title_japanese":"orange（オレンジ）","score":7.63,"scored_by":434703,"members":904121,"episodes":13,"type":"TV","year":2016,"aired":{"from":"2016-07-04T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1415/102477.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1415/102477l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":22,"name":"Romance"},{"mal_id":24,"name":"Sci-Fi"}],"themes":[{"mal_id":64,"name":"Love Polygon"},{"mal_id":23,"name":"School"},{"mal_id":78,"name":"Time Travel"}],"demographics":[{"mal_id":25,"name":"Shoujo"}],"synopsis":"Naho Takamiya's first day of her sophomore year of high school is off to an uneasy start. After waking up late, she receives a strange letter addressed to her. However, the letter is from herself—10 years in the future! At first, Naho is sk"},"33352":{"mal_id":33352,"url":"https://myanimelist.net/anime/33352/Violet_Evergarden","title":"Violet Evergarden","title_english":"Violet Evergarden","title_japanese":"ヴァイオレット・エヴァーガーデン","score":8.69,"scored_by":1097066,"members":2008799,"episodes":13,"type":"TV","year":2018,"aired":{"from":"2018-01-11T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1795/95088.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1795/95088l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"}],"themes":[],"demographics":[],"synopsis":"The Great War finally came to an end after four long years of conflict; fractured in two, the continent of Telesis slowly began to flourish once again. Caught up in the bloodshed was Violet Evergarden, a young girl raised for the sole purpo"},"37450":{"mal_id":37450,"url":"https://myanimelist.net/anime/37450/Seishun_Buta_Yarou_wa_Bunny_Girl_Senpai_no_Yume_wo_Minai","title":"Seishun Buta Yarou wa Bunny Girl Senpai no Yume wo Minai","title_english":"Rascal Does Not Dream of Bunny Girl Senpai","title_japanese":"青春ブタ野郎はバニーガール先輩の夢を見ない","score":8.23,"scored_by":1246585,"members":1971978,"episodes":13,"type":"TV","year":2018,"aired":{"from":"2018-10-04T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1301/93586.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1301/93586l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":22,"name":"Romance"},{"mal_id":37,"name":"Supernatural"}],"themes":[{"mal_id":23,"name":"School"}],"demographics":[],"synopsis":"The rare and inexplicable Puberty Syndrome is thought of as a myth. It is a rare disease which only affects teenagers, and its symptoms are so supernatural that hardly anyone recognizes it as a legitimate occurrence. However, high school st"},"37779":{"mal_id":37779,"url":"https://myanimelist.net/anime/37779/Yakusoku_no_Neverland","title":"Yakusoku no Neverland","title_english":"The Promised Neverland","title_japanese":"約束のネバーランド","score":8.47,"scored_by":1403728,"members":2164152,"episodes":12,"type":"TV","year":2019,"aired":{"from":"2019-01-11T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1830/118780.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1830/118780l.jpg"}},"genres":[{"mal_id":7,"name":"Mystery"},{"mal_id":41,"name":"Suspense"}],"themes":[{"mal_id":40,"name":"Psychological"},{"mal_id":76,"name":"Survival"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Surrounded by a forest and a gated entrance, the Grace Field House is inhabited by orphans happily living together as one big family, looked after by their Mama, Isabella. Although they are required to take tests daily, the children are f"},"41433":{"mal_id":41433,"url":"https://myanimelist.net/anime/41433/Akudama_Drive","title":"Akudama Drive","title_english":"Akudama Drive","title_japanese":"アクダマドライブ","score":7.56,"scored_by":227731,"members":493810,"episodes":12,"type":"TV","year":2020,"aired":{"from":"2020-10-08T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1468/109172.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1468/109172l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":24,"name":"Sci-Fi"},{"mal_id":41,"name":"Suspense"}],"themes":[{"mal_id":50,"name":"Adult Cast"},{"mal_id":58,"name":"Gore"}],"demographics":[],"synopsis":"The bustling metropolis of Kansai, where cybernetic screens litter the neon landscape, may seem like a technological utopia at first glance. But in the dark alleys around the brightly-lit buildings, an unforgiving criminal underbelly still"},"41930":{"mal_id":41930,"url":"https://myanimelist.net/anime/41930/Kamisama_ni_Natta_Hi","title":"Kamisama ni Natta Hi","title_english":"The Day I Became a God","title_japanese":"神様になった日","score":6.81,"scored_by":127118,"members":285969,"episodes":12,"type":"TV","year":2020,"aired":{"from":"2020-10-11T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1396/109465.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1396/109465l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"}],"themes":[{"mal_id":31,"name":"Super Power"}],"demographics":[],"synopsis":"Dressed in a conspicuous outfit and armed with an eccentric spirit, Hina Satou goes around insisting that she is the Asgardian god Odin. When she crosses paths with a boy named Youta Narukami, she uses her precognition abilities to warn h"},"2001":{"mal_id":2001,"url":"https://myanimelist.net/anime/2001/Tengen_Toppa_Gurren_Lagann","title":"Tengen Toppa Gurren Lagann","title_english":"Gurren Lagann","title_japanese":"天元突破グレンラガン","score":8.64,"scored_by":981554,"members":1776385,"episodes":27,"type":"TV","year":2007,"aired":{"from":"2007-04-01T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/4/5123.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/4/5123l.jpg"}},"genres":[{"mal_id":2,"name":"Adventure"},{"mal_id":46,"name":"Award Winning"},{"mal_id":24,"name":"Sci-Fi"}],"themes":[{"mal_id":18,"name":"Mecha"}],"demographics":[],"synopsis":"Simon and Kamina were born and raised in a deep, underground village, hidden from the fabled surface. Kamina is a free-spirited loose cannon bent on making a name for himself, while Simon is a timid young boy with no real aspirations. One d"},"2167":{"mal_id":2167,"url":"https://myanimelist.net/anime/2167/Clannad","title":"Clannad","title_english":"Clannad","title_japanese":"CLANNAD","score":7.99,"scored_by":799357,"members":1516564,"episodes":23,"type":"TV","year":2007,"aired":{"from":"2007-10-05T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1804/95033.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1804/95033l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":22,"name":"Romance"}],"themes":[{"mal_id":23,"name":"School"}],"demographics":[],"synopsis":"Tomoya Okazaki is a delinquent who finds life dull and believes he'll never amount to anything. Along with his friend Youhei Sunohara, he skips school and plans to waste his high school days away. One day while walking to school, Tomoya pas"},"4224":{"mal_id":4224,"url":"https://myanimelist.net/anime/4224/Toradora","title":"Toradora!","title_english":"Toradora!","title_japanese":"とらドラ！","score":8.04,"scored_by":1476480,"members":2375509,"episodes":25,"type":"TV","year":2008,"aired":{"from":"2008-10-02T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/13/22128.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/13/22128l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":22,"name":"Romance"}],"themes":[{"mal_id":64,"name":"Love Polygon"},{"mal_id":23,"name":"School"}],"demographics":[],"synopsis":"Ryuuji Takasu is a gentle high school student with a love for housework; but in contrast to his kind nature, he has an intimidating face that often gets him labeled as a delinquent. On the other hand is Taiga Aisaka, a small, doll-like stud"},"5114":{"mal_id":5114,"url":"https://myanimelist.net/anime/5114/Fullmetal_Alchemist__Brotherhood","title":"Fullmetal Alchemist: Brotherhood","title_english":"Fullmetal Alchemist: Brotherhood","title_japanese":"鋼の錬金術師 FULLMETAL ALCHEMIST","score":9.11,"scored_by":2321844,"members":3701228,"episodes":64,"type":"TV","year":2009,"aired":{"from":"2009-04-05T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1208/94745.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1208/94745l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":2,"name":"Adventure"},{"mal_id":8,"name":"Drama"},{"mal_id":10,"name":"Fantasy"}],"themes":[{"mal_id":38,"name":"Military"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"After a horrific alchemy experiment goes wrong in the Elric household, brothers Edward and Alphonse are left in a catastrophic new reality. Ignoring the alchemical principle banning human transmutation, the boys attempted to bring their rec"},"5530":{"mal_id":5530,"url":"https://myanimelist.net/anime/5530/Pandora_Hearts","title":"Pandora Hearts","title_english":"Pandora Hearts","title_japanese":"パンドラハーツ","score":7.64,"scored_by":181789,"members":454504,"episodes":25,"type":"TV","year":2009,"aired":{"from":"2009-04-03T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/4/75535.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/4/75535l.jpg"}},"genres":[{"mal_id":2,"name":"Adventure"},{"mal_id":10,"name":"Fantasy"},{"mal_id":7,"name":"Mystery"}],"themes":[],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"To young Oz Vessalius, heir to the Vessalius Duke House, the perilous world called the Abyss is nothing more than a folktale used to scare misbehaving children. However, when Oz's coming-of-age ceremony is interrupted by the malicious Baske"},"8425":{"mal_id":8425,"url":"https://myanimelist.net/anime/8425/Gosick","title":"Gosick","title_english":null,"title_japanese":"GOSICK -ゴシック-","score":8.04,"scored_by":248896,"members":607580,"episodes":24,"type":"TV","year":2011,"aired":{"from":"2011-01-08T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/11/27906.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/11/27906l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":7,"name":"Mystery"},{"mal_id":22,"name":"Romance"}],"themes":[{"mal_id":13,"name":"Historical"}],"demographics":[],"synopsis":"Kazuya Kujou is a foreign student at Saint Marguerite Academy, a luxurious boarding school in the Southern European country of Sauville. Originally from Japan, his jet-black hair and dark brown eyes cause his peers to shun him and give him"},"9253":{"mal_id":9253,"url":"https://myanimelist.net/anime/9253/Steins_Gate","title":"Steins;Gate","title_english":"Steins;Gate","title_japanese":"STEINS;GATE","score":9.07,"scored_by":1527441,"members":2826347,"episodes":24,"type":"TV","year":2011,"aired":{"from":"2011-04-06T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1935/127974.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1935/127974l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":24,"name":"Sci-Fi"},{"mal_id":41,"name":"Suspense"}],"themes":[{"mal_id":40,"name":"Psychological"},{"mal_id":78,"name":"Time Travel"}],"demographics":[],"synopsis":"Eccentric scientist Rintarou Okabe has a never-ending thirst for scientific exploration. Together with his ditzy but well-meaning friend Mayuri Shiina and his roommate Itaru Hashida, Okabe founds the Future Gadget Laboratory in the hopes of"},"14075":{"mal_id":14075,"url":"https://myanimelist.net/anime/14075/Zetsuen_no_Tempest","title":"Zetsuen no Tempest","title_english":"Blast of Tempest","title_japanese":"絶園のテンペスト","score":7.88,"scored_by":270714,"members":627246,"episodes":24,"type":"TV","year":2012,"aired":{"from":"2012-10-05T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/7/42453.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/7/42453l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":8,"name":"Drama"},{"mal_id":10,"name":"Fantasy"},{"mal_id":7,"name":"Mystery"}],"themes":[{"mal_id":40,"name":"Psychological"},{"mal_id":82,"name":"Urban Fantasy"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Yoshino Takigawa, an ordinary teenager, is secretly dating his best friend Mahiro Fuwa's younger sister, Aika. But when Aika mysteriously dies, Mahiro disappears, vowing to find the one responsible and make them pay for murdering his belove"},"18897":{"mal_id":18897,"url":"https://myanimelist.net/anime/18897/Nisekoi","title":"Nisekoi","title_english":"Nisekoi: False Love","title_japanese":"ニセコイ","score":7.55,"scored_by":696408,"members":1250031,"episodes":20,"type":"TV","year":2014,"aired":{"from":"2014-01-11T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/13/75587.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/13/75587l.jpg"}},"genres":[{"mal_id":4,"name":"Comedy"},{"mal_id":22,"name":"Romance"}],"themes":[{"mal_id":35,"name":"Harem"},{"mal_id":23,"name":"School"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Raku Ichijou, a first-year student at Bonyari High School, is the sole heir to an intimidating yakuza family. Ten years ago, Raku made a promise to his childhood friend. Now, all he has to go on is a pendant with a lock, which can only be u"},"34599":{"mal_id":34599,"url":"https://myanimelist.net/anime/34599/Made_in_Abyss","title":"Made in Abyss","title_english":"Made in Abyss","title_japanese":"メイドインアビス","score":8.62,"scored_by":841350,"members":1560410,"episodes":13,"type":"TV","year":2017,"aired":{"from":"2017-07-07T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/6/86733.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/6/86733l.jpg"}},"genres":[{"mal_id":2,"name":"Adventure"},{"mal_id":8,"name":"Drama"},{"mal_id":10,"name":"Fantasy"},{"mal_id":7,"name":"Mystery"},{"mal_id":24,"name":"Sci-Fi"}],"themes":[{"mal_id":58,"name":"Gore"}],"demographics":[],"synopsis":"The Abyss—a gaping chasm stretching down into the depths of the earth, filled with mysterious creatures and relics from a time long past. How did it come to be? What lies at the bottom? Countless brave individuals, known as Divers, have sou"},"34636":{"mal_id":34636,"url":"https://myanimelist.net/anime/34636/Ballroom_e_Youkoso","title":"Ballroom e Youkoso","title_english":"Welcome to the Ballroom","title_japanese":"ボールルームへようこそ","score":8.18,"scored_by":160782,"members":364202,"episodes":24,"type":"TV","year":2017,"aired":{"from":"2017-07-09T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/5/86739.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/5/86739l.jpg"}},"genres":[{"mal_id":30,"name":"Sports"}],"themes":[{"mal_id":70,"name":"Performing Arts"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Tatara Fujita is a shy middle schooler who has no particular plan for the future. He has gotten through life by avoiding any kind of confrontation and blending in with the crowd. But blending in isn't enough to get out of trouble, as some b"},"35849":{"mal_id":35849,"url":"https://myanimelist.net/anime/35849/Darling_in_the_FranXX","title":"Darling in the FranXX","title_english":"DARLING in the FRANXX","title_japanese":"ダーリン・イン・ザ・フランキス","score":7.2,"scored_by":1122643,"members":1824967,"episodes":24,"type":"TV","year":2018,"aired":{"from":"2018-01-13T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1614/90408.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1614/90408l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":22,"name":"Romance"},{"mal_id":24,"name":"Sci-Fi"}],"themes":[{"mal_id":18,"name":"Mecha"}],"demographics":[],"synopsis":"In the distant future, humanity has been driven to near-extinction by giant beasts known as Klaxosaurs, forcing the surviving humans to take refuge in massive fortress cities called Plantations. Children raised here are trained to pilot gia"},"37430":{"mal_id":37430,"url":"https://myanimelist.net/anime/37430/Tensei_shitara_Slime_Datta_Ken","title":"Tensei shitara Slime Datta Ken","title_english":"That Time I Got Reincarnated as a Slime","title_japanese":"転生したらスライムだった件","score":8.13,"scored_by":1000664,"members":1656763,"episodes":24,"type":"TV","year":2018,"aired":{"from":"2018-10-02T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1069/123309.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1069/123309l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":4,"name":"Comedy"},{"mal_id":10,"name":"Fantasy"}],"themes":[{"mal_id":62,"name":"Isekai"},{"mal_id":72,"name":"Reincarnation"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Thirty-seven-year-old Satoru Mikami is a typical corporate worker, who is perfectly content with his monotonous lifestyle in Tokyo, other than failing to nail down a girlfriend even once throughout his life. In the midst of a casual encount"},"39198":{"mal_id":39198,"url":"https://myanimelist.net/anime/39198/Kanata_no_Astra","title":"Kanata no Astra","title_english":"Astra Lost in Space","title_japanese":"彼方のアストラ","score":8.07,"scored_by":162828,"members":347745,"episodes":12,"type":"TV","year":2019,"aired":{"from":"2019-07-03T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1784/106428.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1784/106428l.jpg"}},"genres":[{"mal_id":2,"name":"Adventure"},{"mal_id":46,"name":"Award Winning"},{"mal_id":7,"name":"Mystery"},{"mal_id":24,"name":"Sci-Fi"},{"mal_id":41,"name":"Suspense"}],"themes":[{"mal_id":29,"name":"Space"},{"mal_id":76,"name":"Survival"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"In the year 2063, space travel is feasible and commercially available. As the cheerful Aries Spring arrives at the spaceport to attend a camp on the distant planet McPa, her purse is suddenly snatched by a reckless thief. Luckily, the athle"},"39535":{"mal_id":39535,"url":"https://myanimelist.net/anime/39535/Mushoku_Tensei__Isekai_Ittara_Honki_Dasu","title":"Mushoku Tensei: Isekai Ittara Honki Dasu","title_english":"Mushoku Tensei: Jobless Reincarnation","title_japanese":"無職転生 ～異世界行ったら本気だす～","score":8.32,"scored_by":982052,"members":1588567,"episodes":11,"type":"TV","year":2021,"aired":{"from":"2021-01-11T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1530/117776.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1530/117776l.jpg"}},"genres":[{"mal_id":2,"name":"Adventure"},{"mal_id":8,"name":"Drama"},{"mal_id":10,"name":"Fantasy"},{"mal_id":9,"name":"Ecchi"}],"themes":[{"mal_id":62,"name":"Isekai"},{"mal_id":72,"name":"Reincarnation"}],"demographics":[],"synopsis":"Despite being bullied, scorned, and oppressed all of his life, a 34-year-old shut-in still found the resolve to attempt something heroic—only for it to end in a tragic accident. But in a twist of fate, he awakens in another world as Rudeus"},"41457":{"mal_id":41457,"url":"https://myanimelist.net/anime/41457/86","title":"86","title_english":"86 Eighty-Six","title_japanese":"86―エイティシックス―","score":8.35,"scored_by":515463,"members":984479,"episodes":11,"type":"TV","year":2021,"aired":{"from":"2021-04-11T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1987/117507.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1987/117507l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":24,"name":"Sci-Fi"}],"themes":[{"mal_id":18,"name":"Mecha"},{"mal_id":38,"name":"Military"}],"demographics":[],"synopsis":"According to the Republic of San Magnolia, their ongoing war against the Giadian Empire has no casualties—however, that is mere propaganda. While the silver-haired Alba of the Republic's eighty-five sectors live safely behind protective wal"},"42249":{"mal_id":42249,"url":"https://myanimelist.net/anime/42249/Tokyo_Revengers","title":"Tokyo Revengers","title_english":"Tokyo Revengers","title_japanese":"東京リベンジャーズ","score":7.81,"scored_by":784057,"members":1414530,"episodes":24,"type":"TV","year":2021,"aired":{"from":"2021-04-11T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1839/122012.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1839/122012l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":8,"name":"Drama"}],"themes":[{"mal_id":55,"name":"Delinquents"},{"mal_id":78,"name":"Time Travel"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Takemichi Hanagaki's second year of middle school was the highest point in his life. He had respect, a gang of friends he could count on, and even a girlfriend. But that was twelve years ago. Today, he's a nobody: a washed-up nonentity made"},"43439":{"mal_id":43439,"url":"https://myanimelist.net/anime/43439/Shadows_House","title":"Shadows House","title_english":"Shadows House","title_japanese":"シャドーハウス","score":7.81,"scored_by":114126,"members":284612,"episodes":13,"type":"TV","year":2021,"aired":{"from":"2021-04-11T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1424/113342.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1424/113342l.jpg"}},"genres":[{"mal_id":10,"name":"Fantasy"},{"mal_id":7,"name":"Mystery"}],"themes":[],"demographics":[{"mal_id":42,"name":"Seinen"}],"synopsis":"The Shadows, characterized by their pitch-black appearance and tendency to emit soot when agitated, are a family of nobles who reside in a colossal manor deep within the mountains far from other humans. When a Shadow child is nearly of-age,"},"46095":{"mal_id":46095,"url":"https://myanimelist.net/anime/46095/Vivy__Fluorite_Eyes_Song","title":"Vivy: Fluorite Eye's Song","title_english":"Vivy -Fluorite Eye's Song-","title_japanese":"Vivy -Fluorite Eye's Song- (ヴィヴィ -フローライトアイズソング-)","score":8.37,"scored_by":274597,"members":612713,"episodes":13,"type":"TV","year":2021,"aired":{"from":"2021-04-03T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1551/128960.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1551/128960l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":24,"name":"Sci-Fi"},{"mal_id":41,"name":"Suspense"}],"themes":[{"mal_id":19,"name":"Music"},{"mal_id":78,"name":"Time Travel"}],"demographics":[],"synopsis":"When highly evolved AIs set out to eradicate mankind, the carnage that ensues fills the air with the stench of fresh blood and burning bodies. In a desperate bid to prevent the calamity from ever occurring, a scientist bets everything on a"},"47194":{"mal_id":47194,"url":"https://myanimelist.net/anime/47194/Summertime_Render","title":"Summertime Render","title_english":"Summer Time Rendering","title_japanese":"サマータイムレンダ","score":8.46,"scored_by":294082,"members":684601,"episodes":25,"type":"TV","year":2022,"aired":{"from":"2022-04-15T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1120/120796.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1120/120796l.jpg"}},"genres":[{"mal_id":7,"name":"Mystery"},{"mal_id":37,"name":"Supernatural"},{"mal_id":41,"name":"Suspense"}],"themes":[{"mal_id":78,"name":"Time Travel"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Since the death of his parents, Shinpei Ajiro had lived with the Kofune family and their two daughters—Mio and Ushio. Although he then left his home island to continue his education in Tokyo, Shinpei returns after Ushio tragically drowns du"},"48316":{"mal_id":48316,"url":"https://myanimelist.net/anime/48316/Kage_no_Jitsuryokusha_ni_Naritakute","title":"Kage no Jitsuryokusha ni Naritakute!","title_english":"The Eminence in Shadow","title_japanese":"陰の実力者になりたくて！","score":8.21,"scored_by":476615,"members":876989,"episodes":20,"type":"TV","year":2022,"aired":{"from":"2022-10-05T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1091/128729.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1091/128729l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":4,"name":"Comedy"},{"mal_id":10,"name":"Fantasy"}],"themes":[{"mal_id":62,"name":"Isekai"},{"mal_id":72,"name":"Reincarnation"}],"demographics":[],"synopsis":"For as long as he can remember, Minoru Kagenou has been fixated on becoming as strong as possible, which has led him to undertake all kinds of rigorous training. This wish, however, does not stem from a desire to be recognized by others; ra"},"52299":{"mal_id":52299,"url":"https://myanimelist.net/anime/52299/Ore_dake_Level_Up_na_Ken","title":"Ore dake Level Up na Ken","title_english":"Solo Leveling","title_japanese":"俺だけレベルアップな件","score":8.15,"scored_by":718980,"members":1156513,"episodes":12,"type":"TV","year":2024,"aired":{"from":"2024-01-07T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1801/142390.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1801/142390l.jpg"}},"genres":[{"mal_id":1,"name":"Action"},{"mal_id":2,"name":"Adventure"},{"mal_id":10,"name":"Fantasy"}],"themes":[{"mal_id":50,"name":"Adult Cast"},{"mal_id":82,"name":"Urban Fantasy"}],"demographics":[],"synopsis":"Humanity was caught at a precipice a decade ago when the first gates—portals linked with other dimensions that harbor monsters immune to conventional weaponry—emerged around the world. Alongside the appearance of the gates, various humans w"},"23273":{"mal_id":23273,"url":"https://myanimelist.net/anime/23273/Shigatsu_wa_Kimi_no_Uso","title":"Shigatsu wa Kimi no Uso","title_english":"Your Lie in April","title_japanese":"四月は君の嘘","score":8.64,"scored_by":1480927,"members":2440490,"episodes":22,"type":"TV","year":2014,"aired":{"from":"2014-10-10T00:00:00+00:00"},"images":{"jpg":{"image_url":"https://cdn.myanimelist.net/images/anime/1405/143284.jpg","large_image_url":"https://cdn.myanimelist.net/images/anime/1405/143284l.jpg"}},"genres":[{"mal_id":8,"name":"Drama"},{"mal_id":22,"name":"Romance"}],"themes":[{"mal_id":64,"name":"Love Polygon"},{"mal_id":19,"name":"Music"},{"mal_id":70,"name":"Performing Arts"},{"mal_id":23,"name":"School"}],"demographics":[{"mal_id":27,"name":"Shounen"}],"synopsis":"Kousei Arima is a child prodigy known as the Human Metronome for playing the piano with precision and perfection. Guided by a strict mother and rigorous training, Kousei dominates every competition he enters, earning the admiration of his"}};
 
 /* ============ state ============ */
 let genresList = [], demoList = [], themesList = [], tagName = {}, dataLoaded = false;
@@ -701,6 +841,31 @@ function cleanSyn(s, full){
   if(!full){ s = s.replace(/\s+/g," "); if (s.length>210) s = s.slice(0,210).replace(/\s+\S*$/,"")+"…"; }
   return s;
 }
+/* ===== real-time translation (Google Translate, CORS-ok, cached) ===== */
+const trCache = new Map();
+try{ const saved=JSON.parse(localStorage.getItem("af_tr")||"{}"); for(const k in saved) trCache.set(k, saved[k]); }catch(_){}
+let trSaveTimer=null;
+function trSave(){ clearTimeout(trSaveTimer); trSaveTimer=setTimeout(()=>{ try{ localStorage.setItem("af_tr", JSON.stringify(Object.fromEntries(trCache))); }catch(_){} }, 900); }
+async function trBatch(texts){
+  const result = texts.map(t=> t ? trCache.get(t) : t);
+  const need=[], idx=[];
+  texts.forEach((t,i)=>{ if(t && result[i]==null){ need.push(t); idx.push(i); } });
+  if(need.length){
+    try{
+      const qs = need.map(t=>"q="+encodeURIComponent(String(t).slice(0,1800))).join("&");
+      const r = await fetch(`https://clients5.google.com/translate_a/t?client=dict-chrome-ex&sl=en&tl=ru&${qs}`);
+      const j = await r.json();
+      const arr = Array.isArray(j) ? j.map(x=> Array.isArray(x)? x[0] : x) : [];
+      need.forEach((t,k)=>{ const tr = arr[k]; if(tr && typeof tr==="string"){ trCache.set(t, tr); result[idx[k]]=tr; } });
+      trSave();
+    }catch(e){ /* leave English on failure */ }
+  }
+  return result.map((v,i)=> (v!=null ? v : texts[i]));
+}
+const tr = async (t)=> (await trBatch([t]))[0];
+/* short synopsis for a card; Russian is cached-instant or fills in async */
+function engShort(a){ return cleanSyn(a.synopsis); }
+function engFull(a){ return cleanSyn(a.synopsis, true); }
 function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
 function imgOf(a){ return (a.images && a.images.jpg && (a.images.jpg.large_image_url || a.images.jpg.image_url)) || PLACEHOLDER; }
 function titleOf(a){ return a.title_english || a.title || a.title_japanese || "Без названия"; }
@@ -746,7 +911,7 @@ function renderTagPicker(boxId, set, filter, selClass, onChange){
   box.innerHTML = "";
   const f = (filter||"").trim().toLowerCase();
   const match = (x)=> !f || ru(x.name).toLowerCase().includes(f) || x.name.toLowerCase().includes(f);
-  const sections = [["Жанры", genresList],["Аудитория", demoList],["Темы и теги", themesList]];
+  const sections = [[t("grp_genres"), genresList],[t("grp_demo"), demoList],[t("grp_themes"), themesList]];
   let any=false;
   sections.forEach(([label, list])=>{
     const items = list.filter(match); if(!items.length) return; any=true;
@@ -761,9 +926,9 @@ function renderTagPicker(boxId, set, filter, selClass, onChange){
     });
     box.appendChild(row);
   });
-  if(!any) box.innerHTML = "<div class='loading-genres'>Ничего не нашлось 🤷</div>";
+  if(!any) box.innerHTML = `<div class='loading-genres'>${esc(t("nothing_found"))}</div>`;
 }
-function updateTagCount(){ $("tag-count").textContent = "Выбрано: " + selTags.size; }
+function updateTagCount(){ $("tag-count").textContent = t("chosen") + ": " + selTags.size; }
 
 /* ============ wizard (shared params: filter / mood / similar) ============ */
 const steps = () => document.querySelectorAll("#wizard .step");
@@ -786,11 +951,11 @@ function showWizardStep(pos){
   steps().forEach(s=> s.classList.toggle("active", +s.dataset.step===ds));
   $("progress-fill").style.width = ((pos+1)/len*100) + "%";
   const active = [...steps()].find(s=> +s.dataset.step===ds);
-  if(active){ const no = active.querySelector(".step-no"); if(no) no.textContent = `Шаг ${pos+1} из ${len}`; }
+  if(active){ const no = active.querySelector(".step-no"); if(no) no.textContent = `${t("step")} ${pos+1} ${t("of")} ${len}`; }
   $("prev-btn").disabled = (pos===0 && wizardMode==="filter");
   $("next-btn").textContent = (pos===len-1)
-    ? (wizardMode==="similar" ? "🔮 Найти похожее" : "🔍 Приступить к поиску")
-    : "Далее →";
+    ? (wizardMode==="similar" ? t("do_similar") : t("do_search"))
+    : t("next");
 }
 function wizardPrev(){
   if(wizardPos>0){ showWizardStep(wizardPos-1); return; }
@@ -812,7 +977,7 @@ function bindOptGroup(id){
   });
 }
 function resetParams(){
-  $("score-slider").value = 0; $("score-pill").textContent = "Любой";
+  $("score-slider").value = 0; $("score-pill").textContent = t("score_any");
   $("ep-min").value = ""; $("ep-max").value = "";
   $("ep-presets").querySelectorAll(".chip").forEach(c=>c.classList.remove("sel"));
   ["status-opts","type-opts"].forEach(id=>$(id).querySelectorAll(".opt").forEach((o,i)=>o.classList.toggle("sel", i===0)));
@@ -972,30 +1137,30 @@ function applySort(arr){
 function buildSummary(){
   const f = search.shownParams || {tags:[]}, tags = [];
   (f.tags||[]).forEach(id=>{ if(tagName[id]) tags.push("🏷️ "+ru(tagName[id])); });
-  if(f.minScore>0) tags.push("⭐ от "+f.minScore.toFixed(1));
-  if(f.status) tags.push("📡 "+STATUS_RU[f.status]);
-  if(f.type) tags.push("📺 "+TYPE_RU[f.type]);
+  if(f.minScore>0) tags.push(t("sum_from")+" "+f.minScore.toFixed(1));
+  if(f.status) tags.push("📡 "+statusLabel(f.status));
+  if(f.type) tags.push("📺 "+typeLabel(f.type));
   if(f.epMin!=null || f.epMax!=null){
     let e="🎞️ ";
-    if(f.epMin!=null && f.epMax!=null) e+=f.epMin+"–"+f.epMax+" сер.";
-    else if(f.epMin!=null) e+="от "+f.epMin+" сер."; else e+="до "+f.epMax+" сер.";
+    if(f.epMin!=null && f.epMax!=null) e+=f.epMin+"–"+f.epMax+" "+t("sum_eps");
+    else if(f.epMin!=null) e+="≥ "+f.epMin+" "+t("sum_eps"); else e+="≤ "+f.epMax+" "+t("sum_eps");
     tags.push(e);
   }
-  if(f.gem) tags.push("💎 скрытые алмазы");
+  if(f.gem) tags.push(t("sum_gem"));
   if(search.mode==="similar"){
     [...incTags].forEach(id=>{ if(tagName[id]) tags.push("➕ "+ru(tagName[id])); });
     [...excTags].forEach(id=>{ if(tagName[id]) tags.push("➖ "+ru(tagName[id])); });
   }
-  if(!tags.length && search.mode==="filter") tags.push("✨ без фильтров — общий топ");
+  if(!tags.length && search.mode==="filter") tags.push(t("sum_nofilter"));
   $("filter-summary").innerHTML = tags.map(t=>`<span class="tag">${esc(t)}</span>`).join("");
 }
 function renderSimBanner(){
   if(search.mode!=="similar"){ $("sim-banner").innerHTML=""; return; }
   const refNames = search.refsUsed.map(r=>`<b>${esc(titleOf(r))}</b>`).join(", ");
   const common = search.commonTags.length
-    ? "Общие черты: " + search.commonTags.map(n=>`<span class="tag">${esc(ru(n))}</span>`).join(" ")
-    : "Общие черты: явных пересечений мало — ранжируем по рекомендациям зрителей.";
-  $("sim-banner").innerHTML = `<div class="simbanner">🔮 Похоже на: ${refNames} &nbsp;·&nbsp; ${common}</div>`;
+    ? t("sim_common")+" " + search.commonTags.map(n=>`<span class="tag">${esc(ru(n))}</span>`).join(" ")
+    : t("sim_common")+" "+t("sim_common_none");
+  $("sim-banner").innerHTML = `<div class="simbanner">${t("sim_to")} ${refNames} &nbsp;·&nbsp; ${common}</div>`;
 }
 
 function cardHTML(a, rank){
@@ -1003,13 +1168,13 @@ function cardHTML(a, rank){
   const en = (a.title && a.title_english && a.title!==a.title_english) ? a.title : "";
   const score = a.score ? a.score.toFixed(2) : "—";
   const year = a.year || (a.aired && a.aired.prop && a.aired.prop.from && a.aired.prop.from.year) || "";
-  const eps = a.episodes ? a.episodes+" эп." : "? эп.";
+  const eps = a.episodes ? a.episodes+" "+t("eps") : t("eps_unknown");
   const gtags = [...(a.genres||[]), ...(a.themes||[]), ...(a.demographics||[])].slice(0,4)
     .map(g=>`<span>${esc(ru(g.name))}</span>`).join("");
   const meta = [a.type||"", eps, year].filter(Boolean).join(" · ");
   let match = "";
   if(search.mode==="similar" && a.__refsTotal>1 && a.__refCount){
-    match = `<span class="matchbadge">🔗 совпало с ${a.__refCount}/${a.__refsTotal}</span>`;
+    match = `<span class="matchbadge">${t("match_with")} ${a.__refCount}/${a.__refsTotal}</span>`;
   }else if(search.mode==="similar" && a.__votes){
     match = `<span class="matchbadge">👍 ${a.__votes}</span>`;
   }
@@ -1025,10 +1190,10 @@ function cardHTML(a, rank){
     <div class="card-body">
       <h3 class="card-title">${esc(title)}</h3>
       ${en?`<div class="card-en">${esc(en)}</div>`:""}
-      <div class="gtags">${gtags||"<span>жанр не указан</span>"}</div>
-      <p class="syn">${esc(cleanSyn(a.synopsis))}</p>
+      <div class="gtags">${gtags||`<span>${t("no_genre")}</span>`}</div>
+      ${(()=>{ const en=engShort(a); const c = LANG==="ru" ? trCache.get(en) : null; return `<p class="syn" data-en="${esc(en)}">${esc(c||en)}</p>`; })()}
       <div class="card-actions">
-        <button class="b more" data-id="${a.mal_id}">ℹ️ Подробнее</button>
+        <button class="b more" data-id="${a.mal_id}">${t("more_btn")}</button>
         <a class="b mal" href="${esc(a.url||"https://myanimelist.net")}" target="_blank" rel="noopener">MAL ↗</a>
       </div>
     </div>
@@ -1042,8 +1207,18 @@ function renderCards(){
   search.shown = n;
   const total = arr.length;
   $("result-count").textContent = isExhausted()
-    ? `Найдено: ${total} · показано: ${n}`
-    : `Показано: ${n} (есть ещё — жми «Расширить»)`;
+    ? `${t("found")}: ${total} · ${t("shown")}: ${n}`
+    : `${t("shown")}: ${n} ${t("more_hint")}`;
+  translateVisibleCards();
+}
+/* translate short descriptions of the currently shown cards (RU mode only), batched + cached */
+async function translateVisibleCards(){
+  if(LANG!=="ru") return;
+  const nodes=[...document.querySelectorAll('#results-grid .syn[data-en]')];
+  const pending=nodes.filter(s=> !trCache.get(s.dataset.en));
+  if(!pending.length) return;
+  const rus=await trBatch(pending.map(s=>s.dataset.en));
+  pending.forEach((s,i)=>{ if(rus[i] && s.isConnected) s.textContent=rus[i]; });
 }
 
 function showMessage(emoji, title, text){
@@ -1058,22 +1233,22 @@ function updateExpandButton(){
   const atLast = search.targetIndex >= TARGETS.length-1;
   const everythingShown = isExhausted() && search.shown >= arrLen;
   if(everythingShown){
-    btn.classList.remove("hidden"); btn.disabled = true; btn.textContent = "✨ Это весь подходящий список"; return;
+    btn.classList.remove("hidden"); btn.disabled = true; btn.textContent = t("expand_all"); return;
   }
   if(atLast && search.shown>=100){
-    btn.classList.remove("hidden"); btn.disabled = true; btn.textContent = "🏆 Показан полный топ-100"; return;
+    btn.classList.remove("hidden"); btn.disabled = true; btn.textContent = t("expand_top100"); return;
   }
   btn.classList.remove("hidden"); btn.disabled = false;
   const next = TARGETS[Math.min(search.targetIndex+1, TARGETS.length-1)];
-  btn.textContent = `➕ Расширить список (до ${next})`;
+  btn.textContent = `${t("expand_to")} ${next})`;
 }
 
 /* ============ loading ============ */
 let loadingTimer = null;
 function showLoading(){
-  let i=0; $("loading-text").textContent = LOADING_MSGS[0]; $("loading-sub").textContent="";
+  const M=loadingMsgs(); let i=0; $("loading-text").textContent = M[0]; $("loading-sub").textContent="";
   $("loading").classList.remove("hidden");
-  loadingTimer = setInterval(()=>{ i=(i+1)%LOADING_MSGS.length; $("loading-text").textContent = LOADING_MSGS[i]; }, 1400);
+  loadingTimer = setInterval(()=>{ i=(i+1)%M.length; $("loading-text").textContent = M[i]; }, 1400);
 }
 function hideLoading(){ clearInterval(loadingTimer); $("loading").classList.add("hidden"); }
 
@@ -1082,8 +1257,8 @@ function populateSortSelect(){
   const sel = $("sort-select");
   let opts = SORTS.slice();
   if(search.mode==="list") opts = opts.filter(o=>o[0]!=="gem"); // gems excluded from personal favorites
-  if(search.mode==="similar") opts = [["relevance","🔮 По похожести (рекомендации)"], ...opts];
-  sel.innerHTML = opts.map(([v,l])=>`<option value="${v}">${l}</option>`).join("");
+  if(search.mode==="similar") opts = [["relevance","s_relevance"], ...opts];
+  sel.innerHTML = opts.map(([v,k])=>`<option value="${v}">${esc(t(k))}</option>`).join("");
   sel.value = search.sortKey;
 }
 
@@ -1104,11 +1279,10 @@ async function runFilterSearch(filters){
   buildSummary(); renderSimBanner(); populateSortSelect();
   showResultsScreen(); showLoading();
   try{ await fetchForTarget(search.target); }
-  catch(e){ hideLoading(); showMessage("📡","Духи аниме офлайн","Не удалось достучаться до MyAnimeList (Jikan API). Подожди пару секунд и попробуй снова."); return; }
+  catch(e){ hideLoading(); showMessage("📡",t("msg_offline_t"),t("msg_offline_p")); return; }
   hideLoading();
   if(filterPool().length===0){
-    showMessage("🫥","Такого аниме не существует… или оно слишком секретное",
-      "Под эти условия ничего не нашлось. Ослабь фильтры: снизь рейтинг, расширь количество серий или добавь ещё жанров (логика «ИЛИ» — больше тегов = больше вариантов).");
+    showMessage("🫥",t("msg_empty_t"),t("msg_empty_p"));
     return;
   }
   renderCards(); updateExpandButton();
@@ -1145,23 +1319,21 @@ async function runSimilarSearch(){
       hideLoading();
       if(tags.length){
         await runFilterSearch({tags, ...(simFilters||{minScore:0,status:"",type:"",epMin:null,epMax:null})});
-        showMessage("🧭","Точных рекомендаций не нашлось","У выбранных тайтлов нет связки рекомендаций на MyAnimeList — поэтому подобрали похожее по их общим жанрам.");
+        showMessage("🧭",t("msg_simfb_t"),t("msg_simfb_p"));
       }else{
-        showMessage("🤔","Не за что зацепиться","У выбранного аниме нет ни рекомендаций, ни жанров в базе. Попробуй другой тайтл.");
+        showMessage("🤔",t("msg_nohook_t"),t("msg_nohook_p"));
       }
       return;
     }
     await materializeUntil(search.target);
   }catch(e){
-    hideLoading(); showMessage("📡","Духи аниме офлайн","Jikan API не ответил. Попробуй ещё раз чуть позже."); return;
+    hideLoading(); showMessage("📡",t("msg_offline_t"),t("msg_conn_p")); return;
   }
   hideLoading();
 
   if(search.collected.length===0){
-    showMessage("🪄","Похожих под такие условия нет",
-      incTags.size||excTags.size
-        ? "Рекомендации есть, но фильтры «добавить/исключить черты» отсеяли всё. Ослабь их и попробуй снова."
-        : "Странно, но похожих не нашлось. Попробуй другой набор тайтлов.");
+    showMessage("🪄",t("msg_simnone_t"),
+      incTags.size||excTags.size ? t("msg_simnone_ie") : t("msg_simnone_p"));
     return;
   }
   renderCards(); updateExpandButton();
@@ -1175,7 +1347,7 @@ async function runFavorites(){
 
   buildSummary(); populateSortSelect();
   showResultsScreen();
-  $("sim-banner").innerHTML = `<div class="simbanner">⭐ Личная подборка <b>beako</b> · ${FAVORITES.length} тайтлов · полный список сразу</div>`;
+  $("sim-banner").innerHTML = `<div class="simbanner">${t("fav_banner")} · ${FAVORITES.length} ${t("fav_titles")}</div>`;
 
   if(!FAVORITES.length){
     showMessage("📝","Список ещё не настроен","beako, пришли список любимых аниме — и они появятся здесь целиком, как обычные карточки.");
@@ -1198,7 +1370,7 @@ async function runFavorites(){
     hideLoading();
     search.target=search.collected.length; renderCards(); $("expand-btn").classList.add("hidden");
   }
-  if(!search.collected.length){ showMessage("😶","Не загрузилось","Не удалось получить список. Попробуй ещё раз чуть позже."); }
+  if(!search.collected.length){ showMessage("😶",t("msg_favfail_t"),t("msg_favfail_p")); }
 }
 
 /* ============ expand ============ */
@@ -1207,17 +1379,17 @@ async function expandList(){
   const prevShown = search.shown;
   search.targetIndex = Math.min(search.targetIndex+1, TARGETS.length-1);
   search.target = TARGETS[search.targetIndex];
-  btn.disabled = true; btn.textContent = "⏳ Ищем ещё…";
+  btn.disabled = true; btn.textContent = t("expand_searching");
   showLoading();
   try{ await ensureTarget(search.target); }
-  catch(e){ hideLoading(); showMessage("📡","Связь прервалась","Jikan API не ответил. Нажми ещё раз чуть позже."); updateExpandButton(); return; }
+  catch(e){ hideLoading(); showMessage("📡",t("msg_conn_t"),t("msg_conn_p")); updateExpandButton(); return; }
   hideLoading();
 
   const nowShow = Math.min(baseArr().length, search.target);
   if(nowShow > prevShown){ clearMessage(); renderCards(); updateExpandButton(); }
   else{
-    showMessage("🎬","Это всё, что нашлось в этой вселенной","Больше подходящего нет — ты видишь весь список. Смягчи фильтры или поменяй вводные для новых находок.");
-    btn.classList.remove("hidden"); btn.disabled = true; btn.textContent = "🚫 Больше вариантов нет";
+    showMessage("🎬",t("msg_allshown_t"),t("msg_allshown_p"));
+    btn.classList.remove("hidden"); btn.disabled = true; btn.textContent = t("expand_nomore");
   }
 }
 
@@ -1233,15 +1405,16 @@ function quickLinks(title){
 }
 function renderModal(d){
   const a = d.full;
+  const loc = LANG==="en" ? "en" : "ru";
   const img = imgOf(a), title = titleOf(a);
   const en = (a.title && a.title_english && a.title!==a.title_english) ? a.title : (a.title_japanese||"");
   const stats = [];
-  if(a.score) stats.push(`<span class="m-stat">⭐ <b>${a.score}</b> (${(a.scored_by||0).toLocaleString("ru")} оценок)</span>`);
-  if(a.rank) stats.push(`<span class="m-stat">🏆 #<b>${a.rank}</b> в рейтинге</span>`);
-  if(a.popularity) stats.push(`<span class="m-stat">🔥 #<b>${a.popularity}</b> по популярности</span>`);
-  if(a.members) stats.push(`<span class="m-stat">👥 <b>${a.members.toLocaleString("ru")}</b></span>`);
-  if(a.favorites) stats.push(`<span class="m-stat">❤️ <b>${a.favorites.toLocaleString("ru")}</b></span>`);
-  const meta = [a.type, a.episodes?a.episodes+" эп.":"", a.status, a.duration, a.rating].filter(Boolean).join(" · ");
+  if(a.score) stats.push(`<span class="m-stat">⭐ <b>${a.score}</b> (${(a.scored_by||0).toLocaleString(loc)} ${t("m_ratings")})</span>`);
+  if(a.rank) stats.push(`<span class="m-stat">🏆 #<b>${a.rank}</b> ${t("m_rank")}</span>`);
+  if(a.popularity) stats.push(`<span class="m-stat">🔥 #<b>${a.popularity}</b> ${t("m_pop")}</span>`);
+  if(a.members) stats.push(`<span class="m-stat">👥 <b>${a.members.toLocaleString(loc)}</b></span>`);
+  if(a.favorites) stats.push(`<span class="m-stat">❤️ <b>${a.favorites.toLocaleString(loc)}</b></span>`);
+  const meta = [a.type, a.episodes?a.episodes+" "+t("eps"):"", a.status, a.duration, a.rating].filter(Boolean).join(" · ");
   const aired = a.aired && a.aired.string ? a.aired.string : "";
   const studios = (a.studios||[]).map(s=>s.name).join(", ");
   const gset = [...(a.genres||[]),...(a.themes||[]),...(a.demographics||[])];
@@ -1250,19 +1423,18 @@ function renderModal(d){
   let trailer = "";
   if(a.trailer && a.trailer.embed_url){
     const url = a.trailer.embed_url.replace("autoplay=1","autoplay=0");
-    trailer = `<div class="m-sec"><h3>▶️ Трейлер</h3><div class="m-trailer"><iframe src="${esc(url)}" allowfullscreen allow="encrypted-media"></iframe></div></div>`;
+    trailer = `<div class="m-sec"><h3>${t("m_trailer")}</h3><div class="m-trailer"><iframe src="${esc(url)}" allowfullscreen allow="encrypted-media"></iframe></div></div>`;
   }
-  const synFull = cleanSyn(a.synopsis, true);
-  let synSec = `<div class="m-sec"><h3>📖 Описание</h3><p class="m-syn">${esc(synFull)}</p>`;
-  if(a.background) synSec += `<p class="m-syn" style="margin-top:12px;color:#9fb3d8"><b>За кадром:</b> ${esc(cleanSyn(a.background,true))}</p>`;
-  synSec += `</div>`;
+  const enFull = engFull(a);
+  const cachedFull = LANG==="ru" ? trCache.get(enFull) : null;
+  const synSec = `<div class="m-sec"><h3>${t("m_desc")}</h3><p class="m-syn" data-en="${esc(enFull)}">${esc(cachedFull||enFull)}</p></div>`;
 
   let songs="";
   const ops=(a.theme&&a.theme.openings)||[], eds=(a.theme&&a.theme.endings)||[];
   if(ops.length||eds.length){
-    songs = `<div class="m-sec"><h3>🎵 Музыка</h3>`;
-    if(ops.length) songs += `<div style="font-size:12.5px;color:var(--blue2);margin-bottom:4px">Опенинги:</div><ul class="m-songs">${ops.slice(0,3).map(s=>`<li>${esc(s)}</li>`).join("")}</ul>`;
-    if(eds.length) songs += `<div style="font-size:12.5px;color:var(--blue2);margin:8px 0 4px">Эндинги:</div><ul class="m-songs">${eds.slice(0,3).map(s=>`<li>${esc(s)}</li>`).join("")}</ul>`;
+    songs = `<div class="m-sec"><h3>${t("m_music")}</h3>`;
+    if(ops.length) songs += `<div style="font-size:12.5px;color:var(--blue2);margin-bottom:4px">${t("m_openings")}</div><ul class="m-songs">${ops.slice(0,3).map(s=>`<li>${esc(s)}</li>`).join("")}</ul>`;
+    if(eds.length) songs += `<div style="font-size:12.5px;color:var(--blue2);margin:8px 0 4px">${t("m_endings")}</div><ul class="m-songs">${eds.slice(0,3).map(s=>`<li>${esc(s)}</li>`).join("")}</ul>`;
     songs += `</div>`;
   }
 
@@ -1272,17 +1444,17 @@ function renderModal(d){
       const ci = (c.character.images && c.character.images.jpg && c.character.images.jpg.image_url) || PLACEHOLDER;
       const va = (c.voice_actors||[]).find(v=>v.language==="Japanese");
       return `<div class="char"><img src="${esc(ci)}" loading="lazy" onerror="this.onerror=null;this.src='${PLACEHOLDER}'">
-        <div><div class="cn">${esc(c.character.name)}</div><div class="cr">${esc(c.role==="Main"?"Главный":"Второстеп.")}</div>
+        <div><div class="cn">${esc(c.character.name)}</div><div class="cr">${esc(c.role==="Main"?t("m_main"):t("m_supp"))}</div>
         ${va?`<div class="cv">🎙️ ${esc(va.person.name)}</div>`:""}</div></div>`;
     }).join("");
-    chars = `<div class="m-sec"><h3>👥 Персонажи и сэйю</h3><div class="char-grid">${items}</div></div>`;
+    chars = `<div class="m-sec"><h3>${t("m_chars")}</h3><div class="char-grid">${items}</div></div>`;
   }
 
   const streaming = (a.streaming||[]).map(s=>`<a class="link-pill watch" href="${esc(s.url)}" target="_blank" rel="noopener">▶️ ${esc(s.name)}</a>`).join("");
   const ext = (a.external||[]).slice(0,6).map(s=>`<a class="link-pill" href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>`).join("");
   const qlinks = quickLinks(title).map(([l,u])=>`<a class="link-pill" href="${esc(u)}" target="_blank" rel="noopener">${l}</a>`).join("");
-  const watchSec = `<div class="m-sec"><h3>📺 Где смотреть и искать</h3>
-    ${streaming?`<div class="links-row" style="margin-bottom:10px">${streaming}</div>`:`<p class="m-syn" style="margin-bottom:10px;color:var(--muted)">Легальных стримингов в базе MAL не указано.</p>`}
+  const watchSec = `<div class="m-sec"><h3>${t("m_watch")}</h3>
+    ${streaming?`<div class="links-row" style="margin-bottom:10px">${streaming}</div>`:`<p class="m-syn" style="margin-bottom:10px;color:var(--muted)">${t("m_nostream")}</p>`}
     <div class="links-row"><a class="link-pill" href="${esc(a.url)}" target="_blank" rel="noopener">📘 MyAnimeList</a>${qlinks}${ext}</div></div>`;
 
   $("modal").innerHTML = `
@@ -1309,12 +1481,19 @@ function renderModal(d){
       </div>
     </div>`;
   $("modal-close").onclick = closeModal;
+  // real-time translate the full description (RU mode, cached)
+  if(LANG==="ru"){
+    const node = $("modal").querySelector(".m-syn[data-en]");
+    if(node && !trCache.get(node.dataset.en)){
+      tr(node.dataset.en).then(txt=>{ if(txt && node.isConnected) node.textContent = txt; });
+    }
+  }
 }
 function closeModal(){ $("modal").classList.add("hidden"); $("modal").innerHTML=""; }
 
 async function openDetail(id){
   $("modal").classList.remove("hidden");
-  $("modal").innerHTML = `<div class="modal-card"><div class="modal-body" style="padding:50px 24px;text-align:center"><div class="spinner" style="margin:0 auto 18px"></div><div style="color:var(--blue2)">Призываем подробности… 👻</div></div></div>`;
+  $("modal").innerHTML = `<div class="modal-card"><div class="modal-body" style="padding:50px 24px;text-align:center"><div class="spinner" style="margin:0 auto 18px"></div><div style="color:var(--blue2)">${t("m_loading")}</div></div></div>`;
   let d = detailFull.get(id);
   if(!d){
     try{
@@ -1322,7 +1501,7 @@ async function openDetail(id){
       let chars=[]; try{ chars = (await jikan(`${API}/anime/${id}/characters`)).data||[]; }catch(e){}
       d = {full, chars}; detailFull.set(id, d);
     }catch(e){
-      $("modal").innerHTML = `<div class="modal-card"><button class="modal-close" id="modal-close">✕</button><div class="modal-body" style="padding:50px 24px;text-align:center"><div style="font-size:40px">📡</div><p class="m-syn">Не удалось загрузить детали. Попробуй позже.</p></div></div>`;
+      $("modal").innerHTML = `<div class="modal-card"><button class="modal-close" id="modal-close">✕</button><div class="modal-body" style="padding:50px 24px;text-align:center"><div style="font-size:40px">📡</div><p class="m-syn">${t("m_err")}</p></div></div>`;
       $("modal-close").onclick = closeModal; return;
     }
   }
@@ -1348,7 +1527,7 @@ async function runSuggest(q){
   const seen = new Set(), items=[];
   (data.data||[]).forEach(a=>{ if(seen.has(a.mal_id)) return; seen.add(a.mal_id); items.push(a); });
   const box = $("suggest");
-  if(!items.length){ box.innerHTML = `<div class="suggest-item"><div class="si-t">Ничего не нашлось 🤷</div></div>`; box.classList.remove("hidden"); return; }
+  if(!items.length){ box.innerHTML = `<div class="suggest-item"><div class="si-t">${esc(t("suggest_none"))}</div></div>`; box.classList.remove("hidden"); return; }
   box.innerHTML = items.map(a=>{
     const img = (a.images&&a.images.jpg&&a.images.jpg.image_url)||PLACEHOLDER;
     const m = [a.type||"", a.year||""].filter(Boolean).join(" · ");
@@ -1375,7 +1554,7 @@ function renderRefChips(){
     return `<div class="ref-chip"><img src="${esc(img)}" onerror="this.onerror=null;this.src='${PLACEHOLDER}'"><span class="rc-t">${esc(titleOf(r))}</span><span class="rc-x" data-id="${r.mal_id}">✕</span></div>`;
   }).join("");
   $("ref-chips").querySelectorAll(".rc-x").forEach(x=> x.onclick=()=>removeRef(+x.dataset.id));
-  $("ref-input").placeholder = refs.length>=3 ? "Максимум 3 тайтла выбрано" : "🔎 начни вводить название аниме…";
+  $("ref-input").placeholder = refs.length>=3 ? t("ref_max") : t("ref_ph");
   $("ref-input").disabled = refs.length>=3;
   $("similar-go").disabled = refs.length<1;
 }
@@ -1383,7 +1562,7 @@ function resetSimilar(){
   refs=[]; incTags.clear(); excTags.clear();
   $("ref-input").value=""; $("ref-input").disabled=false; $("suggest").classList.add("hidden");
   $("inc-search").value=""; $("exc-search").value="";
-  $("ie-wrap").classList.add("hidden"); $("ie-toggle").textContent="⚙️ Тонкая настройка: добавить / исключить черты ▾";
+  $("ie-wrap").classList.add("hidden"); $("ie-toggle").textContent=t("ie_show");
   renderRefChips();
   if(dataLoaded){ renderTagPicker("inc-box",incTags,"","inc"); renderTagPicker("exc-box",excTags,"","exc"); }
 }
@@ -1401,19 +1580,41 @@ function openSimilar(){ resetSimilar(); setCatVisible(false); ["start-screen","w
 
 /* ============ mood grid ============ */
 function renderMoodGrid(){
-  $("mood-grid").innerHTML = MOODS.map((m,i)=>`<div class="mood-card" data-i="${i}"><span class="e">${m.e}</span><span class="t">${esc(m.t)}</span></div>`).join("");
+  $("mood-grid").innerHTML = MOODS.map((m,i)=>`<div class="mood-card" data-i="${i}"><span class="e">${m.e}</span><span class="t">${esc(moodName(m))}</span></div>`).join("");
   $("mood-grid").querySelectorAll(".mood-card").forEach(el=>{
     el.onclick = ()=>{
       const m=MOODS[+el.dataset.i];
       currentMoodTags = m.tags.slice();
       resetParams();
-      $("score-slider").value = m.min; $("score-pill").textContent = "от "+m.min.toFixed(1)+" ⭐"; // mood's suggested rating (editable)
+      $("score-slider").value = m.min; $("score-pill").textContent = t("score_from")+" "+m.min.toFixed(1)+" ⭐"; // suggested rating (editable)
       startWizard("mood");
     };
   });
 }
 
+/* ============ language ============ */
+function setOptLabels(){
+  const M={ "status-opts":[["st_any","st_any_s"],["st_airing","st_airing_s"],["st_complete","st_complete_s"],["st_upcoming","st_upcoming_s"]],
+            "type-opts":[["ty_any","ty_any_s"],["ty_tv","ty_tv_s"],["ty_movie","ty_movie_s"],["ty_ova","ty_ova_s"],["ty_ona","ty_ona_s"],["ty_special","ty_special_s"]] };
+  for(const id in M){ const opts=$(id).querySelectorAll(".opt"); M[id].forEach((p,i)=>{ if(opts[i]) opts[i].innerHTML = esc(t(p[0]))+`<small>${esc(t(p[1]))}</small>`; }); }
+}
+function applyLang(){
+  document.documentElement.lang = LANG;
+  document.querySelectorAll("[data-i18n]").forEach(el=>{ el.innerHTML = t(el.getAttribute("data-i18n")); });
+  document.querySelectorAll("[data-i18n-ph]").forEach(el=>{ el.setAttribute("placeholder", t(el.getAttribute("data-i18n-ph"))); });
+  setOptLabels();
+  updateTagCount();
+  const v=parseFloat($("score-slider").value)||0; $("score-pill").textContent = v>0 ? (t("score_from")+" "+v.toFixed(1)+" ⭐") : t("score_any");
+  $("ie-toggle").textContent = $("ie-wrap").classList.contains("hidden") ? t("ie_show") : t("ie_hide");
+  if(dataLoaded){ renderTagPicker("tag-box", selTags, $("tag-search").value, "", updateTagCount); renderTagPicker("inc-box", incTags, $("inc-search").value, "inc"); renderTagPicker("exc-box", excTags, $("exc-search").value, "exc"); }
+  renderMoodGrid(); renderRefChips();
+  document.querySelectorAll(".lang-opt").forEach(b=> b.classList.toggle("active", b.dataset.lang===LANG));
+  if(!$("wizard").classList.contains("hidden")) showWizardStep(wizardPos);
+}
+function setLang(l){ if(l!==LANG){ LANG=l; localStorage.setItem("af_lang", l); applyLang(); } }
+
 /* ============ wire up ============ */
+document.querySelectorAll(".lang-opt").forEach(b=> b.onclick=()=> setLang(b.dataset.lang));
 $("open-wizard").onclick = openWizard;
 $("open-mood").onclick = openMood;
 $("open-similar").onclick = openSimilar;
@@ -1428,7 +1629,7 @@ $("next-btn").onclick = wizardNext;
 
 bindOptGroup("status-opts"); bindOptGroup("type-opts");
 
-$("score-slider").addEventListener("input", e=>{ const v=parseFloat(e.target.value); $("score-pill").textContent = v>0?("от "+v.toFixed(1)+" ⭐"):"Любой"; });
+$("score-slider").addEventListener("input", e=>{ const v=parseFloat(e.target.value); $("score-pill").textContent = v>0?(t("score_from")+" "+v.toFixed(1)+" ⭐"):t("score_any"); });
 $("gem-check").addEventListener("change", e=> $("gem-toggle").classList.toggle("on", e.target.checked));
 $("tag-search").addEventListener("input", e=> renderTagPicker("tag-box", selTags, e.target.value, "", updateTagCount));
 $("tag-clear").onclick = ()=>{ selTags.clear(); $("tag-search").value=""; renderTagPicker("tag-box", selTags, "", "", updateTagCount); };
@@ -1442,7 +1643,7 @@ $("ep-presets").addEventListener("click", e=>{
 
 $("ie-toggle").onclick = ()=>{
   const w=$("ie-wrap"); const hide=w.classList.toggle("hidden");
-  $("ie-toggle").textContent = "⚙️ Тонкая настройка: добавить / исключить черты " + (hide?"▾":"▴");
+  $("ie-toggle").textContent = hide ? t("ie_show") : t("ie_hide");
 };
 $("inc-search").addEventListener("input", e=> renderTagPicker("inc-box", incTags, e.target.value, "inc"));
 $("exc-search").addEventListener("input", e=> renderTagPicker("exc-box", excTags, e.target.value, "exc"));
@@ -1545,7 +1746,7 @@ function setCatVisible(v){ const c=$("neko-bg"); if(c) c.style.display = v ? "bl
   btn.onclick=()=> window.scrollTo({top:0, behavior:"smooth"});
 })();
 
-renderMoodGrid();
+applyLang();
 bindRefPicker();
 loadData();
 </script>
