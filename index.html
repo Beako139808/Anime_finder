@@ -315,7 +315,43 @@
   #to-top.show{opacity:1;visibility:visible;transform:translateY(0)}
   #to-top:hover{filter:brightness(1.12);transform:translateY(-3px)}
 
-  @media (max-width:560px){.panel{padding:20px 16px 14px}#filter-summary{justify-content:flex-start}.m-hero img{width:110px}}
+  /* ===== segmented control (tabs) ===== */
+  .seg{position:relative;display:inline-flex;padding:5px;border:1px solid rgba(125,165,255,.2);border-radius:40px;background:rgba(12,20,48,.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+  .seg-ind{position:absolute;top:5px;bottom:5px;left:5px;width:0;border-radius:30px;background:linear-gradient(120deg,var(--blue-deep),var(--accent));box-shadow:0 6px 18px -4px var(--neon);transition:transform .42s cubic-bezier(.22,1,.36,1),width .42s cubic-bezier(.22,1,.36,1);z-index:0}
+  .seg-btn{position:relative;z-index:1;cursor:pointer;border:none;background:transparent;color:var(--muted);font-size:14px;font-weight:700;padding:10px 20px;border-radius:30px;transition:color .25s;white-space:nowrap}
+  .seg-btn.active{color:#fff}
+  .seg-btn:hover:not(.active){color:var(--blue2)}
+  /* ===== section caption ===== */
+  .section-cap{color:var(--muted);font-size:13.5px;margin:6px 0 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;line-height:1.5}
+  .section-cap b{color:var(--blue2)}
+  /* ===== start-screen watch-later badge ===== */
+  .btn-badge{display:inline-block;min-width:20px;padding:1px 7px;border-radius:20px;background:var(--good);color:#04210f;font-size:12px;font-weight:800;margin-left:3px;vertical-align:middle}
+  /* ===== bookmark (watch later) ===== */
+  .bm{position:absolute;right:10px;bottom:10px;z-index:3;width:38px;height:38px;border-radius:50%;cursor:pointer;border:1px solid rgba(125,165,255,.35);background:rgba(7,11,24,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;color:var(--blue2);transition:transform .2s,border-color .2s,background .2s,color .2s;box-shadow:0 4px 14px rgba(0,0,0,.4)}
+  .bm svg{width:18px;height:18px;display:block;fill:none;stroke:currentColor}
+  .bm:hover{transform:translateY(-2px) scale(1.08);border-color:var(--neon);color:#fff}
+  .bm.saved{background:linear-gradient(120deg,var(--good),#1f9d6d);border-color:transparent;color:#04210f}
+  .bm.saved svg{fill:currentColor}
+  .bm.pop{animation:bmPop .45s cubic-bezier(.22,1.6,.4,1)}
+  @keyframes bmPop{0%{transform:scale(.7)}55%{transform:scale(1.24)}100%{transform:scale(1)}}
+  /* watch-later toggle inside modal */
+  .wl-btn{cursor:pointer;display:inline-block;font-size:13.5px;font-weight:700;padding:10px 16px;border-radius:24px;border:1px solid var(--line);background:#0e1834;color:var(--blue2);margin-top:12px;transition:all .18s;text-decoration:none}
+  .wl-btn:hover{border-color:var(--neon);transform:translateY(-1px);box-shadow:0 0 16px -6px var(--neon)}
+  .wl-btn.saved{background:linear-gradient(120deg,var(--good),#1f9d6d);color:#04210f;border-color:transparent}
+  .wl-btn.pop{animation:bmPop .45s cubic-bezier(.22,1.6,.4,1)}
+  /* ===== card stagger-in ===== */
+  .grid .card{animation:cardIn .5s cubic-bezier(.22,1,.36,1) both}
+  @keyframes cardIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+  /* ===== character card / modal ===== */
+  .fav-badge{position:absolute;top:10px;right:10px;background:linear-gradient(120deg,#c0355a,#ff6b81);color:#fff;font-weight:700;font-size:12.5px;padding:5px 10px;border-radius:20px;display:flex;align-items:center;gap:4px;box-shadow:0 4px 14px rgba(0,0,0,.4)}
+  .appear-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+  .appear{display:flex;gap:9px;align-items:center;background:#0e1834;border:1px solid var(--line);border-radius:12px;padding:7px;cursor:pointer;transition:border-color .15s,transform .15s}
+  .appear:hover{border-color:var(--blue);transform:translateY(-2px)}
+  .appear img{width:42px;height:56px;object-fit:cover;border-radius:7px;flex:none;background:#0a1227}
+  .appear .an{font-size:12.5px;font-weight:600;line-height:1.25}
+  .appear .ar{font-size:11px;color:var(--muted);margin-top:2px}
+  .empty-cta{margin-top:16px}
+  @media (max-width:560px){.panel{padding:20px 16px 14px}#filter-summary{justify-content:flex-start}.m-hero img{width:110px}.seg-btn{padding:9px 14px;font-size:13px}.results-head .seg{margin-top:4px}}
 </style>
 </head>
 <body>
@@ -366,6 +402,9 @@
     <div class="alt-actions">
       <button class="alt-btn" id="open-mood" data-i18n="btn_mood">🎭 По настроению</button>
       <button class="alt-btn" id="open-similar" data-i18n="btn_similar">🔮 Похожее на любимое</button>
+      <button class="alt-btn" id="open-top" data-i18n="btn_top">🏆 Топ-100</button>
+      <button class="alt-btn" id="open-season" data-i18n="btn_season">🗓️ Сезонное</button>
+      <button class="alt-btn" id="open-watch">🧺 Смотреть дальше</button>
       <button class="alt-btn" id="open-fav" data-i18n="btn_fav">⭐ Любимые аниме beako</button>
     </div>
     <p class="hint" data-i18n="hint">Выбери жанры и фильтры вручную, иди от настроения, укажи 1–3 любимых аниме — или открой личную подборку beako 🪄</p>
@@ -511,6 +550,50 @@
     <div id="results-grid" class="grid"></div>
     <div id="results-msg"></div>
     <div class="expand-wrap"><button class="btn primary hidden" id="expand-btn"></button></div>
+  </section>
+
+  <!-- ===== TOP-100 (anime / characters) ===== -->
+  <section id="top-screen" class="screen hidden">
+    <div class="results-head">
+      <button class="btn" id="top-home" data-i18n="back_home">← На главную</button>
+      <div class="seg" id="top-seg">
+        <span class="seg-ind"></span>
+        <button class="seg-btn active" data-tab="anime" data-i18n="top_tab_anime">🏆 Аниме</button>
+        <button class="seg-btn" data-tab="characters" data-i18n="top_tab_chars">🎭 Персонажи</button>
+      </div>
+    </div>
+    <p class="section-cap" id="top-cap"></p>
+    <div id="top-grid" class="grid"></div>
+    <div id="top-msg"></div>
+    <div class="expand-wrap"><button class="btn primary hidden" id="top-more"></button></div>
+  </section>
+
+  <!-- ===== SEASONAL (now / upcoming) ===== -->
+  <section id="season-screen" class="screen hidden">
+    <div class="results-head">
+      <button class="btn" id="season-home" data-i18n="back_home">← На главную</button>
+      <div class="seg" id="season-seg">
+        <span class="seg-ind"></span>
+        <button class="seg-btn active" data-tab="now" data-i18n="season_tab_now">🔴 Выходит сейчас</button>
+        <button class="seg-btn" data-tab="soon" data-i18n="season_tab_soon">🗓️ Скоро премьеры</button>
+      </div>
+    </div>
+    <p class="section-cap" id="season-cap"></p>
+    <div id="season-grid" class="grid"></div>
+    <div id="season-msg"></div>
+    <div class="expand-wrap"><button class="btn primary hidden" id="season-more"></button></div>
+  </section>
+
+  <!-- ===== WATCHLIST (localStorage) ===== -->
+  <section id="watch-screen" class="screen hidden">
+    <div class="results-head">
+      <button class="btn" id="watch-home" data-i18n="back_home">← На главную</button>
+      <button class="btn" id="watch-clear" data-i18n="watch_clear">🗑️ Очистить</button>
+    </div>
+    <h2 class="step-title" style="margin:8px 0 2px" data-i18n="watch_title">🧺 Смотреть дальше</h2>
+    <p class="section-cap" id="watch-cap"></p>
+    <div id="watch-grid" class="grid"></div>
+    <div id="watch-msg"></div>
   </section>
 </div>
 
@@ -687,7 +770,44 @@ const T = {
   msg_nohook_p:{ru:"У выбранного аниме нет ни рекомендаций, ни жанров в базе. Попробуй другой тайтл.", en:"The chosen anime has no recommendations or genres in the database. Try another title."},
   msg_favfail_t:{ru:"Не загрузилось", en:"Failed to load"},
   msg_favfail_p:{ru:"Не удалось получить список. Попробуй ещё раз чуть позже.", en:"Couldn't fetch the list. Try again shortly."},
-  suggest_none:{ru:"Ничего не нашлось 🤷", en:"Nothing found 🤷"}
+  suggest_none:{ru:"Ничего не нашлось 🤷", en:"Nothing found 🤷"},
+  /* ---- discover: top / seasonal / watchlist ---- */
+  btn_top:{ru:"🏆 Топ-100", en:"🏆 Top-100"},
+  btn_season:{ru:"🗓️ Сезонное", en:"🗓️ Seasonal"},
+  btn_watch:{ru:"🧺 Смотреть дальше", en:"🧺 Watch later"},
+  back_home:{ru:"← На главную", en:"← Home"},
+  top_tab_anime:{ru:"🏆 Аниме", en:"🏆 Anime"},
+  top_tab_chars:{ru:"🎭 Персонажи", en:"🎭 Characters"},
+  top_cap_anime:{ru:"Лучшие аниме всех времён — по оценкам зрителей <b>MyAnimeList</b>.", en:"The all-time best anime — ranked by <b>MyAnimeList</b> users."},
+  top_cap_chars:{ru:"Самые любимые персонажи — по числу добавлений в избранное на <b>MyAnimeList</b>.", en:"The most-loved characters — by favorites count on <b>MyAnimeList</b>."},
+  season_tab_now:{ru:"🔴 Выходит сейчас", en:"🔴 Airing now"},
+  season_tab_soon:{ru:"🗓️ Скоро премьеры", en:"🗓️ Upcoming"},
+  season_cap_now:{ru:"Аниме текущего сезона — выходит прямо сейчас.", en:"This season's anime — airing right now."},
+  season_cap_soon:{ru:"Будущие премьеры — ещё не вышли, но уже на радаре.", en:"Upcoming premieres — not out yet, but on the radar."},
+  watch_title:{ru:"🧺 Смотреть дальше", en:"🧺 Watch later"},
+  watch_cap:{ru:"твой личный список, сохранён прямо в браузере", en:"your personal list, saved right in this browser"},
+  watch_count:{ru:"в списке", en:"in list"},
+  watch_clear:{ru:"🗑️ Очистить", en:"🗑️ Clear"},
+  watch_confirm:{ru:"Очистить весь список «Смотреть дальше»?", en:"Clear the whole Watch-later list?"},
+  watch_empty_t:{ru:"Список пока пуст", en:"Your list is empty"},
+  watch_empty_p:{ru:"Жми 🔖 на карточке любого аниме — и оно попадёт сюда. Список хранится в этом браузере и не слетает.", en:"Tap 🔖 on any anime card and it lands here. The list is stored in this browser and won't disappear."},
+  watch_empty_cta:{ru:"✨ Подобрать аниме", en:"✨ Find anime"},
+  wl_add:{ru:"🔖 Смотреть дальше", en:"🔖 Watch later"},
+  wl_on:{ru:"✓ В списке", en:"✓ In list"},
+  bm_add:{ru:"В список «Смотреть дальше»", en:"Add to Watch later"},
+  bm_remove:{ru:"Убрать из списка", en:"Remove from list"},
+  load_more:{ru:"➕ Показать ещё", en:"➕ Show more"},
+  load_more_ing:{ru:"⏳ Загружаем…", en:"⏳ Loading…"},
+  load_end_top:{ru:"🏆 Показан полный топ-100", en:"🏆 Full top-100 shown"},
+  load_end:{ru:"✨ Это весь список", en:"✨ That's the whole list"},
+  ch_favs:{ru:"в избранном", en:"favorites"},
+  ch_about:{ru:"📖 О персонаже", en:"📖 About"},
+  ch_anime:{ru:"🎬 Появляется в аниме", en:"🎬 Appears in"},
+  ch_va:{ru:"🎙️ Сэйю (озвучка)", en:"🎙️ Voice actors"},
+  ch_role_main:{ru:"Главная роль", en:"Main role"},
+  ch_role_supp:{ru:"Второстепенная", en:"Supporting"},
+  feed_err_t:{ru:"Не удалось загрузить", en:"Couldn't load"},
+  feed_err_p:{ru:"MyAnimeList (Jikan API) не ответил. Попробуй ещё раз через пару секунд.", en:"MyAnimeList (Jikan API) didn't respond. Try again in a couple seconds."}
 };
 function t(k){ const e=T[k]; return e ? (e[LANG]||e.ru) : k; }
 const STATUS_KEY = {airing:"st_airing", complete:"st_complete", upcoming:"st_upcoming"};
@@ -941,7 +1061,7 @@ let simFilters = null;              // params applied to similar results
 function startWizard(mode){
   wizardMode = mode;
   wizardSteps = (mode==="filter") ? [0,1,2,3,4] : [1,2,3,4]; // mood/similar skip genre step
-  ["start-screen","mood-screen","similar-screen","results-screen"].forEach(id=>$(id).classList.add("hidden"));
+  nukeScreens();
   $("wizard").classList.remove("hidden");
   showWizardStep(0);
 }
@@ -1179,13 +1299,14 @@ function cardHTML(a, rank){
     match = `<span class="matchbadge">👍 ${a.__votes}</span>`;
   }
   return `
-  <article class="card" data-id="${a.mal_id}">
+  <article class="card" data-id="${a.mal_id}" style="animation-delay:${Math.min(rank-1,12)*40}ms">
     <div class="poster" data-id="${a.mal_id}">
       <img src="${esc(img)}" alt="${esc(title)}" loading="lazy" onerror="this.onerror=null;this.src='${PLACEHOLDER}'">
       <span class="rank">#${rank}</span>
       <span class="score">⭐ ${score}</span>
       ${match}
       <div class="meta">${esc(meta)}</div>
+      ${bmHTML(a.mal_id)}
     </div>
     <div class="card-body">
       <h3 class="card-title">${esc(title)}</h3>
@@ -1203,18 +1324,19 @@ function cardHTML(a, rank){
 function renderCards(){
   const arr = applySort(baseArr());
   const n = Math.min(arr.length, search.target);
+  registerKnown(arr);
   $("results-grid").innerHTML = arr.slice(0,n).map((a,i)=>cardHTML(a,i+1)).join("");
   search.shown = n;
   const total = arr.length;
   $("result-count").textContent = isExhausted()
     ? `${t("found")}: ${total} · ${t("shown")}: ${n}`
     : `${t("shown")}: ${n} ${t("more_hint")}`;
-  translateVisibleCards();
+  translateCards($("results-grid"));
 }
-/* translate short descriptions of the currently shown cards (RU mode only), batched + cached */
-async function translateVisibleCards(){
-  if(LANG!=="ru") return;
-  const nodes=[...document.querySelectorAll('#results-grid .syn[data-en]')];
+/* translate short descriptions of cards inside a grid (RU mode only), batched + cached */
+async function translateCards(root){
+  if(LANG!=="ru" || !root) return;
+  const nodes=[...root.querySelectorAll('.syn[data-en]')];
   const pending=nodes.filter(s=> !trCache.get(s.dataset.en));
   if(!pending.length) return;
   const rus=await trBatch(pending.map(s=>s.dataset.en));
@@ -1265,7 +1387,7 @@ function populateSortSelect(){
 /* ============ run: filter ============ */
 function showResultsScreen(){
   setCatVisible(false);
-  ["start-screen","wizard","mood-screen","similar-screen"].forEach(id=>$(id).classList.add("hidden"));
+  nukeScreens();
   $("results-screen").classList.remove("hidden");
   $("results-grid").innerHTML=""; clearMessage(); $("expand-btn").classList.add("hidden"); $("result-count").textContent="";
 }
@@ -1405,6 +1527,7 @@ function quickLinks(title){
 }
 function renderModal(d){
   const a = d.full;
+  registerKnown([a]);
   const loc = LANG==="en" ? "en" : "ru";
   const img = imgOf(a), title = titleOf(a);
   const en = (a.title && a.title_english && a.title!==a.title_english) ? a.title : (a.title_japanese||"");
@@ -1471,6 +1594,7 @@ function renderModal(d){
             ${studios?`<div style="font-size:12.5px;color:var(--muted);margin-top:3px">🎬 ${esc(studios)}${a.source?" · 📚 "+esc(a.source):""}</div>`:(a.source?`<div style="font-size:12.5px;color:var(--muted);margin-top:3px">📚 ${esc(a.source)}</div>`:"")}
             <div class="m-stats">${stats.join("")}</div>
             <div class="gtags" style="margin-top:4px">${gtags}</div>
+            <button class="wl-btn${isWatched(a.mal_id)?" saved":""}" data-bm="${a.mal_id}" data-bm-text="1">${isWatched(a.mal_id)?t("wl_on"):t("wl_add")}</button>
           </div>
         </div>
         ${trailer}
@@ -1567,16 +1691,278 @@ function resetSimilar(){
   if(dataLoaded){ renderTagPicker("inc-box",incTags,"","inc"); renderTagPicker("exc-box",excTags,"","exc"); }
 }
 
+/* ============ screen manager ============ */
+const ALL_SCREENS = ["start-screen","wizard","mood-screen","similar-screen","results-screen","top-screen","season-screen","watch-screen"];
+function nukeScreens(){ ALL_SCREENS.forEach(id=>{ const e=$(id); if(e) e.classList.add("hidden"); }); closeModal(); }
+function showBox(el,emoji,title,text){ el.innerHTML = `<div class="msg"><span class="emoji">${emoji}</span><h3>${esc(title)}</h3>${text?`<p>${esc(text)}</p>`:""}</div>`; }
+function clearBox(el){ el.innerHTML=""; }
+
+/* sliding indicator for a segmented control */
+function moveSeg(segId){
+  const seg=$(segId); if(!seg) return;
+  const ind=seg.querySelector(".seg-ind"), act=seg.querySelector(".seg-btn.active");
+  if(!ind||!act) return;
+  ind.style.width = act.offsetWidth+"px";
+  ind.style.transform = `translateX(${act.offsetLeft-5}px)`;
+}
+function moveSegRAF(id){ requestAnimationFrame(()=>requestAnimationFrame(()=>moveSeg(id))); setTimeout(()=>moveSeg(id), 60); }
+
+/* ============ watch later (localStorage) ============ */
+const WATCH_KEY = "af_watch";
+let watchList = [];
+try{ const w=JSON.parse(localStorage.getItem(WATCH_KEY)||"[]"); if(Array.isArray(w)) watchList=w; }catch(_){}
+const watchSet = new Set(watchList.map(a=>a.mal_id));
+const KNOWN = new Map();                 // id -> compact anime, for adding from any screen
+function compactAnime(a){
+  return {
+    mal_id:a.mal_id, url:a.url, title:a.title, title_english:a.title_english, title_japanese:a.title_japanese,
+    score:a.score, scored_by:a.scored_by, members:a.members, episodes:a.episodes, type:a.type, year:a.year,
+    aired: a.aired ? {from:a.aired.from, prop:a.aired.prop} : undefined,
+    images:a.images, genres:a.genres, themes:a.themes, demographics:a.demographics, synopsis:a.synopsis
+  };
+}
+function registerKnown(list){ (list||[]).forEach(a=>{ if(a && a.mal_id!=null) KNOWN.set(a.mal_id, compactAnime(a)); }); }
+watchList.forEach(a=> KNOWN.set(a.mal_id, a));
+const isWatched = (id)=> watchSet.has(+id);
+function saveWatch(){ try{ localStorage.setItem(WATCH_KEY, JSON.stringify(watchList)); }catch(_){} updateWatchBadge(); }
+function toggleWatch(id){
+  id=+id;
+  if(watchSet.has(id)){ watchSet.delete(id); watchList = watchList.filter(a=>a.mal_id!==id); }
+  else{ const src = KNOWN.get(id); if(!src) return; const c=compactAnime(src); watchSet.add(id); watchList.unshift(c); KNOWN.set(id,c); }
+  saveWatch();
+  reflectWatchButtons(id);
+  if(!$("watch-screen").classList.contains("hidden")) renderWatch();
+}
+function reflectWatchButtons(id){
+  const on = watchSet.has(+id);
+  document.querySelectorAll(`[data-bm="${id}"]`).forEach(b=>{
+    b.classList.toggle("saved", on);
+    b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop");
+    if(b.hasAttribute("data-bm-text")) b.textContent = on ? t("wl_on") : t("wl_add");
+    else b.title = on ? t("bm_remove") : t("bm_add");
+  });
+}
+function updateWatchBadge(){
+  const b=$("open-watch"); if(!b) return;
+  const n=watchList.length;
+  b.innerHTML = t("btn_watch") + (n ? ` <span class="btn-badge">${n}</span>` : "");
+}
+const BM_SVG = `<svg viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-5-7 5V4a1 1 0 0 1 1-1z"/></svg>`;
+function bmHTML(id){ const on=isWatched(id); return `<button class="bm${on?" saved":""}" data-bm="${id}" title="${esc(on?t("bm_remove"):t("bm_add"))}" aria-label="watch later">${BM_SVG}</button>`; }
+
+/* ============ generic paged feed (top / seasonal) ============ */
+function makeFeed(endpoint, pageCap){ return { endpoint, pageCap:pageCap||4, page:0, items:[], seen:new Set(), hasNext:true, loading:false, error:false, loadedOnce:false }; }
+async function feedFetch(feed){
+  if(feed.loading || !feed.hasNext) return;
+  feed.loading=true; feed.error=false;
+  try{
+    const data = await jikan(API + feed.endpoint(feed.page+1));
+    feed.page++;
+    (data.data||[]).forEach(it=>{ const id=it.mal_id; if(id==null||feed.seen.has(id)) return; feed.seen.add(id); feed.items.push(it); });
+    feed.hasNext = !!(data.pagination && data.pagination.has_next_page) && feed.page < feed.pageCap;
+  }catch(e){ feed.error=true; }
+  feed.loading=false; feed.loadedOnce=true;
+}
+const feeds = {
+  topAnime:   makeFeed(p=>`/top/anime?page=${p}`, 4),
+  topChars:   makeFeed(p=>`/top/characters?page=${p}`, 4),
+  seasonNow:  makeFeed(p=>`/seasons/now?page=${p}`, 6),
+  seasonSoon: makeFeed(p=>`/seasons/upcoming?page=${p}`, 6)
+};
+function renderFeed(o){
+  const feed=o.feed, grid=$(o.gridId), more=$(o.moreId), msg=$(o.msgId);
+  if(feed.error && !feed.items.length){ grid.innerHTML=""; more.classList.add("hidden"); showBox(msg,"📡",t("feed_err_t"),t("feed_err_p")); return; }
+  if(!feed.items.length && feed.loadedOnce){ grid.innerHTML=""; more.classList.add("hidden"); showBox(msg,"🫥",t("nothing_found"),""); return; }
+  clearBox(msg);
+  let items = feed.items;
+  if(o.sort) items = feed.items.slice().sort(o.sort);
+  grid.innerHTML = items.map((it,i)=>o.cardOf(it,i+1)).join("");
+  if(o.translate) translateCards(grid);
+  more.classList.remove("hidden");
+  if(feed.hasNext){ more.disabled=false; more.textContent=t("load_more"); }
+  else{ more.disabled=true; more.textContent=t(o.endKey||"load_end"); }
+}
+
+/* ============ character card ============ */
+function charCardHTML(c, rank){
+  const img = (c.images && ((c.images.jpg && c.images.jpg.image_url) || (c.images.webp && c.images.webp.image_url))) || PLACEHOLDER;
+  const name = c.name || "—", kanji = c.name_kanji || "";
+  const favs = c.favorites!=null ? c.favorites.toLocaleString(LANG==="en"?"en":"ru") : "";
+  const nick = (c.nicknames||[]).slice(0,2).join(", ");
+  return `
+  <article class="card" data-char="${c.mal_id}" style="animation-delay:${Math.min(rank-1,12)*40}ms">
+    <div class="poster" data-char="${c.mal_id}">
+      <img src="${esc(img)}" alt="${esc(name)}" loading="lazy" onerror="this.onerror=null;this.src='${PLACEHOLDER}'">
+      <span class="rank">#${rank}</span>
+      ${favs?`<span class="fav-badge">❤️ ${esc(favs)}</span>`:""}
+    </div>
+    <div class="card-body">
+      <h3 class="card-title">${esc(name)}</h3>
+      ${kanji?`<div class="card-en">${esc(kanji)}</div>`:""}
+      ${nick?`<p class="syn" style="flex:1">“${esc(nick)}”</p>`:`<div style="flex:1"></div>`}
+      <div class="card-actions">
+        <button class="b more" data-char="${c.mal_id}">${t("more_btn")}</button>
+        <a class="b mal" href="${esc(c.url||"https://myanimelist.net")}" target="_blank" rel="noopener">MAL ↗</a>
+      </div>
+    </div>
+  </article>`;
+}
+
+/* ============ TOP screen ============ */
+let topTab = "anime";
+function openTop(){ nukeScreens(); $("top-screen").classList.remove("hidden"); setCatVisible(false); topShowTab(topTab); }
+async function topShowTab(tab){
+  topTab = tab;
+  document.querySelectorAll("#top-seg .seg-btn").forEach(b=> b.classList.toggle("active", b.dataset.tab===tab));
+  moveSegRAF("top-seg");
+  $("top-cap").innerHTML = tab==="anime" ? t("top_cap_anime") : t("top_cap_chars");
+  const feed = tab==="anime" ? feeds.topAnime : feeds.topChars;
+  if(!feed.loadedOnce){ $("top-grid").innerHTML=""; $("top-more").classList.add("hidden"); showLoading(); await feedFetch(feed); hideLoading(); if(tab==="anime") registerKnown(feed.items); }
+  renderTop();
+}
+function renderTop(){
+  const tab=topTab, feed = tab==="anime"?feeds.topAnime:feeds.topChars;
+  renderFeed({ feed, gridId:"top-grid", moreId:"top-more", msgId:"top-msg", endKey:"load_end_top",
+    translate: tab==="anime",
+    cardOf: tab==="anime" ? (a,r)=>cardHTML(a,r) : (c,r)=>charCardHTML(c,r) });
+}
+async function topMore(){
+  const tab=topTab, feed = tab==="anime"?feeds.topAnime:feeds.topChars;
+  const btn=$("top-more"); btn.disabled=true; btn.textContent=t("load_more_ing");
+  await feedFetch(feed); if(tab==="anime") registerKnown(feed.items); renderTop();
+}
+
+/* ============ SEASONAL screen ============ */
+let seasonTab = "now";
+function openSeason(){ nukeScreens(); $("season-screen").classList.remove("hidden"); setCatVisible(false); seasonShowTab(seasonTab); }
+async function seasonShowTab(tab){
+  seasonTab = tab;
+  document.querySelectorAll("#season-seg .seg-btn").forEach(b=> b.classList.toggle("active", b.dataset.tab===tab));
+  moveSegRAF("season-seg");
+  $("season-cap").innerHTML = tab==="now" ? t("season_cap_now") : t("season_cap_soon");
+  const feed = tab==="now" ? feeds.seasonNow : feeds.seasonSoon;
+  if(!feed.loadedOnce){ $("season-grid").innerHTML=""; $("season-more").classList.add("hidden"); showLoading(); await feedFetch(feed); hideLoading(); registerKnown(feed.items); }
+  renderSeason();
+}
+function renderSeason(){
+  const tab=seasonTab, feed = tab==="now"?feeds.seasonNow:feeds.seasonSoon;
+  renderFeed({ feed, gridId:"season-grid", moreId:"season-more", msgId:"season-msg", endKey:"load_end",
+    translate:true, sort:(x,y)=>(y.members||0)-(x.members||0), cardOf:(a,r)=>cardHTML(a,r) });
+}
+async function seasonMore(){
+  const tab=seasonTab, feed = tab==="now"?feeds.seasonNow:feeds.seasonSoon;
+  const btn=$("season-more"); btn.disabled=true; btn.textContent=t("load_more_ing");
+  await feedFetch(feed); registerKnown(feed.items); renderSeason();
+}
+
+/* ============ WATCHLIST screen ============ */
+function openWatch(){ nukeScreens(); $("watch-screen").classList.remove("hidden"); setCatVisible(false); renderWatch(); }
+function renderWatch(){
+  const grid=$("watch-grid"), msg=$("watch-msg");
+  $("watch-cap").innerHTML = `<b>${watchList.length}</b> ${t("watch_count")} · ${t("watch_cap")}`;
+  $("watch-clear").style.display = watchList.length ? "" : "none";
+  if(!watchList.length){
+    grid.innerHTML="";
+    showBox(msg,"🧺",t("watch_empty_t"),t("watch_empty_p"));
+    const box=msg.querySelector(".msg");
+    if(box){ box.insertAdjacentHTML("beforeend", `<div class="empty-cta"><button class="btn primary" id="watch-cta">${esc(t("watch_empty_cta"))}</button></div>`); const cta=$("watch-cta"); if(cta) cta.onclick=openWizard; }
+    return;
+  }
+  clearBox(msg);
+  registerKnown(watchList);
+  grid.innerHTML = watchList.map((a,i)=>cardHTML(a,i+1)).join("");
+  translateCards(grid);
+}
+function clearWatch(){
+  if(!watchList.length) return;
+  if(!confirm(t("watch_confirm"))) return;
+  watchList=[]; watchSet.clear(); saveWatch(); renderWatch();
+}
+
+/* ============ character detail modal ============ */
+const detailChar = new Map();
+function loadingModalHTML(){ return `<div class="modal-card"><div class="modal-body" style="padding:50px 24px;text-align:center"><div class="spinner" style="margin:0 auto 18px"></div><div style="color:var(--blue2)">${t("m_loading")}</div></div></div>`; }
+function modalError(){ $("modal").innerHTML = `<div class="modal-card"><button class="modal-close" id="modal-close">✕</button><div class="modal-body" style="padding:50px 24px;text-align:center"><div style="font-size:40px">📡</div><p class="m-syn">${t("m_err")}</p></div></div>`; $("modal-close").onclick=closeModal; }
+async function openCharDetail(id){
+  $("modal").classList.remove("hidden");
+  $("modal").innerHTML = loadingModalHTML();
+  let c = detailChar.get(id);
+  if(!c){
+    try{ c = (await jikan(`${API}/characters/${id}/full`)).data; detailChar.set(id,c); }
+    catch(e){ modalError(); return; }
+  }
+  renderCharModal(c);
+}
+function renderCharModal(c){
+  const loc = LANG==="en" ? "en" : "ru";
+  const img = (c.images && ((c.images.jpg && c.images.jpg.image_url) || (c.images.webp && c.images.webp.image_url))) || PLACEHOLDER;
+  const name = c.name || "—", kanji = c.name_kanji || "";
+  const nick = (c.nicknames||[]).slice(0,5).join(", ");
+  const favs = c.favorites!=null ? `<span class="m-stat">❤️ <b>${c.favorites.toLocaleString(loc)}</b> ${t("ch_favs")}</span>` : "";
+  const aboutEn = cleanSyn(c.about, true);
+  const aboutCached = (LANG==="ru" && c.about) ? trCache.get(aboutEn) : null;
+  const aboutSec = c.about ? `<div class="m-sec"><h3>${t("ch_about")}</h3><p class="m-syn" data-en="${esc(aboutEn)}">${esc(aboutCached||aboutEn)}</p></div>` : "";
+  let appears="";
+  if(c.anime && c.anime.length){
+    const items = c.anime.slice(0,12).map(a=>{
+      const an=a.anime, ai=(an.images && an.images.jpg && an.images.jpg.image_url)||PLACEHOLDER;
+      return `<div class="appear" data-id="${an.mal_id}"><img src="${esc(ai)}" loading="lazy" onerror="this.onerror=null;this.src='${PLACEHOLDER}'"><div><div class="an">${esc(an.title)}</div><div class="ar">${esc(a.role==="Main"?t("ch_role_main"):t("ch_role_supp"))}</div></div></div>`;
+    }).join("");
+    appears = `<div class="m-sec"><h3>${t("ch_anime")}</h3><div class="appear-grid">${items}</div></div>`;
+  }
+  let vas="";
+  if(c.voices && c.voices.length){
+    const jp=c.voices.filter(v=>v.language==="Japanese"); const list=(jp.length?jp:c.voices).slice(0,8);
+    const items = list.map(v=>{
+      const pi=(v.person.images && v.person.images.jpg && v.person.images.jpg.image_url)||PLACEHOLDER;
+      return `<div class="char"><img src="${esc(pi)}" loading="lazy" onerror="this.onerror=null;this.src='${PLACEHOLDER}'"><div><div class="cn">${esc(v.person.name)}</div><div class="cr">${esc(v.language)}</div></div></div>`;
+    }).join("");
+    vas = `<div class="m-sec"><h3>${t("ch_va")}</h3><div class="char-grid">${items}</div></div>`;
+  }
+  $("modal").innerHTML = `
+    <div class="modal-card">
+      <button class="modal-close" id="modal-close">✕</button>
+      <div class="modal-body">
+        <div class="m-hero">
+          <img src="${esc(img)}" alt="${esc(name)}" onerror="this.onerror=null;this.src='${PLACEHOLDER}'">
+          <div style="flex:1;min-width:220px">
+            <h2>${esc(name)}</h2>
+            ${kanji?`<div class="m-en">${esc(kanji)}</div>`:""}
+            ${nick?`<div style="font-size:12.5px;color:var(--muted);margin-top:4px">“${esc(nick)}”</div>`:""}
+            <div class="m-stats">${favs}</div>
+            <a class="link-pill" href="${esc(c.url||"https://myanimelist.net")}" target="_blank" rel="noopener">📘 MyAnimeList ↗</a>
+          </div>
+        </div>
+        ${aboutSec}${appears}${vas}
+      </div>
+    </div>`;
+  $("modal-close").onclick = closeModal;
+  $("modal").querySelectorAll(".appear[data-id]").forEach(el=> el.onclick=()=>openDetail(+el.dataset.id));
+  if(LANG==="ru" && c.about){
+    const node=$("modal").querySelector(".m-syn[data-en]");
+    if(node && !trCache.get(node.dataset.en)) tr(node.dataset.en).then(txt=>{ if(txt && node.isConnected) node.textContent=txt; });
+  }
+}
+
+/* ============ unified grid click (results / top / season / watchlist) ============ */
+function feedGridClick(e){
+  const bm=e.target.closest("[data-bm]"); if(bm){ e.preventDefault(); toggleWatch(+bm.dataset.bm); return; }
+  if(e.target.closest("a")) return;
+  const chEl=e.target.closest("[data-char]");
+  if(chEl){ if(e.target.closest(".b.more")||e.target.closest(".poster")) openCharDetail(+chEl.dataset.char); return; }
+  const more=e.target.closest(".b.more"); if(more){ openDetail(+more.dataset.id); return; }
+  const card=e.target.closest("[data-id]"); if(card && e.target.closest(".poster")) openDetail(+card.dataset.id);
+}
+
 /* ============ navigation ============ */
 function goHome(){
-  ["wizard","mood-screen","similar-screen","results-screen"].forEach(id=>$(id).classList.add("hidden"));
-  closeModal();
+  nukeScreens();
   $("start-screen").classList.remove("hidden");
   setCatVisible(true);
 }
 function openWizard(){ resetWizard(); setCatVisible(false); startWizard("filter"); }
-function openMood(){ setCatVisible(false); ["start-screen","wizard","similar-screen","results-screen"].forEach(id=>$(id).classList.add("hidden")); $("mood-screen").classList.remove("hidden"); }
-function openSimilar(){ resetSimilar(); setCatVisible(false); ["start-screen","wizard","mood-screen","results-screen"].forEach(id=>$(id).classList.add("hidden")); $("similar-screen").classList.remove("hidden"); }
+function openMood(){ setCatVisible(false); nukeScreens(); $("mood-screen").classList.remove("hidden"); }
+function openSimilar(){ resetSimilar(); setCatVisible(false); nukeScreens(); $("similar-screen").classList.remove("hidden"); }
 
 /* ============ mood grid ============ */
 function renderMoodGrid(){
@@ -1608,6 +1994,12 @@ function applyLang(){
   $("ie-toggle").textContent = $("ie-wrap").classList.contains("hidden") ? t("ie_show") : t("ie_hide");
   if(dataLoaded){ renderTagPicker("tag-box", selTags, $("tag-search").value, "", updateTagCount); renderTagPicker("inc-box", incTags, $("inc-search").value, "inc"); renderTagPicker("exc-box", excTags, $("exc-search").value, "exc"); }
   renderMoodGrid(); renderRefChips();
+  updateWatchBadge();
+  $("top-cap").innerHTML = topTab==="anime" ? t("top_cap_anime") : t("top_cap_chars");
+  $("season-cap").innerHTML = seasonTab==="now" ? t("season_cap_now") : t("season_cap_soon");
+  if(!$("top-screen").classList.contains("hidden")){ renderTop(); moveSegRAF("top-seg"); }
+  if(!$("season-screen").classList.contains("hidden")){ renderSeason(); moveSegRAF("season-seg"); }
+  if(!$("watch-screen").classList.contains("hidden")) renderWatch();
   document.querySelectorAll(".lang-opt").forEach(b=> b.classList.toggle("active", b.dataset.lang===LANG));
   if(!$("wizard").classList.contains("hidden")) showWizardStep(wizardPos);
 }
@@ -1619,10 +2011,25 @@ $("open-wizard").onclick = openWizard;
 $("open-mood").onclick = openMood;
 $("open-similar").onclick = openSimilar;
 $("open-fav").onclick = runFavorites;
+$("open-top").onclick = openTop;
+$("open-season").onclick = openSeason;
+$("open-watch").onclick = openWatch;
 $("home-btn").onclick = goHome;
 $("mood-back").onclick = goHome;
 $("similar-back").onclick = goHome;
 $("new-search").onclick = goHome;
+$("top-home").onclick = goHome;
+$("season-home").onclick = goHome;
+$("watch-home").onclick = goHome;
+$("top-more").onclick = topMore;
+$("season-more").onclick = seasonMore;
+$("watch-clear").onclick = clearWatch;
+document.querySelectorAll("#top-seg .seg-btn").forEach(b=> b.onclick=()=> topShowTab(b.dataset.tab));
+document.querySelectorAll("#season-seg .seg-btn").forEach(b=> b.onclick=()=> seasonShowTab(b.dataset.tab));
+window.addEventListener("resize", ()=>{
+  if(!$("top-screen").classList.contains("hidden")) moveSeg("top-seg");
+  if(!$("season-screen").classList.contains("hidden")) moveSeg("season-seg");
+});
 
 $("prev-btn").onclick = wizardPrev;
 $("next-btn").onclick = wizardNext;
@@ -1657,16 +2064,13 @@ $("sort-select").addEventListener("change", e=>{
 
 $("expand-btn").onclick = expandList;
 
-/* delegated card clicks */
-$("results-grid").addEventListener("click", e=>{
-  if(e.target.closest("a")) return;
-  const more = e.target.closest(".b.more");
-  const card = e.target.closest("[data-id]");
-  if(more){ openDetail(+more.dataset.id); return; }
-  if(card && (e.target.closest(".poster")||more===null && e.target.closest(".card-title"))){ openDetail(+card.dataset.id); }
-});
+/* delegated card clicks (shared across all card grids) */
+["results-grid","top-grid","season-grid","watch-grid"].forEach(id=> $(id).addEventListener("click", feedGridClick));
 
-$("modal").addEventListener("click", e=>{ if(e.target.id==="modal") closeModal(); });
+$("modal").addEventListener("click", e=>{
+  const bm=e.target.closest("[data-bm]"); if(bm){ e.preventDefault(); toggleWatch(+bm.dataset.bm); return; }
+  if(e.target.id==="modal") closeModal();
+});
 document.addEventListener("keydown", e=>{
   if(e.key==="Escape"){ closeModal(); return; }
   if(e.key==="Enter" && !$("wizard").classList.contains("hidden") && document.activeElement.id!=="tag-search"){ $("next-btn").click(); }
