@@ -167,17 +167,27 @@
   }
   @media (max-width:360px){ .alt-solo{grid-template-columns:1fr;max-width:280px} .alt-solo .alt-btn{grid-column:auto;justify-self:stretch;width:100%} }
   .hint{color:var(--muted);font-size:13px;max-width:520px}
-  /* ===== service-status banner (top, only when Jikan is down) ===== */
-  #service-banner{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:center;gap:10px;
-    padding:11px 18px;text-align:center;font-size:13.5px;font-weight:600;color:#ffdfe4;
-    background:linear-gradient(180deg,rgba(120,25,45,.96),rgba(90,18,35,.94));backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-    border-bottom:1px solid rgba(255,107,129,.4);box-shadow:0 8px 26px -8px rgba(0,0,0,.6);
-    transform:translateY(-100%);transition:transform .4s cubic-bezier(.2,.8,.2,1)}
-  #service-banner.show{transform:translateY(0)}
-  #service-banner .sb-dot{width:9px;height:9px;border-radius:50%;background:#ff6b81;flex:none;box-shadow:0 0 8px 1px rgba(255,107,129,.8);animation:sbPulse 1.4s ease-in-out infinite}
-  @keyframes sbPulse{0%,100%{opacity:.5;transform:scale(.85)}50%{opacity:1;transform:scale(1.15)}}
-  #service-banner .sb-retry{cursor:pointer;border:1px solid rgba(255,180,190,.5);background:rgba(255,255,255,.08);color:#fff;font-size:12.5px;font-weight:700;padding:5px 12px;border-radius:20px;transition:background .15s}
-  #service-banner .sb-retry:hover{background:rgba(255,255,255,.18)}
+  /* ===== service-status indicator — a small square, top-left, home screen only,
+     shown ONLY when the app genuinely can't fetch data (proxy 503 / offline).
+     Click the square to reveal the message + retry. ===== */
+  #service-banner{position:fixed;top:14px;left:14px;z-index:65;display:none}
+  #service-banner.show{display:block}
+  .sb-square{width:42px;height:42px;border-radius:12px;cursor:pointer;border:1px solid rgba(255,107,129,.5);
+    background:linear-gradient(160deg,rgba(150,32,52,.95),rgba(90,18,35,.95));backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    color:#ffdfe4;font-size:20px;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 8px 22px -6px rgba(0,0,0,.6),0 0 16px -4px rgba(255,107,129,.55);
+    animation:sbPulse 1.9s ease-in-out infinite;transition:transform .15s}
+  .sb-square:hover{transform:scale(1.07)}
+  @keyframes sbPulse{0%,100%{box-shadow:0 8px 22px -6px rgba(0,0,0,.6),0 0 10px -4px rgba(255,107,129,.4)}50%{box-shadow:0 8px 22px -6px rgba(0,0,0,.6),0 0 22px -2px rgba(255,107,129,.85)}}
+  .sb-pop{position:absolute;top:0;left:52px;width:min(280px,72vw);
+    background:linear-gradient(180deg,rgba(120,25,45,.97),rgba(88,17,34,.96));backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    border:1px solid rgba(255,107,129,.4);border-radius:12px;padding:12px 14px;
+    box-shadow:0 12px 30px -8px rgba(0,0,0,.7);color:#ffdfe4;font-size:12.5px;font-weight:600;line-height:1.45;
+    opacity:0;transform:translateX(-8px) scale(.96);transform-origin:left center;pointer-events:none;
+    transition:opacity .2s ease,transform .2s cubic-bezier(.2,.8,.2,1)}
+  #service-banner.open .sb-pop{opacity:1;transform:none;pointer-events:auto}
+  .sb-pop .sb-retry{display:block;margin-top:10px;cursor:pointer;border:1px solid rgba(255,180,190,.5);background:rgba(255,255,255,.08);color:#fff;font-size:12.5px;font-weight:700;padding:6px 12px;border-radius:20px;transition:background .15s}
+  .sb-pop .sb-retry:hover{background:rgba(255,255,255,.18)}
 
   .panel{background:rgba(18,28,60,.55);backdrop-filter:blur(16px) saturate(1.2);-webkit-backdrop-filter:blur(16px) saturate(1.2);border:1px solid rgba(125,165,255,.20);border-radius:var(--radius);box-shadow:var(--shadow),0 0 30px -8px var(--neon),inset 0 1px 0 rgba(255,255,255,.08);max-width:720px;margin:0 auto;padding:24px 24px 18px;position:relative;overflow:hidden}
   .panel::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--accent))}
@@ -245,7 +255,10 @@
   .ref-search-wrap{position:relative;margin-bottom:10px}
   .ref-input{width:100%;padding:13px 14px;border-radius:12px;border:1px solid var(--line);background:#0a1227;color:var(--txt);font-size:15px}
   .ref-input:focus{outline:none;border-color:var(--blue)}
-  .suggest{position:absolute;left:0;right:0;top:calc(100% + 6px);background:#0c1430;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);z-index:20;max-height:330px;overflow:auto}
+  /* position:fixed + JS-computed coordinates (not absolute) — the wizard panels use
+     overflow:hidden for their rounded corners, which would otherwise clip this
+     dropdown's bottom off when the input sits low on the page */
+  .suggest{position:fixed;background:#0c1430;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);z-index:70;max-height:min(330px,calc(100vh - 90px));overflow:auto}
   .suggest-item{display:flex;gap:10px;align-items:center;padding:8px 10px;cursor:pointer;border-bottom:1px solid rgba(34,50,95,.5)}
   .suggest-item:hover{background:#13204a}
   .suggest-item img{width:40px;height:54px;object-fit:cover;border-radius:6px;flex:none;background:#0a1227}
@@ -427,11 +440,13 @@
 </head>
 <body>
 
-<!-- service-status banner (shown only when Jikan / MyAnimeList is unreachable) -->
+<!-- service-status indicator: small square, home screen only, only when the app genuinely can't fetch data -->
 <div id="service-banner">
-  <span class="sb-dot"></span>
-  <span id="sb-text" data-i18n="svc_down">MyAnimeList (Jikan API) сейчас недоступен — поиск и подбор работать не будут. Попробуй позже.</span>
-  <button class="sb-retry" id="sb-retry" data-i18n="svc_retry">Проверить снова</button>
+  <button class="sb-square" id="sb-toggle" aria-label="Статус сервиса" title="Проблемы с загрузкой данных">⚠</button>
+  <div class="sb-pop">
+    <span id="sb-text" data-i18n="svc_down">Некоторые сервисы данных сейчас недоступны — часть функций может работать медленнее или быть временно недоступна.</span>
+    <button class="sb-retry" id="sb-retry" data-i18n="svc_retry">Проверить снова</button>
+  </div>
 </div>
 
 <!-- splash / intro -->
@@ -874,12 +889,14 @@ const T = {
   msg_favfail_t:{ru:"Не загрузилось", en:"Failed to load"},
   msg_favfail_p:{ru:"Не удалось получить список. Попробуй ещё раз чуть позже.", en:"Couldn't fetch the list. Try again shortly."},
   suggest_none:{ru:"Ничего не нашлось 🤷", en:"Nothing found 🤷"},
+  suggest_loading:{ru:"Ищу аниме… ⏳", en:"Searching… ⏳"},
+  suggest_err:{ru:"Сервис поиска сейчас недоступен, попробуй ещё раз", en:"Search service is unavailable, try again"},
   /* ---- discover: top / seasonal / watchlist ---- */
   btn_top:{ru:"Топ-100", en:"Top-100"},
   btn_season:{ru:"Сезонное", en:"Seasonal"},
   btn_watch:{ru:"Смотреть дальше", en:"Watch later"},
   btn_random:{ru:"Случайное аниме", en:"Random anime"},
-  svc_down:{ru:"MyAnimeList (Jikan API) сейчас недоступен — поиск и подбор работать не будут. Попробуй позже.", en:"MyAnimeList (Jikan API) is currently unavailable — search won't work. Try again later."},
+  svc_down:{ru:"Некоторые сервисы данных сейчас недоступны — часть функций может работать медленнее или быть временно недоступна.", en:"Some data services are currently unavailable — a few features may be slower or temporarily unavailable."},
   svc_retry:{ru:"Проверить снова", en:"Check again"},
   back_home:{ru:"← На главную", en:"← Home"},
   top_tab_anime:{ru:"🏆 Аниме", en:"🏆 Anime"},
@@ -1087,31 +1104,164 @@ async function throttle(){
 }
 async function jikanCore(url, retries=3){
   await throttle();
+  let res;
   try{
-    const res = await fetch(url);
-    if (res.status === 429){
-      if (retries>0){ await sleep(1700); return jikanCore(url, retries-1); }
-      throw new Error("rate-limited");
-    }
-    if (!res.ok) throw new Error("HTTP "+res.status);
-    return await res.json();
+    res = await fetch(url);
   }catch(e){
+    // network-level failure (offline / DNS / connection refused) = real outage
     if (retries>0){ await sleep(900); return jikanCore(url, retries-1); }
-    throw e;
+    const err = new Error("network"); err.down = true; throw err;
   }
+  if (res.status === 429){
+    // rate-limited: too many requests, NOT an outage — retry, but never flag the service as down
+    if (retries>0){ await sleep(1700); return jikanCore(url, retries-1); }
+    const err = new Error("rate-limited"); err.down = false; throw err;
+  }
+  if (res.status >= 500){
+    // 5xx = server/gateway is actually broken (Jikan 502/503/504) = real outage
+    if (retries>0){ await sleep(900); return jikanCore(url, retries-1); }
+    const err = new Error("HTTP "+res.status); err.down = true; throw err;
+  }
+  if (!res.ok){
+    // other 4xx (e.g. 404 for a specific title) = the service works, this request just failed
+    const err = new Error("HTTP "+res.status); err.down = false; throw err;
+  }
+  return await res.json();
 }
-/* every call funnels through here — used as the live signal for the service-status banner,
-   since cached endpoints (e.g. genre lists) can return 200 from CDN cache while the live
-   backend (search, random, details) is actually down */
+/* thin wrapper: retries/throttle for direct-Jikan calls. Deliberately does NOT touch the
+   service indicator anymore — a single flaky direct-Jikan call (e.g. characters) no longer
+   means the app is "down", since almost everything has a MAL/AniList/cache fallback. The
+   indicator is driven solely by checkService() probing the real data path (the proxy). */
 async function jikan(url, retries=3){
+  return await jikanCore(url, retries);
+}
+/* health probe — hits OUR PROXY (the app's real data path: MAL → Jikan → cache), NOT Jikan
+   directly. If the proxy returns data the app works, so no indicator; only a 503 (every
+   source failed) or a network error counts as genuinely down. Runs on load + on returning
+   home + on retry. */
+async function checkService(){
   try{
-    const data = await jikanCore(url, retries);
-    setServiceStatus(false);
-    return data;
-  }catch(e){
-    setServiceStatus(true);
-    throw e;
+    const res = await fetch(`${PROXY}/top/anime?page=1`, {cache:"no-store"});
+    if (res.status === 503) setServiceStatus(true);      // proxy: all sources failed
+    else if (res.ok) setServiceStatus(false);            // healthy (mal/jikan/cache)
+    else setServiceStatus(true);                         // unexpected proxy error
+  }catch(e){ setServiceStatus(true); }                   // network failure / offline
+}
+
+/* ============ resilience proxy (Jikan+cache) for search / top-100 / seasonal ============ */
+const PROXY = "https://anime-proxy.beako.workers.dev";
+/* calls our own Worker (not Jikan directly): it already retried Jikan server-side and
+   cached the last-good response, so no client-side throttle/retry needed here.
+   Returns {down:true} only when the Worker itself found nothing usable at all —
+   that's the signal to fall back to AniList directly from the browser. */
+async function fetchViaProxy(url){
+  const res = await fetch(url);
+  if(res.status===503) return {down:true};
+  if(!res.ok) throw new Error("proxy HTTP "+res.status);
+  return {down:false, data: await res.json()};
+}
+
+/* ---- AniList GraphQL fallback (browser-only: AniList outright blocks Cloudflare
+   Workers' IP ranges — "You have been manually blocked" — so this can't live server-side) ---- */
+const ANILIST_URL = "https://graphql.anilist.co";
+const ANI_MEDIA_FIELDS = `idMal title{romaji english native} coverImage{large} averageScore popularity
+  episodes format status seasonYear startDate{year month day} description(asHtml:false) genres tags{name}`;
+/* best-effort MAL genre/theme ID -> AniList genre-or-tag name. Unmapped IDs just skip
+   that filter (still returns a sensibly-ranked list, never errors). Demographics
+   (Shounen/Seinen/...) have no AniList equivalent field, so they're left unmapped. */
+const ANI_GENRE_MAP = {
+  1:["genre","Action"],2:["genre","Adventure"],4:["genre","Comedy"],8:["genre","Drama"],
+  10:["genre","Fantasy"],14:["genre","Horror"],7:["genre","Mystery"],22:["genre","Romance"],
+  24:["genre","Sci-Fi"],36:["genre","Slice of Life"],30:["genre","Sports"],37:["genre","Supernatural"],
+  41:["genre","Thriller"], // Jikan "Suspense" == AniList "Thriller"
+  47:["tag","Gourmet"],
+  50:["tag","Adult Cast"],51:["tag","Anthropomorphic"],52:["tag","CGDCT"],53:["tag","Childcare"],
+  54:["tag","Combat Sports"],81:["tag","Crossdressing"],55:["tag","Delinquents"],57:["tag","Gag Humor"],
+  58:["tag","Gore"],35:["tag","Harem"],13:["tag","Historical"],60:["tag","Idols (Female)"],
+  61:["tag","Idols (Male)"],62:["tag","Isekai"],63:["tag","Iyashikei"],66:["genre","Mahou Shoujo"],
+  17:["tag","Martial Arts"],18:["genre","Mecha"],38:["tag","Military"],19:["genre","Music"],
+  6:["tag","Mythology"],20:["tag","Parody"],70:["tag","Performing Arts"],40:["genre","Psychological"],
+  72:["tag","Reincarnation"],21:["tag","Samurai"],23:["tag","School"],29:["tag","Space"],
+  31:["tag","Super Power"],76:["tag","Survival"],77:["tag","Team Sports"],78:["tag","Time Travel"],
+  32:["tag","Vampire"],79:["tag","Video Game"],48:["tag","Workplace"]
+};
+const ANI_STATUS_MAP = {airing:"RELEASING", complete:"FINISHED", upcoming:"NOT_YET_RELEASED"};
+const ANI_TYPE_MAP   = {tv:"TV", movie:"MOVIE", ova:"OVA", ona:"ONA", special:"SPECIAL"};
+const ANI_TYPE_BACK   = {TV:"TV", MOVIE:"Movie", OVA:"OVA", ONA:"ONA", SPECIAL:"Special", MUSIC:"Music"};
+const ANI_STATUS_BACK = {RELEASING:"Currently Airing", FINISHED:"Finished Airing", NOT_YET_RELEASED:"Not yet aired", CANCELLED:"Finished Airing", HIATUS:"Currently Airing"};
+
+/* AniList's public rate limit is only 30 req/min (much stricter than Jikan's ~180/min) —
+   pace requests and retry on 429, or a multi-genre wizard search (several streams fired
+   in quick succession) reliably blows through it and silently gives up mid-search. */
+let lastAniReq = 0;
+const ANI_MIN_INTERVAL = 2100;
+async function aniThrottle(){
+  const wait = Math.max(0, ANI_MIN_INTERVAL - (Date.now()-lastAniReq));
+  if(wait>0) await sleep(wait);
+  lastAniReq = Date.now();
+}
+async function anilistQuery(query, variables, retries=2){
+  await aniThrottle();
+  const res = await fetch(ANILIST_URL, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({query, variables})});
+  if(res.status===429){
+    if(retries>0){ await sleep(2500); return anilistQuery(query, variables, retries-1); }
+    throw new Error("anilist rate-limited");
   }
+  let j;
+  try{ j = await res.json(); }catch(e){ j = null; }
+  if(!res.ok || !j || j.errors){
+    if(retries>0){ await sleep(700); return anilistQuery(query, variables, retries-1); }
+    throw new Error("anilist failed");
+  }
+  return j.data;
+}
+function aniStripHtml(s){ return s ? s.replace(/<br\s*\/?>/gi,"\n").replace(/<[^>]+>/g,"").trim() : s; }
+function aniToJikanAnime(m){
+  if(!m.idMal) return null; // no MAL id -> can't key it into this MAL-ID-based app
+  const d = m.startDate;
+  return {
+    mal_id:m.idMal, url:`https://myanimelist.net/anime/${m.idMal}`,
+    title:m.title.romaji, title_english:m.title.english||null, title_japanese:m.title.native||null,
+    images:{jpg:{image_url:m.coverImage.large, large_image_url:m.coverImage.large}},
+    score: m.averageScore!=null ? Math.round(m.averageScore)/10 : null,
+    scored_by: m.popularity||null, members: m.popularity||null, episodes: m.episodes||null,
+    type: ANI_TYPE_BACK[m.format]||m.format||null, status: ANI_STATUS_BACK[m.status]||null,
+    year: m.seasonYear || (d&&d.year) || null,
+    aired:{ from: d&&d.year ? `${d.year}-${String(d.month||1).padStart(2,"0")}-${String(d.day||1).padStart(2,"0")}T00:00:00+00:00` : null },
+    synopsis: aniStripHtml(m.description),
+    genres: (m.genres||[]).map(name=>({mal_id:null,name})),
+    themes: (m.tags||[]).slice(0,4).map(tg=>({mal_id:null,name:tg.name})),
+    demographics: []
+  };
+}
+function aniToJikanPage(media, hasNext){ return {data:(media||[]).map(aniToJikanAnime).filter(Boolean), pagination:{has_next_page:!!hasNext}}; }
+
+async function anilistSearchFallback({genreId, minScore, status, type, page}){
+  const mapped = genreId!=null ? ANI_GENRE_MAP[genreId] : null;
+  const vars = {page:page||1, perPage:25};
+  const filters = ["type: ANIME","isAdult: false","sort: SCORE_DESC"];
+  let decl = "$page:Int,$perPage:Int";
+  if(mapped && mapped[0]==="genre"){ filters.push("genre: $genre"); vars.genre=mapped[1]; decl+=",$genre:String"; }
+  if(mapped && mapped[0]==="tag"){ filters.push("tag: $tag"); vars.tag=mapped[1]; decl+=",$tag:String"; }
+  if(minScore>0){ filters.push("averageScore_greater: $minScore"); vars.minScore=Math.max(0,Math.round(minScore*10)-1); decl+=",$minScore:Int"; }
+  if(status && ANI_STATUS_MAP[status]){ filters.push("status: $status"); vars.status=ANI_STATUS_MAP[status]; decl+=",$status:MediaStatus"; }
+  if(type && ANI_TYPE_MAP[type]){ filters.push("format: $format"); vars.format=ANI_TYPE_MAP[type]; decl+=",$format:MediaFormat"; }
+  const query = `query(${decl}){ Page(page:$page, perPage:$perPage){ pageInfo{hasNextPage} media(${filters.join(", ")}){ ${ANI_MEDIA_FIELDS} } } }`;
+  const data = await anilistQuery(query, vars);
+  return aniToJikanPage(data.Page.media, data.Page.pageInfo.hasNextPage);
+}
+async function anilistTopFallback({page}){
+  const query = `query($page:Int){ Page(page:$page, perPage:25){ pageInfo{hasNextPage} media(type:ANIME, isAdult:false, sort:SCORE_DESC){ ${ANI_MEDIA_FIELDS} } } }`;
+  const data = await anilistQuery(query, {page:page||1});
+  return aniToJikanPage(data.Page.media, data.Page.pageInfo.hasNextPage);
+}
+function aniCurrentSeason(d=new Date()){ const m=d.getUTCMonth()+1,y=d.getUTCFullYear(); if(m<=3)return{season:"WINTER",year:y}; if(m<=6)return{season:"SPRING",year:y}; if(m<=9)return{season:"SUMMER",year:y}; return{season:"FALL",year:y}; }
+function aniNextSeason(cur){ const order=["WINTER","SPRING","SUMMER","FALL"]; const i=order.indexOf(cur.season); return i===3?{season:"WINTER",year:cur.year+1}:{season:order[i+1],year:cur.year}; }
+async function anilistSeasonalFallback({which,page}){
+  const s = which==="upcoming" ? aniNextSeason(aniCurrentSeason()) : aniCurrentSeason();
+  const query = `query($page:Int,$season:MediaSeason,$year:Int){ Page(page:$page, perPage:25){ pageInfo{hasNextPage} media(type:ANIME, isAdult:false, season:$season, seasonYear:$year, sort:POPULARITY_DESC){ ${ANI_MEDIA_FIELDS} } } }`;
+  const data = await anilistQuery(query, {page:page||1, season:s.season, year:s.year});
+  return aniToJikanPage(data.Page.media, data.Page.pageInfo.hasNextPage);
 }
 
 const PLACEHOLDER = "data:image/svg+xml;charset=utf-8,"+enc(
@@ -1165,15 +1315,27 @@ function dateNum(a){
 function mapData(arr){ return (arr||[]).filter(x=>!EXPLICIT.includes(x.mal_id)); }
 function fromFallback(pairs){ return pairs.map(([mal_id,name])=>({mal_id,name})).filter(x=>!EXPLICIT.includes(x.mal_id)); }
 
+/* the indicator shows ONLY when the app genuinely can't fetch data AND the user is on
+   the home screen (per design: small unobtrusive square, home-only). */
+let serviceDown = false;
 function setServiceStatus(down){
-  $("service-banner").classList.toggle("show", down);
+  serviceDown = down;
+  if(!down) $("service-banner").classList.remove("open"); // collapse the popover when recovered
+  updateServiceBanner();
+}
+function updateServiceBanner(){
+  const onHome = !$("start-screen").classList.contains("hidden");
+  $("service-banner").classList.toggle("show", serviceDown && onHome);
 }
 async function loadData(){
   try{
+    // use jikanCore (not jikan): the genre lists are CDN-cached and can return 200 even
+    // while the live backend is down, so they must NOT touch the service-status banner —
+    // checkService() and real feature calls are the authoritative signal instead.
     const [g,d,t] = await Promise.all([
-      jikan(`${API}/genres/anime?filter=genres`),
-      jikan(`${API}/genres/anime?filter=demographics`),
-      jikan(`${API}/genres/anime?filter=themes`)
+      jikanCore(`${API}/genres/anime?filter=genres`),
+      jikanCore(`${API}/genres/anime?filter=demographics`),
+      jikanCore(`${API}/genres/anime?filter=themes`)
     ]);
     genresList = mapData(g.data); demoList = mapData(d.data); themesList = mapData(t.data);
     if(!genresList.length) genresList = fromFallback(FALLBACK.genres);
@@ -1289,16 +1451,17 @@ function collectParams(){
   const gem = $("gem-check").checked;
   return { minScore, status, type, epMin, epMax, gem };
 }
+function effectiveMinScore(f){ return f.gem ? Math.max(f.minScore||0, GEM_MIN_SCORE) : f.minScore; }
 function buildUrl(gid, page, f){
   const p = new URLSearchParams();
   p.set("page", page); p.set("limit", 25);
   p.set("order_by","score"); p.set("sort","desc"); p.set("sfw","true");
   if(gid!=null) p.set("genres", gid);
-  const minScore = f.gem ? Math.max(f.minScore||0, GEM_MIN_SCORE) : f.minScore;
+  const minScore = effectiveMinScore(f);
   if(minScore>0) p.set("min_score", minScore);
   if(f.status) p.set("status", f.status);
   if(f.type) p.set("type", f.type);
-  return `${API}/anime?` + p.toString();
+  return `${PROXY}/anime?` + p.toString();
 }
 function passesEpisodes(a, f){
   if(f.epMin==null && f.epMax==null) return true;
@@ -1330,7 +1493,11 @@ async function fetchForTarget(target){
     for(const s of search.streams){
       while(!s.exhausted && s.page <= pagesNeeded && s.page <= STREAM_PAGE_CAP){
         let data;
-        try{ data = await jikan(buildUrl(s.gid, s.page, f)); anyOk = true; }
+        try{
+          const r = await fetchViaProxy(buildUrl(s.gid, s.page, f));
+          data = r.down ? await anilistSearchFallback({genreId:s.gid, minScore:effectiveMinScore(f), status:f.status, type:f.type, page:s.page}) : r.data;
+          anyOk = true;
+        }
         catch(e){ anyErr = true; s.exhausted = true; break; }
         (data.data||[]).forEach(a=>{ if(!search.pool.has(a.mal_id)) a.__rnd=Math.random(); search.pool.set(a.mal_id, a); });
         if(!(data.pagination && data.pagination.has_next_page)) s.exhausted = true;
@@ -1352,7 +1519,7 @@ async function gatherCandidates(){
   const refIds = new Set(refs.map(r=>r.mal_id));
   for(const r of refs){
     let data;
-    try{ data = await jikan(`${API}/anime/${r.mal_id}/recommendations`); }
+    try{ data = await jikan(`${PROXY}/anime/${r.mal_id}/recommendations`); }
     catch(e){ continue; }
     (data.data||[]).forEach(rec=>{
       const id = rec.entry.mal_id;
@@ -1383,7 +1550,7 @@ async function materializeUntil(target){
     const cand = search.simCandidates[search.simCursor++];
     let a = detailBasic.get(cand.id);
     if(!a){
-      try{ a = (await jikan(`${API}/anime/${cand.id}`)).data; detailBasic.set(cand.id, a); }
+      try{ a = (await jikan(`${PROXY}/anime/${cand.id}`)).data; detailBasic.set(cand.id, a); }
       catch(e){ continue; }
     }
     if(!passInclude(a) || !passExclude(a) || !passesParams(a)) continue;
@@ -1660,7 +1827,7 @@ async function runFavorites(){
   if(missing.length){
     showLoading();
     for(const id of missing){
-      try{ const a=(await jikan(`${API}/anime/${id}`)).data; a.__rnd=Math.random(); detailBasic.set(id,a); search.collected.push(a); }catch(e){}
+      try{ const a=(await jikan(`${PROXY}/anime/${id}`)).data; a.__rnd=Math.random(); detailBasic.set(id,a); search.collected.push(a); }catch(e){}
     }
     hideLoading();
     search.target=search.collected.length; renderCards(); $("expand-btn").classList.add("hidden");
@@ -1794,7 +1961,7 @@ async function openDetail(id){
   let d = detailFull.get(id);
   if(!d){
     try{
-      const full = (await jikan(`${API}/anime/${id}/full`)).data;
+      const full = (await jikan(`${PROXY}/anime/${id}/full`)).data;
       let chars=[]; try{ chars = (await jikan(`${API}/anime/${id}/characters`)).data||[]; }catch(e){}
       d = {full, chars}; detailFull.set(id, d);
     }catch(e){
@@ -1807,30 +1974,68 @@ async function openDetail(id){
 
 /* ============ similar reference picker ============ */
 let suggestTimer = null;
+let suggestReqId = 0;
+/* .suggest is position:fixed (to escape the wizard panel's overflow:hidden clipping),
+   so its coordinates must track the input. A one-shot calc is fragile — ANY layout
+   shift after it (banner appearing, images/fonts loading, translation reflow) strands
+   the box at stale coords, detached from the field. So we re-sync every frame via rAF
+   while the box is visible, and stop the loop the moment it's hidden. */
+let suggestRaf = null;
+function positionSuggestBox(){
+  const box = $("suggest");
+  if(box.classList.contains("hidden")){ if(suggestRaf){ cancelAnimationFrame(suggestRaf); suggestRaf=null; } return; }
+  const r = $("ref-input").getBoundingClientRect();
+  box.style.left = r.left+"px";
+  box.style.width = r.width+"px";
+  box.style.top = (r.bottom+6)+"px";
+  suggestRaf = requestAnimationFrame(positionSuggestBox);
+}
 function bindRefPicker(){
   const input = $("ref-input");
+  // Move the dropdown to <body>: .panel has backdrop-filter, which makes it the
+  // containing block for position:fixed descendants AND clips them via overflow:hidden.
+  // As a direct child of <body> (no transformed/filtered ancestor), fixed coords are
+  // finally true viewport coordinates and nothing clips it.
+  document.body.appendChild($("suggest"));
   input.addEventListener("input", ()=>{
     clearTimeout(suggestTimer);
     const q = input.value.trim();
-    if(q.length<2){ $("suggest").classList.add("hidden"); return; }
+    if(q.length<2){ $("suggest").classList.add("hidden"); positionSuggestBox(); return; }
     suggestTimer = setTimeout(()=>runSuggest(q), 350);
   });
-  document.addEventListener("click", e=>{ if(!e.target.closest(".ref-search-wrap")) $("suggest").classList.add("hidden"); });
+  document.addEventListener("click", e=>{ if(!e.target.closest(".ref-search-wrap") && !e.target.closest("#suggest")){ $("suggest").classList.add("hidden"); positionSuggestBox(); } });
+}
+async function anilistSearchByText(q, limit){
+  const query = `query($q:String,$perPage:Int){ Page(page:1, perPage:$perPage){ media(search:$q, type:ANIME, isAdult:false){ ${ANI_MEDIA_FIELDS} } } }`;
+  const data = await anilistQuery(query, {q, perPage:limit||8});
+  return aniToJikanPage(data.Page.media, false);
+}
+function showSuggestMsg(msg){
+  const box = $("suggest");
+  box.innerHTML = `<div class="suggest-item"><div class="si-t">${esc(msg)}</div></div>`;
+  box.classList.remove("hidden"); positionSuggestBox();
 }
 async function runSuggest(q){
+  const myReq = ++suggestReqId;         // guard against out-of-order responses
+  showSuggestMsg(t("suggest_loading")); // never silent: always react to typing
   let data;
-  try{ data = await jikan(`${API}/anime?q=${enc(q)}&limit=8&order_by=members&sort=desc&sfw=true`); }
-  catch(e){ return; }
+  try{
+    const r = await fetchViaProxy(`${PROXY}/search?q=${enc(q)}&limit=8`);
+    data = r.down ? await anilistSearchByText(q, 8) : r.data;
+  }
+  catch(e){ if(myReq===suggestReqId) showSuggestMsg(t("suggest_err")); return; }
+  if(myReq!==suggestReqId) return;       // a newer keystroke already superseded this one
   const seen = new Set(), items=[];
   (data.data||[]).forEach(a=>{ if(seen.has(a.mal_id)) return; seen.add(a.mal_id); items.push(a); });
   const box = $("suggest");
-  if(!items.length){ box.innerHTML = `<div class="suggest-item"><div class="si-t">${esc(t("suggest_none"))}</div></div>`; box.classList.remove("hidden"); return; }
+  if(!items.length){ box.innerHTML = `<div class="suggest-item"><div class="si-t">${esc(t("suggest_none"))}</div></div>`; box.classList.remove("hidden"); positionSuggestBox(); return; }
   box.innerHTML = items.map(a=>{
     const img = (a.images&&a.images.jpg&&a.images.jpg.image_url)||PLACEHOLDER;
     const m = [a.type||"", a.year||""].filter(Boolean).join(" · ");
     return `<div class="suggest-item" data-id="${a.mal_id}"><img src="${esc(img)}" onerror="this.onerror=null;this.src='${PLACEHOLDER}'"><div><div class="si-t">${esc(titleOf(a))}</div><div class="si-m">${esc(m)}</div></div></div>`;
   }).join("");
   box.classList.remove("hidden");
+  positionSuggestBox();
   box.querySelectorAll(".suggest-item").forEach(el=>{
     const id = +el.dataset.id; if(!id) return;
     el.onclick = ()=>{ addRef(items.find(x=>x.mal_id===id)); };
@@ -1866,7 +2071,7 @@ function resetSimilar(){
 
 /* ============ screen manager ============ */
 const ALL_SCREENS = ["start-screen","wizard","mood-screen","similar-screen","results-screen","top-screen","season-screen","watch-screen"];
-function nukeScreens(){ ALL_SCREENS.forEach(id=>{ const e=$(id); if(e) e.classList.add("hidden"); }); closeModal(); }
+function nukeScreens(){ ALL_SCREENS.forEach(id=>{ const e=$(id); if(e) e.classList.add("hidden"); }); closeModal(); if(typeof updateServiceBanner==="function") updateServiceBanner(); }
 function showBox(el,emoji,title,text){ el.innerHTML = `<div class="msg"><span class="emoji">${emoji}</span><h3>${esc(title)}</h3>${text?`<p>${esc(text)}</p>`:""}</div>`; }
 function clearBox(el){ el.innerHTML=""; }
 
@@ -1927,12 +2132,18 @@ const BM_SVG = `<svg viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round
 function bmHTML(id){ const on=isWatched(id); return `<button class="bm${on?" saved":""}" data-bm="${id}" title="${esc(on?t("bm_remove"):t("bm_add"))}" aria-label="watch later">${BM_SVG}</button>`; }
 
 /* ============ generic paged feed (top / seasonal) ============ */
-function makeFeed(endpoint, pageCap){ return { endpoint, pageCap:pageCap||4, page:0, items:[], seen:new Set(), hasNext:true, loading:false, error:false, loadedOnce:false }; }
+function makeFeed(endpoint, pageCap, opts){ return { endpoint, pageCap:pageCap||4, page:0, items:[], seen:new Set(), hasNext:true, loading:false, error:false, loadedOnce:false, ...opts }; }
 async function feedFetch(feed){
   if(feed.loading || !feed.hasNext) return;
   feed.loading=true; feed.error=false;
   try{
-    const data = await jikan(API + feed.endpoint(feed.page+1));
+    let data;
+    if(feed.proxied){
+      const r = await fetchViaProxy(PROXY + feed.endpoint(feed.page+1));
+      data = r.down ? await feed.anilistFallback(feed.page+1) : r.data;
+    }else{
+      data = await jikan(API + feed.endpoint(feed.page+1));
+    }
     feed.page++;
     (data.data||[]).forEach(it=>{ const id=it.mal_id; if(id==null||feed.seen.has(id)) return; feed.seen.add(id); feed.items.push(it); });
     feed.hasNext = !!(data.pagination && data.pagination.has_next_page) && feed.page < feed.pageCap;
@@ -1940,10 +2151,10 @@ async function feedFetch(feed){
   feed.loading=false; feed.loadedOnce=true;
 }
 const feeds = {
-  topAnime:   makeFeed(p=>`/top/anime?page=${p}`, 4),
-  topChars:   makeFeed(p=>`/top/characters?page=${p}`, 4),
-  seasonNow:  makeFeed(p=>`/seasons/now?page=${p}`, 6),
-  seasonSoon: makeFeed(p=>`/seasons/upcoming?page=${p}`, 6)
+  topAnime:   makeFeed(p=>`/top/anime?page=${p}`, 4, {proxied:true, anilistFallback:(p)=>anilistTopFallback({page:p})}),
+  topChars:   makeFeed(p=>`/top/characters?page=${p}`, 4),   // characters stay Jikan-only, no AniList equivalent used
+  seasonNow:  makeFeed(p=>`/seasons/now?page=${p}`, 6, {proxied:true, anilistFallback:(p)=>anilistSeasonalFallback({which:"now",page:p})}),
+  seasonSoon: makeFeed(p=>`/seasons/upcoming?page=${p}`, 6, {proxied:true, anilistFallback:(p)=>anilistSeasonalFallback({which:"upcoming",page:p})})
 };
 function renderFeed(o){
   const feed=o.feed, grid=$(o.gridId), more=$(o.moreId), msg=$(o.msgId);
@@ -2153,6 +2364,8 @@ function goHome(){
   nukeScreens();
   $("start-screen").classList.remove("hidden");
   replayHero();
+  updateServiceBanner();   // re-show the indicator if the app is still down and we're home
+  checkService();          // and re-probe, so it clears itself once things recover
 }
 function openWizard(){ resetWizard(); setCatVisible(false); startWizard("filter"); }
 function openMood(){ setCatVisible(false); nukeScreens(); $("mood-screen").classList.remove("hidden"); }
@@ -2209,7 +2422,8 @@ $("open-top").onclick = openTop;
 $("open-season").onclick = openSeason;
 $("open-watch").onclick = openWatch;
 $("open-random").onclick = openRandomAnime;
-$("sb-retry").onclick = loadData;
+$("sb-toggle").onclick = ()=> $("service-banner").classList.toggle("open");
+$("sb-retry").onclick = ()=>{ checkService(); if(!dataLoaded) loadData(); };
 $("home-btn").onclick = goHome;
 $("mood-back").onclick = goHome;
 $("similar-back").onclick = goHome;
@@ -2375,6 +2589,7 @@ function setCatVisible(){}
 
 applyLang();
 bindRefPicker();
+checkService();   // probe Jikan availability right away → banner shows on load if it's down
 loadData();
 </script>
 </body>
