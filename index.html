@@ -129,7 +129,7 @@
   .big-btn:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 20px 55px rgba(139,92,255,.55)}
   .big-btn:hover .bi{transform:rotate(18deg) scale(1.15)}
   @keyframes glow{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-  /* ---- start-screen action grid (3×2 cards) ---- */
+  /* ---- start-screen action grid (3×N cards, 8 buttons) ---- */
   .alt-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;width:100%;max-width:680px;margin:8px auto 0}
   .alt-btn{position:relative;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:11px;
     min-height:120px;padding:20px 14px;border-radius:20px;color:var(--txt);font-size:14.5px;font-weight:600;letter-spacing:.2px;
@@ -158,14 +158,6 @@
     .alt-btn{min-height:106px;padding:16px 10px}
   }
   @media (max-width:360px){ .alt-actions{grid-template-columns:1fr;max-width:280px} .alt-btn{flex-direction:row;justify-content:flex-start;gap:14px;min-height:0;padding:15px 18px} }
-  /* solo "random anime" card — same size as a grid cell, centered under the grid */
-  .alt-solo{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;width:100%;max-width:680px;margin:14px auto 0}
-  .alt-solo .alt-btn{grid-column:2}
-  @media (max-width:620px){
-    .alt-solo{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:430px}
-    .alt-solo .alt-btn{grid-column:1 / -1;justify-self:center;width:calc(50% - 6px)}
-  }
-  @media (max-width:360px){ .alt-solo{grid-template-columns:1fr;max-width:280px} .alt-solo .alt-btn{grid-column:auto;justify-self:stretch;width:100%} }
   .hint{color:var(--muted);font-size:13px;max-width:520px}
   /* ===== service-status indicator — a small square, top-left, home screen only,
      shown ONLY when the app genuinely can't fetch data (proxy 503 / offline).
@@ -325,8 +317,8 @@
   .modal-close{position:sticky;float:right;top:12px;right:12px;margin:12px 12px 0;z-index:3;cursor:pointer;border:1px solid var(--line);background:rgba(7,11,24,.8);color:var(--txt);width:38px;height:38px;border-radius:50%;font-size:18px;font-weight:700}
   .modal-close:hover{border-color:var(--blue);color:var(--blue2)}
   .modal-body{padding:6px 24px 0}
-  .m-hero{display:flex;gap:18px;flex-wrap:wrap}
-  .m-hero img{width:150px;border-radius:12px;flex:none;background:#0a1227}
+  .m-hero{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start}
+  .m-hero img{width:150px;height:auto;aspect-ratio:225/318;object-fit:cover;border-radius:12px;flex:none;background:#0a1227}
   .m-hero h2{margin:2px 0 2px;font-size:22px}
   .m-en{color:var(--muted);font-size:13px;margin-bottom:8px}
   .m-stats{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
@@ -337,6 +329,29 @@
   .m-syn{font-size:13.5px;line-height:1.65;color:#cdd9f3;white-space:pre-line}
   .m-trailer{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
   .m-trailer iframe{width:100%;height:100%;border:0}
+  .shot-strip{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
+  .shot-strip::-webkit-scrollbar{height:8px}
+  .shot-strip::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px}
+  /* fixed HEIGHT, auto width — so a portrait poster and a landscape still each keep their
+     own natural aspect ratio with zero letterboxing, instead of forcing every image into
+     the same landscape box (which is what caused big black bars around portrait shots) */
+  .shot-thumb{flex:none;height:170px;min-width:100px;scroll-snap-align:start;display:block;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:#050810;cursor:pointer;padding:0;transition:transform .15s ease,border-color .15s ease,min-width .1s}
+  .shot-thumb:hover{transform:translateY(-3px);border-color:var(--neon);box-shadow:0 8px 20px -8px var(--neon)}
+  .shot-thumb img{display:block;height:100%;width:auto;max-width:280px;object-fit:contain}
+  @media (max-width:560px){.shot-thumb{height:130px;min-width:80px}.shot-thumb img{max-width:220px}}
+  /* ===== screenshot lightbox (full image, prev/next nav) ===== */
+  #lightbox{position:fixed;inset:0;z-index:200;background:rgba(4,7,16,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center}
+  #lightbox.hidden{display:none}
+  #lightbox img{max-width:88vw;max-height:84vh;object-fit:contain;border-radius:10px;box-shadow:0 24px 70px rgba(0,0,0,.65)}
+  .lb-close,.lb-nav{position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.08);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s ease,transform .15s ease}
+  .lb-close:hover,.lb-nav:hover{background:rgba(255,255,255,.2)}
+  .lb-close{top:18px;right:20px;width:44px;height:44px;font-size:19px}
+  .lb-nav{top:50%;transform:translateY(-50%);width:54px;height:54px;font-size:30px;line-height:1}
+  .lb-nav:hover{transform:translateY(-50%) scale(1.08)}
+  .lb-prev{left:16px}
+  .lb-next{right:16px}
+  .lb-count{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);color:var(--muted);font-size:13px;background:rgba(0,0,0,.45);padding:6px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.1)}
+  @media (max-width:560px){.lb-nav{width:44px;height:44px;font-size:24px}.lb-prev{left:8px}.lb-next{right:8px}}
   .char-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
   .char{display:flex;gap:9px;align-items:center;background:#0e1834;border:1px solid var(--line);border-radius:12px;padding:7px}
   .char img{width:42px;height:56px;object-fit:cover;border-radius:7px;flex:none;background:#0a1227}
@@ -423,6 +438,57 @@
   .wl-btn:hover{border-color:var(--neon);transform:translateY(-1px);box-shadow:0 0 16px -6px var(--neon)}
   .wl-btn.saved{background:linear-gradient(120deg,var(--good),#1f9d6d);color:#04210f;border-color:transparent}
   .wl-btn.pop{animation:bmPop .45s cubic-bezier(.22,1.6,.4,1)}
+  .rand-next-btn{margin-left:8px;background:linear-gradient(120deg,var(--blue-deep),var(--accent));color:#fff;border-color:transparent}
+  .rand-next-btn:hover{filter:brightness(1.12)}
+  /* ===== personal list: status/score/rewatch controls, tabs, badge, toast ===== */
+  /* status/score/rewatch controls in the detail modal */
+  .mal-ctrls{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;align-items:flex-end}
+  .mal-field{display:flex;flex-direction:column;gap:4px;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+  .mal-field select,.mal-field input{font-size:13.5px;font-weight:600;color:#eaf0ff;background:#0e1834;border:1px solid var(--line);border-radius:12px;padding:9px 12px;transition:all .15s;text-transform:none;letter-spacing:0}
+  .mal-field select:focus,.mal-field input:focus{outline:none;border-color:var(--neon);box-shadow:0 0 14px -6px var(--neon)}
+  .mal-field .mal-rw{width:74px}
+  /* watch-screen header: caption + side stats (completed titles / episodes watched) */
+  .watch-head-row{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 16px}
+  .watch-head-row .section-cap{margin:0}
+  .watch-stats{display:flex;flex-wrap:wrap;gap:8px}
+  .stat-chip{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:700;color:#cfe0ff;background:#0e1834;border:1px solid var(--line);border-radius:16px;padding:6px 12px}
+  .stat-chip b{color:#fff;font-weight:800}
+  /* status filter tabs + per-card badge on the watch screen */
+  .watch-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 14px}
+  .wf-btn{cursor:pointer;border:1px solid var(--line);background:#0e1834;color:var(--muted);font-size:12.5px;font-weight:700;padding:8px 13px;border-radius:20px;transition:all .16s}
+  .wf-btn:hover{color:var(--blue2);border-color:var(--neon)}
+  .wf-btn.active{background:linear-gradient(120deg,var(--blue-deep),var(--accent));color:#fff;border-color:transparent}
+  .wf-btn .wf-n{opacity:.7;font-size:11px;margin-left:5px}
+  .mal-badge{position:absolute;left:10px;top:44px;font-size:11px;font-weight:800;padding:4px 9px;border-radius:14px;color:#fff;background:#2e51a2;box-shadow:0 3px 10px -3px #000;z-index:2}
+  .mal-badge.st-watching{background:linear-gradient(120deg,#2e7d5b,#1f9d6d)}
+  .mal-badge.st-completed{background:linear-gradient(120deg,#3155a8,#5b7fe0)}
+  .mal-badge.st-on_hold{background:linear-gradient(120deg,#9a7d1f,#c8a43a)}
+  .mal-badge.st-dropped{background:linear-gradient(120deg,#8a2f3f,#c04a5f)}
+  .mal-badge.st-plan_to_watch{background:linear-gradient(120deg,#4a3a7a,#6b5bd0)}
+  /* next-episode badge (watchlist "watching" entries only) — mirrors .mal-badge on the right */
+  /* stacked BELOW .mal-badge (same left edge, not mirrored to the right) — two absolutely
+     positioned pills side-by-side would overlap on narrow cards once either has enough text
+     to exceed half the poster's width; stacking is collision-proof regardless of text length */
+  .air-badge{position:absolute;left:10px;top:76px;font-size:11px;font-weight:800;padding:4px 9px;border-radius:14px;color:#fff;background:linear-gradient(120deg,#2b3d6b,#3d5aa8);box-shadow:0 3px 10px -3px #000;z-index:2;animation:cardIn .4s ease both;max-width:calc(100% - 20px)}
+  .air-badge.today{background:linear-gradient(120deg,#a8323f,#e2495c);animation:airPulse 1.8s ease-in-out infinite}
+  @keyframes airPulse{0%,100%{box-shadow:0 3px 10px -3px #000,0 0 0 0 rgba(226,73,92,.5)}50%{box-shadow:0 3px 10px -3px #000,0 0 0 5px rgba(226,73,92,0)}}
+  .toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);background:#0e1834;border:1px solid var(--line);color:#eaf0ff;padding:11px 18px;border-radius:24px;font-size:13.5px;font-weight:600;z-index:130;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;box-shadow:0 8px 30px -8px #000,0 0 20px -8px var(--neon);max-width:80vw;text-align:center}
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+  /* ===== related-anime / watch-order ===== */
+  .rel-group{margin-bottom:11px}
+  .rel-group:last-child{margin-bottom:0}
+  .rel-label{display:block;font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
+  .rel-items{display:flex;flex-wrap:wrap;gap:8px}
+  .rel-pill{cursor:pointer;font-size:13px;font-weight:600;color:#eaf0ff;background:#0e1834;border:1px solid var(--line);border-radius:14px;padding:8px 13px;transition:all .16s;text-decoration:none;text-align:left;line-height:1.3}
+  .rel-pill:hover{border-color:var(--neon);color:#fff;transform:translateY(-1px);box-shadow:0 0 14px -6px var(--neon)}
+  .rel-pill.rel-ext{color:var(--blue2)}
+  /* ===== score distribution mini bar chart ===== */
+  .sc-chart{display:flex;flex-direction:column;gap:5px;max-width:420px}
+  .sc-row{display:flex;align-items:center;gap:10px}
+  .sc-n{width:20px;text-align:right;font-size:12.5px;font-weight:700;color:var(--blue2);flex:none}
+  .sc-bar{flex:1;height:14px;background:#0e1834;border-radius:8px;overflow:hidden}
+  .sc-bar i{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,var(--blue-deep),var(--accent));transition:width .5s cubic-bezier(.22,1,.36,1)}
+  .sc-v{width:52px;text-align:right;font-size:11.5px;color:var(--muted);flex:none;font-variant-numeric:tabular-nums}
   /* ===== card stagger-in ===== */
   .grid .card{animation:cardIn .5s cubic-bezier(.22,1,.36,1) both}
   @keyframes cardIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
@@ -510,16 +576,18 @@
         <span class="ai"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="16" rx="2.4"/><path d="M4 9.5h16"/><path d="M8 3.2v3.4"/><path d="M16 3.2v3.4"/><circle cx="9" cy="13.5" r=".9" fill="currentColor" stroke="none"/><circle cx="12" cy="13.5" r=".9" fill="currentColor" stroke="none"/><circle cx="15" cy="13.5" r=".9" fill="currentColor" stroke="none"/></svg></span>
         <span class="al" data-i18n="btn_season">Сезонное</span>
       </button>
+      <button class="alt-btn" id="open-schedule">
+        <span class="ai"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="16" rx="2.4"/><path d="M4 9.5h16"/><path d="M8 3.2v3.4"/><path d="M16 3.2v3.4"/><path d="M7.5 13h3"/><path d="M7.5 16.5h6"/></svg></span>
+        <span class="al" data-i18n="btn_schedule">Расписание</span>
+      </button>
       <button class="alt-btn" id="open-watch">
-        <span class="ai"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3.5h11a1 1 0 0 1 1 1v16l-6.5-4.6L5.5 20.5v-16a1 1 0 0 1 1-1z"/></svg></span>
-        <span class="al" data-i18n="btn_watch">Смотреть дальше</span>
+        <span class="ai"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h11"/><path d="M8 12h11"/><path d="M8 18h11"/><path d="M4.3 6l.8.8L6.7 5.2"/><path d="M4.3 12l.8.8L6.7 11.2"/><path d="M4.3 18l.8.8L6.7 17.2"/></svg></span>
+        <span class="al" data-i18n="btn_watch">Мой список</span>
       </button>
       <button class="alt-btn" id="open-fav">
         <span class="ai"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.55 5.17 5.7.83-4.12 4.02.97 5.68L12 16.99l-5.1 2.31.97-5.68L3.75 9.6l5.7-.83z"/></svg></span>
         <span class="al" data-i18n="btn_fav">Любимые аниме beako</span>
       </button>
-    </div>
-    <div class="alt-solo">
       <button class="alt-btn" id="open-random">
         <span class="ai"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4.2"/><circle cx="9" cy="9" r="1.35" fill="currentColor" stroke="none"/><circle cx="15" cy="9" r="1.35" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.35" fill="currentColor" stroke="none"/><circle cx="9" cy="15" r="1.35" fill="currentColor" stroke="none"/><circle cx="15" cy="15" r="1.35" fill="currentColor" stroke="none"/></svg></span>
         <span class="al" data-i18n="btn_random">Случайное аниме</span>
@@ -708,10 +776,25 @@
       <button class="btn" id="watch-home" data-i18n="back_home">← На главную</button>
       <button class="btn" id="watch-clear" data-i18n="watch_clear">🗑️ Очистить</button>
     </div>
-    <h2 class="step-title" style="margin:8px 0 2px" data-i18n="watch_title">🧺 Смотреть дальше</h2>
-    <p class="section-cap" id="watch-cap"></p>
+    <h2 class="step-title" style="margin:8px 0 2px" data-i18n="watch_title">📋 Мой список</h2>
+    <div class="watch-head-row">
+      <p class="section-cap" id="watch-cap"></p>
+      <div class="watch-stats" id="watch-stats"></div>
+    </div>
     <div id="watch-grid" class="grid"></div>
     <div id="watch-msg"></div>
+  </section>
+
+  <!-- ===== WEEKLY SCHEDULE ===== -->
+  <section id="schedule-screen" class="screen hidden">
+    <div class="results-head">
+      <button class="btn" id="sched-home" data-i18n="back_home">← На главную</button>
+    </div>
+    <h2 class="step-title" style="margin:8px 0 2px" data-i18n="sched_title">🗓️ Расписание недели</h2>
+    <p class="section-cap" id="sched-cap" data-i18n="sched_cap">Что выходит по дням недели</p>
+    <div id="sched-tabs" class="watch-tabs"></div>
+    <div id="sched-grid" class="grid"></div>
+    <div id="sched-msg"></div>
   </section>
 </div>
 
@@ -728,6 +811,13 @@
 </div>
 
 <div id="modal" class="hidden"></div>
+<div id="lightbox" class="hidden">
+  <button class="lb-close" id="lb-close" aria-label="Закрыть">✕</button>
+  <button class="lb-nav lb-prev" id="lb-prev" aria-label="Предыдущий">‹</button>
+  <img id="lb-img" src="" alt="">
+  <button class="lb-nav lb-next" id="lb-next" aria-label="Следующий">›</button>
+  <div class="lb-count" id="lb-count"></div>
+</div>
 
 <script>
 "use strict";
@@ -859,6 +949,8 @@ const T = {
   sum_gem:{ru:"💎 скрытые алмазы", en:"💎 hidden gems"},
   sum_eps:{ru:"сер.", en:"eps"},
   m_trailer:{ru:"▶️ Трейлер", en:"▶️ Trailer"},
+  m_trailer_yt:{ru:"Смотреть на YouTube", en:"Watch on YouTube"},
+  m_shots:{ru:"🖼️ Скриншоты", en:"🖼️ Screenshots"},
   m_desc:{ru:"📖 Описание", en:"📖 Description"},
   m_bg:{ru:"За кадром:", en:"Background:"},
   m_music:{ru:"🎵 Музыка", en:"🎵 Music"},
@@ -866,6 +958,13 @@ const T = {
   m_endings:{ru:"Эндинги:", en:"Endings:"},
   m_chars:{ru:"👥 Персонажи и сэйю", en:"👥 Characters & voice actors"},
   m_main:{ru:"Главный", en:"Main"}, m_supp:{ru:"Второстеп.", en:"Supporting"},
+  m_related:{ru:"🔗 Связанное · порядок просмотра", en:"🔗 Related · watch order"},
+  m_scores:{ru:"📊 Распределение оценок", en:"📊 Score distribution"},
+  last_ep_aired:{ru:"Вышла серия {n}", en:"Episode {n} aired"},
+  next_ep_today:{ru:"🔴 серия {n} — сегодня!", en:"🔴 episode {n} — today!"},
+  next_ep_in:{ru:"след. серия {n} — через {d} дн.", en:"next episode {n} — in {d}d"},
+  air_badge_today:{ru:"🔴 Сегодня · серия {n}", en:"🔴 Today · ep {n}"},
+  air_badge_soon:{ru:"⏳ Серия {n} — через {d}д", en:"⏳ Ep {n} in {d}d"},
   m_watch:{ru:"📺 Где смотреть и искать", en:"📺 Where to watch & search"},
   m_nostream:{ru:"Легальных стримингов в базе MAL не указано.", en:"No legal streaming listed on MAL."},
   m_ratings:{ru:"оценок", en:"ratings"}, m_rank:{ru:"в рейтинге", en:"in ranking"}, m_pop:{ru:"по популярности", en:"by popularity"},
@@ -891,10 +990,42 @@ const T = {
   suggest_none:{ru:"Ничего не нашлось 🤷", en:"Nothing found 🤷"},
   suggest_loading:{ru:"Ищу аниме… ⏳", en:"Searching… ⏳"},
   suggest_err:{ru:"Сервис поиска сейчас недоступен, попробуй ещё раз", en:"Search service is unavailable, try again"},
+  /* ---- personal list: statuses, score, rewatch ---- */
+  mal_saved:{ru:"Сохранено ✓", en:"Saved ✓"},
+  mal_removed:{ru:"Убрано из списка", en:"Removed from list"},
+  mal_added_ptw:{ru:"Добавлено · Планирую", en:"Added · Plan to watch"},
+  mal_status:{ru:"В списке", en:"List status"},
+  mal_score:{ru:"Моя оценка", en:"Your score"},
+  mal_rewatch:{ru:"Пересмотры", en:"Rewatches"},
+  st_none:{ru:"— Не в списке", en:"— Not in list"},
+  st_watching:{ru:"Смотрю", en:"Watching"},
+  st_completed:{ru:"Просмотрено", en:"Completed"},
+  st_on_hold:{ru:"Отложено", en:"On hold"},
+  st_dropped:{ru:"Брошено", en:"Dropped"},
+  st_plan_to_watch:{ru:"Планирую", en:"Plan to watch"},
+  score_none:{ru:"— Без оценки", en:"— No score"},
+  wf_all:{ru:"Все", en:"All"},
+  watch_empty_filter:{ru:"В этом разделе пока пусто.", en:"Nothing in this category yet."},
+  score_lbl_10:{ru:"Шедевр", en:"Masterpiece"},
+  score_lbl_9:{ru:"Великолепно", en:"Great"},
+  score_lbl_8:{ru:"Очень хорошо", en:"Very Good"},
+  score_lbl_7:{ru:"Хорошо", en:"Good"},
+  score_lbl_6:{ru:"Неплохо", en:"Fine"},
+  score_lbl_5:{ru:"Средне", en:"Average"},
+  score_lbl_4:{ru:"Плохо", en:"Bad"},
+  score_lbl_3:{ru:"Очень плохо", en:"Very Bad"},
+  score_lbl_2:{ru:"Ужасно", en:"Horrible"},
+  score_lbl_1:{ru:"Отвратительно", en:"Appalling"},
   /* ---- discover: top / seasonal / watchlist ---- */
   btn_top:{ru:"Топ-100", en:"Top-100"},
   btn_season:{ru:"Сезонное", en:"Seasonal"},
-  btn_watch:{ru:"Смотреть дальше", en:"Watch later"},
+  btn_schedule:{ru:"Расписание", en:"Schedule"},
+  btn_watch:{ru:"Мой список", en:"My List"},
+  sched_title:{ru:"🗓️ Расписание недели", en:"🗓️ Weekly schedule"},
+  sched_cap:{ru:"Что выходит по дням недели", en:"What airs on each day"},
+  sched_today:{ru:"сегодня", en:"today"},
+  day_monday:{ru:"Пн", en:"Mon"}, day_tuesday:{ru:"Вт", en:"Tue"}, day_wednesday:{ru:"Ср", en:"Wed"},
+  day_thursday:{ru:"Чт", en:"Thu"}, day_friday:{ru:"Пт", en:"Fri"}, day_saturday:{ru:"Сб", en:"Sat"}, day_sunday:{ru:"Вс", en:"Sun"},
   btn_random:{ru:"Случайное аниме", en:"Random anime"},
   svc_down:{ru:"Некоторые сервисы данных сейчас недоступны — часть функций может работать медленнее или быть временно недоступна.", en:"Some data services are currently unavailable — a few features may be slower or temporarily unavailable."},
   svc_retry:{ru:"Проверить снова", en:"Check again"},
@@ -907,16 +1038,19 @@ const T = {
   season_tab_soon:{ru:"🗓️ Скоро премьеры", en:"🗓️ Upcoming"},
   season_cap_now:{ru:"Аниме текущего сезона — выходит прямо сейчас.", en:"This season's anime — airing right now."},
   season_cap_soon:{ru:"Будущие премьеры — ещё не вышли, но уже на радаре.", en:"Upcoming premieres — not out yet, but on the radar."},
-  watch_title:{ru:"🧺 Смотреть дальше", en:"🧺 Watch later"},
+  watch_title:{ru:"📋 Мой список", en:"📋 My List"},
   watch_cap:{ru:"твой личный список, сохранён прямо в браузере", en:"your personal list, saved right in this browser"},
   watch_count:{ru:"в списке", en:"in list"},
   watch_clear:{ru:"🗑️ Очистить", en:"🗑️ Clear"},
-  watch_confirm:{ru:"Очистить весь список «Смотреть дальше»?", en:"Clear the whole Watch-later list?"},
+  watch_confirm:{ru:"Очистить весь список?", en:"Clear the whole list?"},
   watch_empty_t:{ru:"Список пока пуст", en:"Your list is empty"},
   watch_empty_p:{ru:"Жми 🔖 на карточке любого аниме — и оно попадёт сюда. Список хранится в этом браузере и не слетает.", en:"Tap 🔖 on any anime card and it lands here. The list is stored in this browser and won't disappear."},
+  watch_stat_done:{ru:"завершено", en:"completed"},
+  watch_stat_eps:{ru:"серий просмотрено", en:"episodes watched"},
   watch_empty_cta:{ru:"✨ Подобрать аниме", en:"✨ Find anime"},
-  wl_add:{ru:"🔖 Смотреть дальше", en:"🔖 Watch later"},
+  wl_add:{ru:"🔖 Добавить в список", en:"🔖 Add to list"},
   wl_on:{ru:"✓ В списке", en:"✓ In list"},
+  rand_next:{ru:"Ещё случайное", en:"Another random"},
   bm_add:{ru:"В список «Смотреть дальше»", en:"Add to Watch later"},
   bm_remove:{ru:"Убрать из списка", en:"Remove from list"},
   load_more:{ru:"➕ Показать ещё", en:"➕ Show more"},
@@ -999,6 +1133,7 @@ const SORTS = [
 ];
 
 const LOADING_MSGS_RU = [
+  "Отматываем время, как Субару…","Синхронизируемся с Евой-01…","Титаны сносят стену спойлеров…","Луффи тянется за тайтлом…",
   "Это должно было быть лёгкой работой","Да здравствует Британия!","Я разрушил мир — чтобы ты могла жить",
   "Этот мир жесток, но всё же прекрасен","Вы не Восемьдесят Шестые. Вы люди","Я запомню твоё имя до конца",
   "Мы не боги. Мы просто люди, которые пытаются","Восстань","Я хочу увидеть тебя снова, даже если забуду всё",
@@ -1028,6 +1163,7 @@ const LOADING_MSGS_RU = [
   "В тот апрель мир снова обрёл цвет","Прости за ложь. Я не была в порядке ни секунды"
 ];
 const LOADING_MSGS_EN = [
+  "Rewinding time like Subaru…","Synchronizing with Eva-01…","Titans tear down the spoiler wall…","Luffy stretches for the title…",
   "This was supposed to be an easy job","All hail Britannia!","I destroyed the world — so you could live",
   "This world is cruel, but also beautiful","You're not the Eighty-Six. You're people","I'll remember your name to the very end",
   "We're not gods. Just people who try","Arise","I want to see you again, even if I forget everything",
@@ -1097,13 +1233,18 @@ const sleep = (ms) => new Promise(r=>setTimeout(r,ms));
 const enc = encodeURIComponent;
 
 let lastReq = 0;
-async function throttle(){
+async function throttle(url){
+  // only DIRECT Jikan calls need client-side pacing to respect its public rate limit —
+  // our own proxy already paces its own outbound Jikan requests server-side, so throttling
+  // calls to it here just adds latency for no reason (was needlessly slowing down every
+  // wizard/mood search stream, top/seasonal pagination, and detail-modal fetch).
+  if(!url.startsWith(API)) return;
   const wait = Math.max(0, MIN_INTERVAL - (Date.now() - lastReq));
   if (wait>0) await sleep(wait);
   lastReq = Date.now();
 }
 async function jikanCore(url, retries=3){
-  await throttle();
+  await throttle(url);
   let res;
   try{
     res = await fetch(url);
@@ -1159,6 +1300,87 @@ async function fetchViaProxy(url){
   if(res.status===503) return {down:true};
   if(!res.ok) throw new Error("proxy HTTP "+res.status);
   return {down:false, data: await res.json()};
+}
+
+/* ============ personal list (local, multi-status) ============
+   The list lives entirely in localStorage — see the watch-later block below for the
+   watchList/watchSet storage. Each entry carries a status + personal score + rewatch
+   count (e.status / e.score_user / e.rewatch). No account, no login. (A cross-device
+   "sync code" via KV could be bolted on later, but is intentionally not built.) */
+const STATUSES=["watching","completed","on_hold","dropped","plan_to_watch"];
+function scoreLabel(n){ return t("score_lbl_"+n) || ""; }
+/* entries ARE the compactAnime objects stored in watchList */
+function entryOf(id){ return watchList.find(a=>a.mal_id===+id) || null; }
+/* set/patch status·score·rewatch; adds the anime to the list if it isn't there yet */
+function setListStatus(id, patch){
+  id=+id;
+  let e=entryOf(id);
+  if(!e){
+    const src=KNOWN.get(id); if(!src) return null;
+    e=compactAnime(src); watchSet.add(id); watchList.unshift(e); KNOWN.set(id,e);
+  }
+  if(patch.status!=null) e.status=patch.status;
+  if(patch.score!=null) e.score_user=+patch.score;        // personal score (a.score is the community score)
+  if(patch.rewatch!=null) e.rewatch=Math.max(0,Math.min(99,patch.rewatch|0));
+  if(!e.status) e.status="plan_to_watch";
+  saveWatch();
+  return e;
+}
+function removeFromList(id){
+  id=+id;
+  watchSet.delete(id); watchList=watchList.filter(a=>a.mal_id!==id);
+  saveWatch();
+}
+
+/* toast */
+let toastTimer=null;
+function toast(msg){
+  let el=$("toast");
+  if(!el){ el=document.createElement("div"); el.id="toast"; el.className="toast"; document.body.appendChild(el); }
+  el.textContent=msg; el.classList.add("show");
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.remove("show"), 2400);
+}
+
+/* ---- detail-modal list controls: status + personal score + rewatch ---- */
+/* score + rewatch-count only make sense once you've actually started the title — hidden
+   for "" (not in list) and "plan_to_watch" (haven't watched it yet, nothing to rate/rewatch) */
+const STATUSES_WITH_PROGRESS = ["watching","completed","on_hold","dropped"];
+function listControls(id){
+  const e=entryOf(id);
+  const cur=e&&e.status?e.status:"";
+  const score=e&&e.score_user?e.score_user:0;
+  const rw=e&&e.rewatch?e.rewatch:0;
+  const statusOpts=`<option value="">${esc(t("st_none"))}</option>`+STATUSES.map(s=>`<option value="${s}"${s===cur?" selected":""}>${esc(t("st_"+s))}</option>`).join("");
+  const scoreOpts=`<option value="0">${esc(t("score_none"))}</option>`+[10,9,8,7,6,5,4,3,2,1].map(n=>`<option value="${n}"${n===score?" selected":""}>${n} · ${esc(scoreLabel(n))}</option>`).join("");
+  const hide=STATUSES_WITH_PROGRESS.includes(cur)?"":' style="display:none"';
+  return `<div class="mal-ctrls" data-mid="${id}">
+    <label class="mal-field"><span>${esc(t("mal_status"))}</span><select class="mal-status">${statusOpts}</select></label>
+    <label class="mal-field mal-score-f"${hide}><span>${esc(t("mal_score"))}</span><select class="mal-score">${scoreOpts}</select></label>
+    <label class="mal-field mal-rw-f"${hide}><span>${esc(t("mal_rewatch"))}</span><input class="mal-rw" type="number" min="0" max="99" value="${rw}"></label>
+  </div>`;
+}
+function wireListControls(root){
+  const id=+root.dataset.mid;
+  const stSel=root.querySelector(".mal-status"), scSel=root.querySelector(".mal-score"), rwInp=root.querySelector(".mal-rw");
+  const scoreF=root.querySelector(".mal-score-f"), rwF=root.querySelector(".mal-rw-f");
+  stSel.onchange=()=>{
+    const v=stSel.value;
+    if(!v){ removeFromList(id); scoreF.style.display="none"; rwF.style.display="none"; toast(t("mal_removed")); }
+    else{
+      const showProgress = STATUSES_WITH_PROGRESS.includes(v);
+      // switching TO plan_to_watch: score/rewatch no longer make sense (haven't watched it) — clear them
+      const patch = v==="plan_to_watch" ? {status:v, score:0, rewatch:0} : {status:v};
+      setListStatus(id, patch);
+      scoreF.style.display = showProgress ? "" : "none";
+      rwF.style.display = showProgress ? "" : "none";
+      if(v==="plan_to_watch"){ scSel.value="0"; rwInp.value="0"; }
+      toast(t("mal_saved"));
+    }
+    reflectWatchButtons(id); updateWatchBadge();
+    if(!$("watch-screen").classList.contains("hidden")) renderWatch();
+  };
+  scSel.onchange=()=>{ setListStatus(id,{score:+scSel.value}); toast(t("mal_saved")); if(!$("watch-screen").classList.contains("hidden")) renderWatch(); };
+  rwInp.onchange=()=>{ const n=Math.max(0,Math.min(99,parseInt(rwInp.value,10)||0)); rwInp.value=n; setListStatus(id,{rewatch:n}); toast(t("mal_saved")); };
 }
 
 /* ---- AniList GraphQL fallback (browser-only: AniList outright blocks Cloudflare
@@ -1263,6 +1485,131 @@ async function anilistSeasonalFallback({which,page}){
   const data = await anilistQuery(query, {page:page||1, season:s.season, year:s.year});
   return aniToJikanPage(data.Page.media, data.Page.pageInfo.hasNextPage);
 }
+/* weekly schedule fallback: Jikan's /schedules is one of its flakiest endpoints (confirmed
+   repeatedly via direct curl 504s), and unlike search/top/seasonal it has no MAL-official
+   leg (MAL has no schedule endpoint) — so without this it just goes dark whenever Jikan
+   hiccups. AniList doesn't have a "day of week" filter either, but currently-airing shows
+   carry `nextAiringEpisode.airingAt` (a Unix timestamp) — the weekday of that IS the show's
+   regular broadcast day. Broadcast day is a JST (Japan) concept, same as Jikan's own
+   `broadcast.day`, so convert to JST (UTC+9) before reading the weekday, not raw UTC. */
+const ANI_JST_WEEKDAY=["sunday","monday","tuesday","wednesday","thursday","friday","saturday"]; // Date#getUTCDay() index
+let aniScheduleCache=null; // one fetch buckets the whole week; reused across day-tab switches
+async function anilistScheduleFallback(day){
+  if(!aniScheduleCache){
+    const s=aniCurrentSeason();
+    const query=`query($season:MediaSeason,$year:Int){ Page(page:1, perPage:50){ media(type:ANIME, isAdult:false, season:$season, seasonYear:$year, status:RELEASING, sort:POPULARITY_DESC){ ${ANI_MEDIA_FIELDS} nextAiringEpisode{airingAt} } } }`;
+    const data = await anilistQuery(query, {season:s.season, year:s.year});
+    const byDay={}; SCHED_DAYS.forEach(d=>byDay[d]=[]);
+    (data.Page.media||[]).forEach(m=>{
+      if(!m.nextAiringEpisode) return;
+      const jst=new Date((m.nextAiringEpisode.airingAt+9*3600)*1000);
+      const wd=ANI_JST_WEEKDAY[jst.getUTCDay()];
+      const a=aniToJikanAnime(m); if(a && byDay[wd]) byDay[wd].push(a);
+    });
+    aniScheduleCache=byDay;
+  }
+  return {data: aniScheduleCache[day]||[], pagination:{has_next_page:false}};
+}
+
+/* next/latest-episode info for ongoing titles, wherever a currently-airing anime is shown
+   (detail modal, watchlist badges). AniList's `nextAiringEpisode` gives an exact upcoming
+   timestamp + episode number (accounting for real delays), which is strictly richer than
+   Jikan's own static `broadcast.day/time` — so this is used unconditionally, not just as a
+   down-fallback. Batches via `idMal_in` (confirmed live: works fine for dozens of ids in one
+   call) and caches per id for 10 min — airing schedules don't change minute to minute, and
+   this can be called repeatedly (every watch-screen render, every modal open). */
+const jstDateStr = (unixSec)=>{ const d=new Date((unixSec+9*3600)*1000); return d.getUTCFullYear()+"-"+String(d.getUTCMonth()+1).padStart(2,"0")+"-"+String(d.getUTCDate()).padStart(2,"0"); };
+const airingInfoCache = new Map(); // malId -> {ts, nextEp:{airingAt,episode}|null}
+const AIRING_TTL = 10*60*1000;
+async function anilistNextEpisodeBulk(malIds){
+  const now = Date.now();
+  const ids = [...new Set(malIds)].filter(id=>id!=null);
+  const need = ids.filter(id=>{ const c=airingInfoCache.get(id); return !c || (now-c.ts)>AIRING_TTL; });
+  for(let i=0;i<need.length;i+=40){
+    const chunk = need.slice(i,i+40);
+    try{
+      const query = `query($ids:[Int]){ Page(perPage:50){ media(idMal_in:$ids, type:ANIME){ idMal nextAiringEpisode{airingAt episode} } } }`;
+      const data = await anilistQuery(query, {ids:chunk});
+      const got = new Set();
+      (data.Page.media||[]).forEach(m=>{ got.add(m.idMal); airingInfoCache.set(m.idMal, {ts:now, nextEp:m.nextAiringEpisode||null}); });
+      chunk.forEach(id=>{ if(!got.has(id)) airingInfoCache.set(id, {ts:now, nextEp:null}); }); // no AniList match — cache the miss too, don't re-ask every render
+    }catch(e){ /* leave uncached — caller treats missing entries as "no data", not an error */ }
+  }
+  const out = new Map();
+  ids.forEach(id=>{ const c=airingInfoCache.get(id); if(c) out.set(id, c.nextEp); });
+  return out;
+}
+/* {today:bool, nextEpisode, lastEpisode, daysLeft} or null if nothing airing-soon is known */
+function nextEpSummary(nextEp){
+  if(!nextEp) return null;
+  const todayJst = jstDateStr(Math.floor(Date.now()/1000));
+  const epJst = jstDateStr(nextEp.airingAt);
+  const daysLeft = Math.max(0, Math.round((nextEp.airingAt*1000 - Date.now())/86400000));
+  return { today: epJst===todayJst, nextEpisode: nextEp.episode, lastEpisode: Math.max(0, nextEp.episode-1), daysLeft };
+}
+
+/* ============ AniList fallbacks for blocks that previously had NONE ============
+   Detail modal, recommendations, and the score histogram all had a MAL→Jikan→cache waterfall
+   but NO further tier — a genuine (if rare) total outage of both meant a hard failure. Same
+   reason as every other AniList call in this file: Workers are IP-blocked by AniList, so these
+   can only run client-side. Characters+VA were previously documented as having "no alternative
+   free source" — that was WRONG, AniList does have character+VA data (confirmed live), so it
+   gets a real fallback here too (one disclosed limitation: AniList characters carry no MAL
+   character id, so they can't drill into the character's own bio modal — they still render
+   correctly, just aren't clickable-through). */
+const ANI_FULL_FIELDS = ANI_MEDIA_FIELDS + ` bannerImage duration studios(isMain:true){nodes{name}} trailer{id site} endDate{year month day} source`;
+function aniToJikanFull(m){
+  const base = aniToJikanAnime(m); if(!base) return null;
+  let trailer=null;
+  if(m.trailer && m.trailer.site==="youtube" && m.trailer.id) trailer = {embed_url:`https://www.youtube.com/embed/${m.trailer.id}`};
+  const e=m.endDate;
+  return {
+    ...base,
+    rank:null, popularity:m.popularity||null, favorites:null,
+    duration: m.duration ? m.duration+" min per ep" : null,
+    rating:null,
+    source: m.source ? (m.source.charAt(0)+m.source.slice(1).toLowerCase()) : null,
+    aired: { ...base.aired, string: null },
+    background:null, trailer,
+    studios: ((m.studios&&m.studios.nodes)||[]).map(s=>({name:s.name})),
+    theme:{openings:[],endings:[]},
+    streaming:[], external:[],
+    pictures: [m.bannerImage].filter(Boolean),
+    relations:[] // Jikan's own /full already carries relations whenever ITS tier serves the request — this is only reached on a genuine full outage
+  };
+}
+async function anilistDetailFallback(id){
+  const query = `query($id:Int){ Media(idMal:$id, type:ANIME){ ${ANI_FULL_FIELDS} } }`;
+  const data = await anilistQuery(query, {id:+id});
+  if(!data.Media) throw new Error("anilist: no such media");
+  const full = aniToJikanFull(data.Media);
+  if(!full) throw new Error("anilist: no MAL id on this media");
+  return full;
+}
+async function anilistRecommendationsFallback(id){
+  const query = `query($id:Int){ Media(idMal:$id, type:ANIME){ recommendations(sort:RATING_DESC, perPage:10){ nodes{ rating mediaRecommendation{ ${ANI_MEDIA_FIELDS} } } } } }`;
+  const data = await anilistQuery(query, {id:+id});
+  const nodes = (data.Media && data.Media.recommendations && data.Media.recommendations.nodes) || [];
+  const list = nodes.map(n=>{ const entry=n.mediaRecommendation && aniToJikanAnime(n.mediaRecommendation); return entry?{entry, votes:Math.max(0,n.rating||0)}:null; }).filter(Boolean);
+  return {data:list};
+}
+async function anilistScoreDistFallback(id){
+  const query = `query($id:Int){ Media(idMal:$id, type:ANIME){ stats{ scoreDistribution{score amount} } } }`;
+  const data = await anilistQuery(query, {id:+id});
+  const dist = (data.Media && data.Media.stats && data.Media.stats.scoreDistribution) || [];
+  const total = dist.reduce((s,x)=>s+(x.amount||0),0) || 1;
+  return { scores: dist.map(x=>({score:Math.round(x.score/10), votes:x.amount||0, percentage:(x.amount||0)/total*100})) };
+}
+async function anilistCharactersFallback(id){
+  const query = `query($id:Int){ Media(idMal:$id, type:ANIME){ characters(sort:ROLE, perPage:10){ edges{ role node{ name{full} image{large} } voiceActors(language:JAPANESE){ name{full} } } } } }`;
+  const data = await anilistQuery(query, {id:+id});
+  const edges = (data.Media && data.Media.characters && data.Media.characters.edges) || [];
+  return edges.map(e=>({
+    character:{ mal_id:null, name:e.node.name.full, images:{jpg:{image_url:(e.node.image&&e.node.image.large)||null}} },
+    role: e.role==="MAIN" ? "Main" : "Supporting",
+    voice_actors: (e.voiceActors||[]).map(v=>({person:{name:v.name.full}, language:"Japanese"}))
+  }));
+}
 
 const PLACEHOLDER = "data:image/svg+xml;charset=utf-8,"+enc(
   `<svg xmlns='http://www.w3.org/2000/svg' width='300' height='400'>
@@ -1303,6 +1650,25 @@ function engShort(a){ return cleanSyn(a.synopsis); }
 function engFull(a){ return cleanSyn(a.synopsis, true); }
 function esc(s){ return String(s==null?"":s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
 function imgOf(a){ return (a.images && a.images.jpg && (a.images.jpg.large_image_url || a.images.jpg.image_url)) || PLACEHOLDER; }
+/* MAL/Jikan CDN URLs encode the same underlying picture across sizes, e.g.
+   ".../anime/13/13738.jpg" vs ".../13738l.jpg" — a bare filename vs one with a single
+   trailing size-suffix letter. Normalize away that suffix so same-artwork-different-size
+   entries collapse to one dedupe key instead of showing as separate "duplicate" shots. */
+function pictureKey(u){
+  try{ return new URL(u).pathname.replace(/([a-zA-Z])(\.\w+)$/, "$2"); }
+  catch(e){ return u; }
+}
+function dedupePictures(urls, posterUrl){
+  const posterKey = posterUrl ? pictureKey(posterUrl) : null;
+  const seen = new Set(); const out = [];
+  for(const u of (urls||[])){
+    if(!u) continue;
+    const k = pictureKey(u);
+    if(k===posterKey || seen.has(k)) continue; // skip the poster (shown already) + true dupes
+    seen.add(k); out.push(u);
+  }
+  return out;
+}
 function titleOf(a){ return a.title_english || a.title || a.title_japanese || "Без названия"; }
 function genreIds(a){ return [...(a.genres||[]),...(a.themes||[]),...(a.demographics||[])].map(g=>g.mal_id); }
 function dateNum(a){
@@ -1520,7 +1886,10 @@ async function gatherCandidates(){
   for(const r of refs){
     let data;
     try{ data = await jikan(`${PROXY}/anime/${r.mal_id}/recommendations`); }
-    catch(e){ continue; }
+    catch(e){
+      try{ data = await anilistRecommendationsFallback(r.mal_id); }
+      catch(e2){ continue; } // both MAL/Jikan and AniList failed for this one ref — skip it, others may still work
+    }
     (data.data||[]).forEach(rec=>{
       const id = rec.entry.mal_id;
       if(refIds.has(id)) return;
@@ -1671,6 +2040,44 @@ function renderCards(){
     ? `${t("found")}: ${total} · ${t("shown")}: ${n}`
     : `${t("shown")}: ${n} ${t("more_hint")}`;
   translateCards($("results-grid"));
+  enrichCardScores(arr.slice(0,n));
+}
+/* ============ score-freshness enrichment (wizard/mood/similar search only) ============
+   Search has no MAL-official leg (MAL's /v2/anime needs a text query, can't genre-filter —
+   confirmed architectural limit), so its cards are sourced from Jikan or, when Jikan's search
+   is down, the client-side AniList fallback. AniList's own averageScore is a DIFFERENT
+   community's number (rounded from a 0-100 integer), not a stale copy of MAL's — it will
+   almost never exactly match the precise score the detail modal shows (sourced from
+   MAL-official). Rather than live with that mismatch, silently correct it in the background:
+   fetch each visible card's authoritative score via the existing MAL→Jikan→cache basic
+   endpoint (cheap, our own registered key, no rate concern) and patch the badge in place —
+   same progressive-enhancement pattern as translateCards(). Never blocks the initial render. */
+const scoreEnrichCache = new Map(); // mal_id -> {ts, score, scored_by, members}
+const SCORE_ENRICH_TTL = 5*60*1000;
+async function enrichCardScores(items){
+  const now = Date.now();
+  const todo = (items||[]).filter(a=>{
+    if(!a || a.mal_id==null) return false;
+    const c = scoreEnrichCache.get(a.mal_id);
+    return !c || (now-c.ts)>SCORE_ENRICH_TTL;
+  });
+  if(!todo.length) return;
+  const CONC = 5; // several parallel MAL-official calls through our own Worker is cheap — jikan()'s throttle only paces DIRECT Jikan calls
+  for(let i=0;i<todo.length;i+=CONC){
+    const batch = todo.slice(i, i+CONC);
+    await Promise.all(batch.map(async a=>{
+      try{
+        const fresh = (await jikan(`${PROXY}/anime/${a.mal_id}`, 1)).data;
+        if(!fresh) return;
+        scoreEnrichCache.set(a.mal_id, {ts:now, score:fresh.score, scored_by:fresh.scored_by, members:fresh.members});
+        a.score = fresh.score; a.scored_by = fresh.scored_by; a.members = fresh.members;
+        const known = KNOWN.get(a.mal_id);
+        if(known){ known.score=fresh.score; known.scored_by=fresh.scored_by; known.members=fresh.members; }
+        const node = document.querySelector(`.card[data-id="${a.mal_id}"] .score`);
+        if(node) node.textContent = `⭐ ${fresh.score ? fresh.score.toFixed(2) : "—"}`;
+      }catch(e){ /* leave the initially-shown score as-is — not an error, just no correction available right now */ }
+    }));
+  }
 }
 /* translate short descriptions of cards inside a grid (RU mode only), batched + cached */
 async function translateCards(root){
@@ -1865,6 +2272,16 @@ function quickLinks(title){
     ["🔎 Google", `https://www.google.com/search?q=${q}`]
   ];
 }
+/* relation-type labels (Jikan/MAL use these exact English strings) */
+const REL_LABELS={
+  "Sequel":{ru:"Продолжение",en:"Sequel"}, "Prequel":{ru:"Предыстория",en:"Prequel"},
+  "Side story":{ru:"Побочная история",en:"Side story"}, "Parent story":{ru:"Основная история",en:"Parent story"},
+  "Alternative version":{ru:"Альтернативная версия",en:"Alternative version"}, "Alternative setting":{ru:"Альтернативный сеттинг",en:"Alternative setting"},
+  "Full story":{ru:"Полная версия",en:"Full story"}, "Summary":{ru:"Краткая версия",en:"Summary"},
+  "Spin-off":{ru:"Спин-офф",en:"Spin-off"}, "Adaptation":{ru:"Адаптация",en:"Adaptation"},
+  "Character":{ru:"Общие персонажи",en:"Character"}, "Other":{ru:"Другое",en:"Other"}
+};
+function relLabel(r){ const e=REL_LABELS[r]; return e?(e[LANG]||e.ru):r; }
 function renderModal(d){
   const a = d.full;
   registerKnown([a]);
@@ -1886,7 +2303,19 @@ function renderModal(d){
   let trailer = "";
   if(a.trailer && a.trailer.embed_url){
     const url = a.trailer.embed_url.replace("autoplay=1","autoplay=0");
-    trailer = `<div class="m-sec"><h3>${t("m_trailer")}</h3><div class="m-trailer"><iframe src="${esc(url)}" allowfullscreen allow="encrypted-media"></iframe></div></div>`;
+    // some trailers have embedding disabled by the rights holder (shows YouTube's own small
+    // "Ошибка 153" error inside the frame) — there's no way to detect/fix that from our side,
+    // so always offer a clean direct link as a working fallback regardless of embed status.
+    const ytId = (a.trailer.embed_url.match(/embed\/([a-zA-Z0-9_-]+)/)||[])[1];
+    const watchUrl = a.trailer.url || (ytId ? `https://www.youtube.com/watch?v=${ytId}` : null);
+    trailer = `<div class="m-sec"><h3>${t("m_trailer")}</h3><div class="m-trailer"><iframe src="${esc(url)}" allowfullscreen allow="encrypted-media"></iframe></div>
+      ${watchUrl?`<a class="link-pill watch" href="${esc(watchUrl)}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px;margin-top:8px">▶️ ${esc(t("m_trailer_yt"))}</a>`:""}</div>`;
+  }
+  let shots = "";
+  const shotPics = (d.pictures||[]).slice(0,14);
+  if(shotPics.length){
+    const items = shotPics.map((u,i)=>`<button type="button" class="shot-thumb" data-i="${i}"><img src="${esc(u)}" alt="" onerror="this.closest('.shot-thumb').remove()"></button>`).join("");
+    shots = `<div class="m-sec"><h3>${t("m_shots")}</h3><div class="shot-strip">${items}</div></div>`;
   }
   const enFull = engFull(a);
   const cachedFull = LANG==="ru" ? trCache.get(enFull) : null;
@@ -1913,6 +2342,42 @@ function renderModal(d){
     chars = `<div class="m-sec"><h3>${t("m_chars")}</h3><div class="char-grid">${items}</div></div>`;
   }
 
+  // related anime / watch-order (clickable → drills into the related title)
+  let relatedSec="";
+  // next/last episode (ongoing titles only — AniList's nextAiringEpisode is null otherwise)
+  const nextEpSum = nextEpSummary(d.nextEp);
+  let nextEpLine="";
+  if(nextEpSum){
+    const parts=[];
+    if(nextEpSum.lastEpisode>0) parts.push(esc(t("last_ep_aired").replace("{n}",nextEpSum.lastEpisode)));
+    parts.push(esc(nextEpSum.today ? t("next_ep_today").replace("{n}",nextEpSum.nextEpisode) : t("next_ep_in").replace("{n}",nextEpSum.nextEpisode).replace("{d}",nextEpSum.daysLeft)));
+    nextEpLine = `<div style="font-size:12.5px;color:var(--muted);margin-top:3px">📅 ${parts.join(" · ")}</div>`;
+  }
+
+  const rels=(a.relations||[]).map(r=>({relation:r.relation, entry:(r.entry||[]).filter(e=>e&&e.mal_id)})).filter(r=>r.entry.length);
+  if(rels.length){
+    const groups=rels.map(r=>{
+      const items=r.entry.map(e=> e.type==="anime"
+        ? `<button class="rel-pill" data-rel="${e.mal_id}">${esc(e.name)}</button>`
+        : `<a class="rel-pill rel-ext" href="${esc(e.url||"https://myanimelist.net")}" target="_blank" rel="noopener">${esc(e.name)} ↗</a>`
+      ).join("");
+      return `<div class="rel-group"><span class="rel-label">${esc(relLabel(r.relation))}</span><div class="rel-items">${items}</div></div>`;
+    }).join("");
+    relatedSec=`<div class="m-sec"><h3>${t("m_related")}</h3>${groups}</div>`;
+  }
+  // 1-10 score distribution mini bar chart
+  let scoresSec="";
+  const scoreDist=(d.stats&&d.stats.scores)||[];
+  if(scoreDist.some(s=>s.votes)){
+    const maxV=Math.max(...scoreDist.map(s=>s.votes||0))||1;
+    const rows=scoreDist.slice().sort((x,y)=>y.score-x.score).map(s=>{
+      const pct=s.percentage!=null?s.percentage:0;
+      const w=Math.round((s.votes||0)/maxV*100);
+      return `<div class="sc-row"><span class="sc-n">${s.score}</span><div class="sc-bar"><i style="width:${w}%"></i></div><span class="sc-v">${pct.toFixed(1)}%</span></div>`;
+    }).join("");
+    scoresSec=`<div class="m-sec"><h3>${t("m_scores")}</h3><div class="sc-chart">${rows}</div></div>`;
+  }
+
   const streaming = (a.streaming||[]).map(s=>`<a class="link-pill watch" href="${esc(s.url)}" target="_blank" rel="noopener">▶️ ${esc(s.name)}</a>`).join("");
   const ext = (a.external||[]).slice(0,6).map(s=>`<a class="link-pill" href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>`).join("");
   const qlinks = quickLinks(title).map(([l,u])=>`<a class="link-pill" href="${esc(u)}" target="_blank" rel="noopener">${l}</a>`).join("");
@@ -1931,20 +2396,29 @@ function renderModal(d){
             ${en?`<div class="m-en">${esc(en)}</div>`:""}
             <div style="font-size:12.5px;color:var(--muted)">${esc(meta)}</div>
             ${aired?`<div style="font-size:12.5px;color:var(--muted);margin-top:3px">📅 ${esc(aired)}</div>`:""}
+            ${nextEpLine}
             ${studios?`<div style="font-size:12.5px;color:var(--muted);margin-top:3px">🎬 ${esc(studios)}${a.source?" · 📚 "+esc(a.source):""}</div>`:(a.source?`<div style="font-size:12.5px;color:var(--muted);margin-top:3px">📚 ${esc(a.source)}</div>`:"")}
             <div class="m-stats">${stats.join("")}</div>
             <div class="gtags" style="margin-top:4px">${gtags}</div>
-            <button class="wl-btn${isWatched(a.mal_id)?" saved":""}" data-bm="${a.mal_id}" data-bm-text="1">${isWatched(a.mal_id)?t("wl_on"):t("wl_add")}</button>
+            ${listControls(a.mal_id)}
+            ${modalIsRandom?`<button class="wl-btn rand-next-btn" id="rand-next-btn">🎲 ${esc(t("rand_next"))}</button>`:""}
           </div>
         </div>
         ${trailer}
+        ${shots}
         ${synSec}
+        ${relatedSec}
+        ${scoresSec}
         ${songs}
         ${chars}
         ${watchSec}
       </div>
     </div>`;
   $("modal-close").onclick = closeModal;
+  const mc = $("modal").querySelector(".mal-ctrls"); if(mc) wireListControls(mc);
+  $("modal").querySelectorAll(".rel-pill[data-rel]").forEach(el=> el.onclick=()=> openDetail(+el.dataset.rel));
+  const nextBtn = $("rand-next-btn"); if(nextBtn) nextBtn.onclick = nextRandomAnime;
+  $("modal").querySelectorAll(".shot-thumb").forEach(el=> el.onclick = ()=> openLightbox(shotPics, +el.dataset.i));
   // real-time translate the full description (RU mode, cached)
   if(LANG==="ru"){
     const node = $("modal").querySelector(".m-syn[data-en]");
@@ -1955,15 +2429,74 @@ function renderModal(d){
 }
 function closeModal(){ $("modal").classList.add("hidden"); $("modal").innerHTML=""; }
 
-async function openDetail(id){
+/* ===== screenshot lightbox: full image in-page, prev/next nav (no new tab) ===== */
+let lbPics = [], lbIdx = 0;
+function renderLightbox(){
+  $("lb-img").src = lbPics[lbIdx];
+  $("lb-count").textContent = (lbIdx+1) + " / " + lbPics.length;
+  const multi = lbPics.length > 1;
+  $("lb-prev").style.display = multi ? "flex" : "none";
+  $("lb-next").style.display = multi ? "flex" : "none";
+  $("lb-count").style.display = multi ? "block" : "none";
+}
+function openLightbox(pics, idx){
+  lbPics = pics; lbIdx = idx;
+  renderLightbox();
+  $("lightbox").classList.remove("hidden");
+}
+function closeLightbox(){ $("lightbox").classList.add("hidden"); $("lb-img").src=""; }
+function lbStep(delta){ if(!lbPics.length) return; lbIdx = (lbIdx + delta + lbPics.length) % lbPics.length; renderLightbox(); }
+$("lb-close").onclick = closeLightbox;
+$("lb-prev").onclick = ()=> lbStep(-1);
+$("lb-next").onclick = ()=> lbStep(1);
+$("lightbox").addEventListener("click", e=>{ if(e.target.id==="lightbox") closeLightbox(); });
+document.addEventListener("keydown", e=>{
+  if($("lightbox").classList.contains("hidden")) return;
+  // stop the anime-detail modal's own Escape handler from ALSO firing and closing
+  // the modal underneath — one Escape press should just back out of the lightbox first.
+  if(e.key==="Escape"){ e.stopImmediatePropagation(); closeLightbox(); }
+  else if(e.key==="ArrowLeft") lbStep(-1);
+  else if(e.key==="ArrowRight") lbStep(1);
+});
+
+async function openDetail(id, fromRandom=false){
+  modalIsRandom = fromRandom;
   $("modal").classList.remove("hidden");
   $("modal").innerHTML = `<div class="modal-card"><div class="modal-body" style="padding:50px 24px;text-align:center"><div class="spinner" style="margin:0 auto 18px"></div><div style="color:var(--blue2)">${t("m_loading")}</div></div></div>`;
   let d = detailFull.get(id);
   if(!d){
     try{
-      const full = (await jikan(`${PROXY}/anime/${id}/full`)).data;
-      let chars=[]; try{ chars = (await jikan(`${API}/anime/${id}/characters`)).data||[]; }catch(e){}
-      d = {full, chars}; detailFull.set(id, d);
+      // full detail (resilient, via proxy), characters, and screenshots all run concurrently
+      // instead of sequentially, each with a low retry budget (1) since a slow/failing one
+      // shouldn't hold up the whole modal. full/characters/statistics each now fall through to
+      // an AniList leg before finally giving up (characters' AniList data has no MAL character
+      // id, so those entries render but aren't clickable-through — disclosed, accepted tradeoff).
+      // Pictures/streaming genuinely have no AniList equivalent (cover/banner only) — unchanged.
+      const [full, chars, jikanPics, stats] = await Promise.all([
+        jikan(`${PROXY}/anime/${id}/full`).then(r=>r.data).catch(()=>anilistDetailFallback(id)),
+        jikan(`${API}/anime/${id}/characters`, 1).then(r=>r.data||[]).catch(()=>anilistCharactersFallback(id).catch(()=>[])),
+        jikan(`${API}/anime/${id}/pictures`, 1).then(r=>r.data||[]).catch(()=>[]),
+        // 1-10 score histogram via the proxy (Jikan→cache; no MAL leg) → AniList scoreDistribution
+        // as a last resort. Down/empty → null, section just doesn't render.
+        fetchViaProxy(`${PROXY}/anime/${id}/statistics`)
+          .then(r=> r.down ? anilistScoreDistFallback(id).catch(()=>null) : (r.data && r.data.data))
+          .catch(()=>anilistScoreDistFallback(id).catch(()=>null))
+      ]);
+      // the proxy's MAL-official leg already includes `pictures` in the /full response
+      // (free, same request) — only fall back to the separate Jikan call above when that
+      // leg wasn't the one that served this request (e.g. Jikan/cache tier won instead).
+      const rawPictures = (full.pictures && full.pictures.length) ? full.pictures
+        : jikanPics.map(p => (p.jpg&&(p.jpg.large_image_url||p.jpg.image_url)) || (p.webp&&(p.webp.large_image_url||p.webp.image_url))).filter(Boolean);
+      const pictures = dedupePictures(rawPictures, imgOf(full));
+      // next/last episode — only bother asking AniList when the title is actually airing
+      // (the vast majority of lookups are finished shows); paced behind aniThrottle same as
+      // every other AniList call, so it's deliberately NOT in the Promise.all above — that
+      // would tax every single modal open with AniList's ~2s pacing for no reason.
+      let nextEp=null;
+      if(full.status==="Currently Airing"){
+        try{ nextEp = (await anilistNextEpisodeBulk([+id])).get(+id) || null; }catch(e){}
+      }
+      d = {full, chars, pictures, stats, nextEp}; detailFull.set(id, d);
     }catch(e){
       $("modal").innerHTML = `<div class="modal-card"><button class="modal-close" id="modal-close">✕</button><div class="modal-body" style="padding:50px 24px;text-align:center"><div style="font-size:40px">📡</div><p class="m-syn">${t("m_err")}</p></div></div>`;
       $("modal-close").onclick = closeModal; return;
@@ -2070,7 +2603,7 @@ function resetSimilar(){
 }
 
 /* ============ screen manager ============ */
-const ALL_SCREENS = ["start-screen","wizard","mood-screen","similar-screen","results-screen","top-screen","season-screen","watch-screen"];
+const ALL_SCREENS = ["start-screen","wizard","mood-screen","similar-screen","results-screen","top-screen","season-screen","watch-screen","schedule-screen"];
 function nukeScreens(){ ALL_SCREENS.forEach(id=>{ const e=$(id); if(e) e.classList.add("hidden"); }); closeModal(); if(typeof updateServiceBanner==="function") updateServiceBanner(); }
 function showBox(el,emoji,title,text){ el.innerHTML = `<div class="msg"><span class="emoji">${emoji}</span><h3>${esc(title)}</h3>${text?`<p>${esc(text)}</p>`:""}</div>`; }
 function clearBox(el){ el.innerHTML=""; }
@@ -2092,27 +2625,41 @@ try{ const w=JSON.parse(localStorage.getItem(WATCH_KEY)||"[]"); if(Array.isArray
 const watchSet = new Set(watchList.map(a=>a.mal_id));
 const KNOWN = new Map();                 // id -> compact anime, for adding from any screen
 function compactAnime(a){
+  // `a` is either a fresh raw API anime object (a.status = the MAL/AniList AIRING status,
+  // e.g. "Currently Airing"; no personal fields) or an already-compacted watchlist/KNOWN
+  // entry being re-compacted (has .air_status already; a.status is the PERSONAL list
+  // status instead, e.g. "watching") — .air_status's presence disambiguates which.
+  const alreadyCompact = Object.prototype.hasOwnProperty.call(a, "air_status"); // key presence, not value — air_status can legitimately BE undefined (e.g. beako favorites have no native status field)
   return {
     mal_id:a.mal_id, url:a.url, title:a.title, title_english:a.title_english, title_japanese:a.title_japanese,
     score:a.score, scored_by:a.scored_by, members:a.members, episodes:a.episodes, type:a.type, year:a.year,
     aired: a.aired ? {from:a.aired.from, prop:a.aired.prop} : undefined,
-    images:a.images, genres:a.genres, themes:a.themes, demographics:a.demographics, synopsis:a.synopsis
+    images:a.images, genres:a.genres, themes:a.themes, demographics:a.demographics, synopsis:a.synopsis,
+    air_status: alreadyCompact ? a.air_status : a.status,  // the anime's own MAL airing status ("Currently Airing"/…)
+    status: alreadyCompact ? a.status : undefined,          // personal-list status (preserved on round-trips)
+    score_user:a.score_user, rewatch:a.rewatch
   };
 }
 function registerKnown(list){ (list||[]).forEach(a=>{ if(a && a.mal_id!=null) KNOWN.set(a.mal_id, compactAnime(a)); }); }
-watchList.forEach(a=> KNOWN.set(a.mal_id, a));
+/* migrate any pre-multi-status entries (no .status) to "plan_to_watch" */
+watchList.forEach(a=>{ if(a && !a.status) a.status="plan_to_watch"; KNOWN.set(a.mal_id, a); });
 const isWatched = (id)=> watchSet.has(+id);
+const inList = (id)=> watchSet.has(+id);
 function saveWatch(){ try{ localStorage.setItem(WATCH_KEY, JSON.stringify(watchList)); }catch(_){} updateWatchBadge(); }
 function toggleWatch(id){
   id=+id;
-  if(watchSet.has(id)){ watchSet.delete(id); watchList = watchList.filter(a=>a.mal_id!==id); }
-  else{ const src = KNOWN.get(id); if(!src) return; const c=compactAnime(src); watchSet.add(id); watchList.unshift(c); KNOWN.set(id,c); }
+  if(watchSet.has(id)){ watchSet.delete(id); watchList = watchList.filter(a=>a.mal_id!==id); toast(t("mal_removed")); }
+  else{
+    const src = KNOWN.get(id); if(!src) return;
+    const c=compactAnime(src); c.status="plan_to_watch"; watchSet.add(id); watchList.unshift(c); KNOWN.set(id,c);
+    toast(t("mal_added_ptw"));
+  }
   saveWatch();
   reflectWatchButtons(id);
   if(!$("watch-screen").classList.contains("hidden")) renderWatch();
 }
 function reflectWatchButtons(id){
-  const on = watchSet.has(+id);
+  const on = inList(id);
   document.querySelectorAll(`[data-bm="${id}"]`).forEach(b=>{
     b.classList.toggle("saved", on);
     b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop");
@@ -2123,13 +2670,13 @@ function reflectWatchButtons(id){
 function updateWatchBadge(){
   const b=$("open-watch"); if(!b) return;
   const lab=b.querySelector(".al"); if(lab) lab.textContent=t("btn_watch");
-  const n=watchList.length;
+  const n= watchList.length;
   let bd=b.querySelector(".btn-badge");
   if(n){ if(!bd){ bd=document.createElement("span"); bd.className="btn-badge"; b.appendChild(bd); } bd.textContent=n; }
   else if(bd){ bd.remove(); }
 }
 const BM_SVG = `<svg viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-5-7 5V4a1 1 0 0 1 1-1z"/></svg>`;
-function bmHTML(id){ const on=isWatched(id); return `<button class="bm${on?" saved":""}" data-bm="${id}" title="${esc(on?t("bm_remove"):t("bm_add"))}" aria-label="watch later">${BM_SVG}</button>`; }
+function bmHTML(id){ const on=inList(id); return `<button class="bm${on?" saved":""}" data-bm="${id}" title="${esc(on?t("bm_remove"):t("bm_add"))}" aria-label="watch later">${BM_SVG}</button>`; }
 
 /* ============ generic paged feed (top / seasonal) ============ */
 function makeFeed(endpoint, pageCap, opts){ return { endpoint, pageCap:pageCap||4, page:0, items:[], seen:new Set(), hasNext:true, loading:false, error:false, loadedOnce:false, ...opts }; }
@@ -2242,46 +2789,180 @@ async function seasonMore(){
   await feedFetch(feed); registerKnown(feed.items); renderSeason();
 }
 
-/* ============ WATCHLIST screen ============ */
+/* ============ WATCHLIST screen (local, multi-status) ============ */
+let watchFilter="all";
 function openWatch(){ nukeScreens(); $("watch-screen").classList.remove("hidden"); setCatVisible(false); renderWatch(); }
+/* completed-titles count + episodes watched — deliberately ONLY from status:"completed".
+   There's no per-episode progress tracking in this app (an explicit earlier decision), so a
+   "watching" entry's episode count can't be honestly known — showing a guessed number here
+   would just be a new version of the "the numbers don't match" trust problem. */
+function renderWatchStats(){
+  const box=$("watch-stats"); if(!box) return;
+  const completed = watchList.filter(a=>a.status==="completed");
+  if(!completed.length){ box.innerHTML=""; return; }
+  const eps = completed.reduce((s,a)=> s+(a.episodes||0), 0);
+  box.innerHTML = `<span class="stat-chip">✅ <b>${completed.length}</b> ${esc(t("watch_stat_done"))}</span><span class="stat-chip">🎬 <b>${eps}</b> ${esc(t("watch_stat_eps"))}</span>`;
+}
 function renderWatch(){
   const grid=$("watch-grid"), msg=$("watch-msg");
-  $("watch-cap").innerHTML = `<b>${watchList.length}</b> ${t("watch_count")} · ${t("watch_cap")}`;
   $("watch-clear").style.display = watchList.length ? "" : "none";
+  renderWatchStats();
   if(!watchList.length){
+    watchFilter="all";
+    const tb=$("watch-tabs"); if(tb) tb.remove();
+    $("watch-cap").innerHTML = `<b>0</b> ${t("watch_count")} · ${t("watch_cap")}`;
     grid.innerHTML="";
     showBox(msg,"🧺",t("watch_empty_t"),t("watch_empty_p"));
     const box=msg.querySelector(".msg");
     if(box){ box.insertAdjacentHTML("beforeend", `<div class="empty-cta"><button class="btn primary" id="watch-cta">${esc(t("watch_empty_cta"))}</button></div>`); const cta=$("watch-cta"); if(cta) cta.onclick=openWizard; }
     return;
   }
+  ensureWatchTabs();
+  const filtered = watchFilter==="all" ? watchList : watchList.filter(a=> a.status===watchFilter);
+  $("watch-cap").innerHTML = `<b>${filtered.length}</b> ${t("watch_count")} · ${t("watch_cap")}`;
+  if(!filtered.length){ grid.innerHTML=""; showBox(msg,"🧺",t("watch_empty_t"),t("watch_empty_filter")); return; }
   clearBox(msg);
-  registerKnown(watchList);
-  grid.innerHTML = watchList.map((a,i)=>cardHTML(a,i+1)).join("");
+  registerKnown(filtered);
+  grid.innerHTML = filtered.map((a,i)=>cardHTML(a,i+1)).join("");
+  decorateWatchCards(grid);
   translateCards(grid);
+  decorateAiringBadges(grid, filtered, ++watchRenderId);
 }
+let watchRenderId=0; // guards the async airing-badge fetch below against a stale re-render (filter switch, navigation) landing late
 function clearWatch(){
   if(!watchList.length) return;
   if(!confirm(t("watch_confirm"))) return;
-  watchList=[]; watchSet.clear(); saveWatch(); renderWatch();
+  watchList=[]; watchSet.clear(); watchFilter="all"; saveWatch(); renderWatch();
+}
+/* status-filter pill tabs with per-status counts */
+function ensureWatchTabs(){
+  let bar=$("watch-tabs");
+  if(!bar){ bar=document.createElement("div"); bar.id="watch-tabs"; bar.className="watch-tabs"; $("watch-cap").insertAdjacentElement("afterend", bar); }
+  const counts={}; watchList.forEach(a=>{ const s=a.status; if(s) counts[s]=(counts[s]||0)+1; });
+  const tabs=[["all","wf_all",watchList.length], ...STATUSES.map(s=>[s,"st_"+s,counts[s]||0])];
+  bar.innerHTML=tabs.map(([v,k,n])=>`<button class="wf-btn${v===watchFilter?" active":""}" data-wf="${v}">${esc(t(k))}<span class="wf-n">${n}</span></button>`).join("");
+  bar.querySelectorAll(".wf-btn").forEach(b=> b.onclick=()=>{ watchFilter=b.dataset.wf; renderWatch(); });
+}
+/* overlay each card with its status + personal score */
+function decorateWatchCards(grid){
+  grid.querySelectorAll(".card").forEach(card=>{
+    const e=entryOf(+card.dataset.id); if(!e||!e.status) return;
+    const poster=card.querySelector(".poster"); if(!poster) return;
+    const pill=document.createElement("span");
+    pill.className="mal-badge st-"+e.status;
+    pill.textContent=t("st_"+e.status)+(e.score_user?" · ★"+e.score_user:"");
+    poster.appendChild(pill);
+  });
+}
+/* async, non-blocking: only entries you're actively "watching" get a next-episode badge —
+   fetched after the grid is already visible so it never delays the screen. */
+async function decorateAiringBadges(grid, items, myRenderId){
+  const watchingIds = items.filter(a=>a.status==="watching").map(a=>a.mal_id);
+  if(!watchingIds.length) return;
+  let map;
+  try{ map = await anilistNextEpisodeBulk(watchingIds); }catch(e){ return; }
+  if(myRenderId!==watchRenderId || !grid.isConnected) return; // a newer render/filter switch already superseded this one
+  watchingIds.forEach(id=>{
+    const sum = nextEpSummary(map.get(id)); if(!sum) return;
+    const card = grid.querySelector(`.card[data-id="${id}"]`); if(!card) return;
+    const poster = card.querySelector(".poster"); if(!poster) return;
+    const pill = document.createElement("span");
+    pill.className = "air-badge"+(sum.today?" today":"");
+    pill.textContent = sum.today ? t("air_badge_today").replace("{n}",sum.nextEpisode) : t("air_badge_soon").replace("{n}",sum.nextEpisode).replace("{d}",sum.daysLeft);
+    poster.appendChild(pill);
+  });
+}
+
+/* ============ WEEKLY SCHEDULE screen ============ */
+const SCHED_DAYS=["monday","tuesday","wednesday","thursday","friday","saturday","sunday"];
+const scheduleCache={}; // day -> array | null(=fetch failed)
+let scheduleDay = SCHED_DAYS[(new Date().getDay()+6)%7]; // JS Sun=0 -> our Mon-first index
+function openSchedule(){ nukeScreens(); $("schedule-screen").classList.remove("hidden"); setCatVisible(false); ensureSchedTabs(); scheduleShowDay(scheduleDay); }
+function ensureSchedTabs(){
+  const bar=$("sched-tabs");
+  bar.innerHTML=SCHED_DAYS.map(day=>{
+    const today = day===SCHED_DAYS[(new Date().getDay()+6)%7];
+    return `<button class="wf-btn${day===scheduleDay?" active":""}" data-day="${day}">${esc(t("day_"+day))}${today?` <span class="wf-n">${esc(t("sched_today"))}</span>`:""}</button>`;
+  }).join("");
+  bar.querySelectorAll(".wf-btn").forEach(b=> b.onclick=()=> scheduleShowDay(b.dataset.day));
+}
+async function scheduleShowDay(day){
+  scheduleDay=day;
+  $("sched-tabs").querySelectorAll(".wf-btn").forEach(b=> b.classList.toggle("active", b.dataset.day===day));
+  if(scheduleCache[day]===undefined){
+    $("sched-grid").innerHTML=""; clearBox($("sched-msg")); showLoading();
+    try{
+      const r=await fetchViaProxy(`${PROXY}/schedules?filter=${day}`);
+      if(!r.down){ scheduleCache[day] = (r.data&&r.data.data)||[]; }
+      else{ scheduleCache[day] = (await anilistScheduleFallback(day)).data; } // Jikan down → AniList (bucketed by JST broadcast weekday)
+    }catch(e){ scheduleCache[day]=null; }
+    hideLoading();
+  }
+  renderSchedule();
+}
+function renderSchedule(){
+  const grid=$("sched-grid"), msg=$("sched-msg"), list=scheduleCache[scheduleDay];
+  if(list==null){ grid.innerHTML=""; showBox(msg,"📡",t("feed_err_t"),t("feed_err_p")); return; }
+  if(!list.length){ grid.innerHTML=""; showBox(msg,"🫥",t("nothing_found"),""); return; }
+  clearBox(msg);
+  const seen=new Set();
+  const items=list.filter(a=>{ if(a.mal_id==null||seen.has(a.mal_id)) return false; seen.add(a.mal_id); return true; })
+                  .sort((x,y)=>(y.members||0)-(x.members||0));
+  registerKnown(items);
+  grid.innerHTML=items.map((a,i)=>cardHTML(a,i+1)).join("");
+  translateCards(grid);
 }
 
 /* ============ random anime ("Удиви меня") ============ */
+let modalIsRandom = false; // true while the open modal was reached via "Случайное аниме" — shows the "next random" button
+async function pickRandomAnime(){
+  let a = null;
+  // fast path: Jikan's own /random/anime — great when Jikan is healthy, but it's the
+  // single flakiest Jikan endpoint observed. Zero internal retries (not the default 3) so
+  // a dead endpoint fails on the very first request instead of burning multiple
+  // 900ms-1700ms retry sleeps before falling through to the resilient path below.
+  for(let tries=0; !a && tries<2; tries++){
+    let cand;
+    try{ cand = (await jikan(`${API}/random/anime`, 0)).data; }
+    catch(e){ break; } // Jikan's random endpoint itself is down — stop hammering it, fall through
+    if(cand && !genreIds(cand).some(id=>EXPLICIT.includes(id))) a = cand;
+  }
+  // resilient fallback: no random-anime tier on the proxy, so fake randomness by grabbing
+  // a random page of the same MAL-official→Jikan→cache Top-100 feed everything else uses,
+  // then picking a random entry from it — same waterfall as the rest of the app.
+  for(let tries=0; !a && tries<4; tries++){
+    const page = 1 + Math.floor(Math.random()*20);
+    let data;
+    try{
+      const r = await fetchViaProxy(`${PROXY}/top/anime?page=${page}`);
+      data = r.down ? await anilistTopFallback({page}) : r.data;
+    }catch(e){ continue; }
+    const pool = (data.data||[]).filter(x=>!genreIds(x).some(id=>EXPLICIT.includes(id)));
+    if(pool.length) a = pool[Math.floor(Math.random()*pool.length)];
+  }
+  return a;
+}
 async function openRandomAnime(){
   showLoading();
   try{
-    let a, tries = 0;
-    do{
-      a = (await jikan(`${API}/random/anime`)).data;
-      tries++;
-    }while(a && genreIds(a).some(id=>EXPLICIT.includes(id)) && tries<4);
+    const a = await pickRandomAnime();
     hideLoading();
-    if(a && a.mal_id){ registerKnown([a]); openDetail(a.mal_id); }
+    if(a && a.mal_id){ registerKnown([a]); openDetail(a.mal_id, true); }
+    else { $("modal").classList.remove("hidden"); modalError(); }
   }catch(e){
     hideLoading();
     $("modal").classList.remove("hidden");
     modalError();
   }
+}
+/* "🎲 Ещё случайное" inside the already-open modal — reroll without closing/reopening */
+async function nextRandomAnime(){
+  $("modal").innerHTML = loadingModalHTML();
+  try{
+    const a = await pickRandomAnime();
+    if(a && a.mal_id){ registerKnown([a]); openDetail(a.mal_id, true); }
+    else { modalError(); }
+  }catch(e){ modalError(); }
 }
 
 /* ============ character detail modal ============ */
@@ -2293,7 +2974,10 @@ async function openCharDetail(id){
   $("modal").innerHTML = loadingModalHTML();
   let c = detailChar.get(id);
   if(!c){
-    try{ c = (await jikan(`${API}/characters/${id}/full`)).data; detailChar.set(id,c); }
+    // no fallback source exists for character bios (MAL-official/AniList don't have this data),
+    // so a low retry budget (1, not the default 3) just means a real Jikan outage fails fast
+    // instead of wasting ~6s on retries that can't change the outcome either way.
+    try{ c = (await jikan(`${API}/characters/${id}/full`, 1)).data; detailChar.set(id,c); }
     catch(e){ modalError(); return; }
   }
   renderCharModal(c);
@@ -2407,6 +3091,7 @@ function applyLang(){
   if(!$("top-screen").classList.contains("hidden")){ renderTop(); moveSegRAF("top-seg"); }
   if(!$("season-screen").classList.contains("hidden")){ renderSeason(); moveSegRAF("season-seg"); }
   if(!$("watch-screen").classList.contains("hidden")) renderWatch();
+  if(!$("schedule-screen").classList.contains("hidden")){ ensureSchedTabs(); renderSchedule(); }
   document.querySelectorAll(".lang-opt").forEach(b=> b.classList.toggle("active", b.dataset.lang===LANG));
   if(!$("wizard").classList.contains("hidden")) showWizardStep(wizardPos);
 }
@@ -2420,6 +3105,7 @@ $("open-similar").onclick = openSimilar;
 $("open-fav").onclick = runFavorites;
 $("open-top").onclick = openTop;
 $("open-season").onclick = openSeason;
+$("open-schedule").onclick = openSchedule;
 $("open-watch").onclick = openWatch;
 $("open-random").onclick = openRandomAnime;
 $("sb-toggle").onclick = ()=> $("service-banner").classList.toggle("open");
@@ -2430,6 +3116,7 @@ $("similar-back").onclick = goHome;
 $("new-search").onclick = goHome;
 $("top-home").onclick = goHome;
 $("season-home").onclick = goHome;
+$("sched-home").onclick = goHome;
 $("watch-home").onclick = goHome;
 $("top-more").onclick = topMore;
 $("season-more").onclick = seasonMore;
@@ -2475,7 +3162,7 @@ $("sort-select").addEventListener("change", e=>{
 $("expand-btn").onclick = expandList;
 
 /* delegated card clicks (shared across all card grids) */
-["results-grid","top-grid","season-grid","watch-grid"].forEach(id=> $(id).addEventListener("click", feedGridClick));
+["results-grid","top-grid","season-grid","watch-grid","sched-grid"].forEach(id=> $(id).addEventListener("click", feedGridClick));
 
 $("modal").addEventListener("click", e=>{
   const bm=e.target.closest("[data-bm]"); if(bm){ e.preventDefault(); toggleWatch(+bm.dataset.bm); return; }
